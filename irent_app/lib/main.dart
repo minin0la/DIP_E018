@@ -123,9 +123,9 @@ class _SignupPageState extends State<SignupPage> {
   String _userEmail = '';
 
   @override
+  bool value = false;
   Widget build(BuildContext context) {
     final screenwidth = MediaQuery.of(context).size.width;
-    bool value = false;
     return Scaffold(
       appBar: AppBar(
         title: Text('Sign up'),
