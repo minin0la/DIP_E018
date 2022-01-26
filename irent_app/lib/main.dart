@@ -113,9 +113,9 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   @override
+  bool value = false;
   Widget build(BuildContext context) {
     final screenwidth = MediaQuery.of(context).size.width;
-    bool value = false;
     return Scaffold(
       appBar: AppBar(
         title: Text('Sign up'),
@@ -199,6 +199,11 @@ class _SignupPageState extends State<SignupPage> {
                     SizedBox(
                       height: 20,
                     ),
+                    Checkbox(
+                        value: value,
+                        onChanged: (value) => setState(() {
+                              this.value = value!;
+                            })),
                     ButtonTheme(
                       minWidth: 300,
                       child: RaisedButton(
