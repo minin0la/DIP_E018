@@ -115,6 +115,7 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     final screenwidth = MediaQuery.of(context).size.width;
+    bool value = false;
     return Scaffold(
       appBar: AppBar(
         title: Text('Sign up'),
@@ -195,6 +196,22 @@ class _SignupPageState extends State<SignupPage> {
                         obscureText: true,
                       ),
                     ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    ButtonTheme(
+                      minWidth: 300,
+                      child: RaisedButton(
+                        onPressed: () {},
+                        color: Colors.blue,
+                        child: Text(
+                          'Login',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                      ),
+                    )
                   ]),
             ),
           ),
