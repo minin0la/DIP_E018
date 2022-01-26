@@ -81,7 +81,9 @@ class LoginScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20)),
                       ),
                     ),
-                    Text('Login as Admin')
+                    Container(
+                        margin: EdgeInsets.only(left: 100, top: 10),
+                        child: Text('Login as Admin'))
                   ]),
             ),
           )
