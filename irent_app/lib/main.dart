@@ -64,7 +64,12 @@ class LoginScreen extends StatelessWidget {
                     ButtonTheme(
                       minWidth: 300,
                       child: RaisedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SignupPage()));
+                        },
                         color: Colors.grey.shade300,
                         child: Text('Sign Up'),
                         shape: RoundedRectangleBorder(
@@ -87,6 +92,105 @@ class LoginScreen extends StatelessWidget {
                   ]),
             ),
           )
+        ],
+      ),
+    );
+  }
+}
+
+class SignupPage extends StatefulWidget {
+  const SignupPage({Key? key}) : super(key: key);
+
+  @override
+  _SignupPageState createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
+  @override
+  Widget build(BuildContext context) {
+    final screenwidth = MediaQuery.of(context).size.width;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Sign up'),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: Column(
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    SizedBox(
+                      height: 20,
+                    ),
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.blue,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Create Account',
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Please create an account with your student email (e.g. user@e.ntu.edu.sg',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.w400),
+                    ),
+                    SizedBox(height: 30),
+                    SizedBox(
+                      height: 30,
+                      width: 300,
+                      child: TextField(
+                        decoration: InputDecoration(
+                            hintText: 'admin@e.ntu.edu.sg',
+                            prefixIcon: Icon(Icons.person)),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      height: 30,
+                      width: 300,
+                      child: TextField(
+                        decoration: InputDecoration(
+                            hintText: 'admin@e.ntu.edu.sg',
+                            prefixIcon: Icon(Icons.email)),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      height: 30,
+                      width: 300,
+                      child: TextField(
+                        decoration: InputDecoration(
+                            hintText: 'admin@e.ntu.edu.sg',
+                            prefixIcon: Icon(Icons.phone)),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      height: 30,
+                      width: 300,
+                      child: TextField(
+                        decoration: InputDecoration(
+                            hintText: 'admin@e.ntu.edu.sg',
+                            prefixIcon: Icon(Icons.vpn_key_rounded)),
+                      ),
+                    ),
+                  ]),
+            ),
+          ),
         ],
       ),
     );
