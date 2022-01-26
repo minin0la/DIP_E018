@@ -138,7 +138,7 @@ class _SignupPageState extends State<SignupPage> {
                       height: 10,
                     ),
                     Text(
-                      'Please create an account with your student email (e.g. user@e.ntu.edu.sg',
+                      'Please create an account with your student email\n (e.g. user@e.ntu.edu.sg)',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontWeight: FontWeight.w400),
                     ),
@@ -148,7 +148,7 @@ class _SignupPageState extends State<SignupPage> {
                       width: 300,
                       child: TextField(
                         decoration: InputDecoration(
-                            hintText: 'admin@e.ntu.edu.sg',
+                            hintText: 'John Smith',
                             prefixIcon: Icon(Icons.person)),
                       ),
                     ),
@@ -172,7 +172,7 @@ class _SignupPageState extends State<SignupPage> {
                       width: 300,
                       child: TextField(
                         decoration: InputDecoration(
-                            hintText: 'admin@e.ntu.edu.sg',
+                            hintText: '9245XXXX',
                             prefixIcon: Icon(Icons.phone)),
                       ),
                     ),
@@ -184,8 +184,9 @@ class _SignupPageState extends State<SignupPage> {
                       width: 300,
                       child: TextField(
                         decoration: InputDecoration(
-                            hintText: 'admin@e.ntu.edu.sg',
+                            hintText: '*******',
                             prefixIcon: Icon(Icons.vpn_key_rounded)),
+                        obscureText: true,
                       ),
                     ),
                   ]),
