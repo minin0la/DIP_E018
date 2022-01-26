@@ -58,8 +58,11 @@ class LoginScreen extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                     Text('Borrowing made easy.'),
+                    SizedBox(
+                      height: 100,
+                    ),
                     ButtonTheme(
-                      minWidth: 200,
+                      minWidth: 300,
                       child: RaisedButton(
                         onPressed: () {},
                         color: Colors.grey.shade300,
@@ -69,7 +72,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     ButtonTheme(
-                      minWidth: 200,
+                      minWidth: 300,
                       child: RaisedButton(
                         onPressed: () {},
                         color: Colors.white,
