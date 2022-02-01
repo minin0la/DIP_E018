@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "425302352539",
+    "project_id": "irent-cf25e",
+    "storage_bucket": "irent-cf25e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425302352539:android:11dab92e92087f4a8c5c3e",
+        "android_client_info": {
+          "package_name": "com.example.irent_app_experimential"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "425302352539-vt46s778vqlabithc72d6952bt6cv3n4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfUL1pYxX-JEUX-BCIg_7n1AV7h7WXIOI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "425302352539-vt46s778vqlabithc72d6952bt6cv3n4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
