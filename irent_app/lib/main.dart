@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'signup_page.dart';
+import 'login_register.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,73 +42,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final screenwidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.only(left: 50, bottom: 100),
-              width: screenwidth,
-              color: Colors.grey.shade400,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  // ignore: prefer_const_literals_to_create_immutables
-                  children: [
-                    const Text(
-                      'iRent',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text('Borrowing made easy.'),
-                    SizedBox(
-                      height: 100,
-                    ),
-                    ButtonTheme(
-                      minWidth: 300,
-                      child: RaisedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const SignupPage()));
-                        },
-                        color: Colors.grey.shade300,
-                        child: Text('Sign Up'),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                      ),
-                    ),
-                    ButtonTheme(
-                      minWidth: 300,
-                      child: RaisedButton(
-                        onPressed: () {},
-                        color: Colors.white,
-                        child: Text('Login'),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                      ),
-                    ),
-                    Container(
-                        margin: EdgeInsets.only(left: 100, top: 10),
-                        child: Text('Login as Admin'))
-                  ]),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
 
@@ -119,69 +54,76 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  bool agree = false;
   bool? _success;
   String _userEmail = '';
 
   @override
   bool value = false;
+  @override
   Widget build(BuildContext context) {
-    final screenwidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text('Sign up'),
+        iconTheme: IconThemeData(color: Colors.black),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
       ),
-      body: Form(
-        key: _formKey,
-        child: Card(
-          child: Center(
-            child: Column(
-                // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.blue,
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Create Account',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Please create an account with your student email\n (e.g. user@e.ntu.edu.sg)',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.w400),
-                  ),
-                  SizedBox(height: 30),
-                  SizedBox(
-                    height: 30,
-                    width: 300,
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                          hintText: 'John Smith',
-                          prefixIcon: Icon(Icons.person)),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 40),
+            child: Form(
+              key: _formKey,
+              child: Column(crossAxisAlignment: CrossAxisAlignment.center,
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    Text(
+                      'Create Account',
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    height: 30,
-                    width: 300,
-                    child: TextFormField(
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Please create an account with your student email\n (e.g. user@e.ntu.edu.sg)',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.w400),
+                    ),
+                    SizedBox(height: 20),
+                    TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your name';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 0, horizontal: 10),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade400)),
+                            border: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade400)),
+                            labelText: 'Name',
+                            prefixIcon: Icon(Icons.person),
+                            hintText: 'John Smith')),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
                       controller: _emailController,
                       validator: (String? value) {
                         bool emailValid =
                             RegExp(r'^[A-Za-z0-9._%+-]+@e.ntu.edu.sg$')
                                 .hasMatch(value!);
                         if (value.isEmpty) {
-                          return 'Please enter some text';
+                          return 'Please enter your email';
                         }
                         if (!emailValid && value.isNotEmpty) {
                           return 'Please use NTU Email';
@@ -189,72 +131,119 @@ class _SignupPageState extends State<SignupPage> {
                         return null;
                       },
                       decoration: InputDecoration(
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade400)),
+                          border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade400)),
+                          labelText: 'Email',
                           hintText: 'admin@e.ntu.edu.sg',
                           prefixIcon: Icon(Icons.email)),
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    height: 30,
-                    width: 300,
-                    child: TextField(
-                      decoration: InputDecoration(
-                          hintText: '9245XXXX', prefixIcon: Icon(Icons.phone)),
+                    SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    height: 30,
-                    width: 300,
-                    child: TextFormField(
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your mobile number';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade400)),
+                          border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade400)),
+                          hintText: '9245XXXX',
+                          labelText: 'Mobile No',
+                          prefixIcon: Icon(Icons.phone)),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
                       controller: _passwordController,
                       validator: (String? value) {
                         if (value!.isEmpty) {
-                          return 'Please enter some text';
+                          return 'Please enter your password';
                         }
                         return null;
                       },
                       decoration: InputDecoration(
                           hintText: '*******',
+                          labelText: 'Password',
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade400)),
+                          border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey.shade400)),
                           prefixIcon: Icon(Icons.vpn_key_rounded)),
                       obscureText: true,
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  ButtonTheme(
-                    minWidth: 300,
-                    child: RaisedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          await _register();
-                        }
-                      },
-                      color: Colors.blue,
-                      child: Text(
-                        'Login',
-                        style: TextStyle(color: Colors.white),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: [
+                        // for checkbox validation link, check https://www.kindacode.com/article/flutter-i-agree-to-terms-checkbox-example/
+                        Checkbox(
+                            value: agree,
+                            onChanged: (value) {
+                              setState(() {
+                                agree = value ?? false;
+                              });
+                            }),
+                        Container(
+                            width: 250,
+                            child: Text(
+                                'By clicking this button, you are agreeing to our Terms and Conditions'))
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    ButtonTheme(
+                      minWidth: 300,
+                      child: RaisedButton(
+                        onPressed: agree
+                            ? () async {
+                                if (_formKey.currentState!.validate()) {
+                                  await _register();
+                                }
+                              }
+                            : null,
+                        color: Colors.blue,
+                        child: Text(
+                          'Login',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
                       ),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
                     ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    child: Text(
-                      _success == null
-                          ? ''
-                          : (_success!
-                              ? 'Successfully registered $_userEmail'
-                              : 'Registration failed'),
-                    ),
-                  )
-                ]),
+                    Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        _success == null
+                            ? ''
+                            : (_success!
+                                ? 'Successfully registered $_userEmail'
+                                : 'Registration failed'),
+                      ),
+                    )
+                  ]),
+            ),
           ),
         ),
       ),
