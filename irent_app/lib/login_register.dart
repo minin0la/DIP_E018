@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'main.dart';
+import 'login.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -51,7 +52,13 @@ class LoginScreen extends StatelessWidget {
                     ButtonTheme(
                       minWidth: 300,
                       child: RaisedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ));
+                        },
                         color: Colors.white,
                         child: Text('Login'),
                         shape: RoundedRectangleBorder(

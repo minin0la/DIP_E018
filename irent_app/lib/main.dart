@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'signup_page.dart';
 import 'login_register.dart';
+import 'homepage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -204,7 +205,7 @@ class _SignupPageState extends State<SignupPage> {
                                 agree = value ?? false;
                               });
                             }),
-                        Container(
+                        SizedBox(
                             width: 250,
                             child: Text(
                                 'By clicking this button, you are agreeing to our Terms and Conditions'))
@@ -220,6 +221,13 @@ class _SignupPageState extends State<SignupPage> {
                             ? () async {
                                 if (_formKey.currentState!.validate()) {
                                   await _register();
+                                  if (_success = true) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const HomePage()));
+                                  }
                                 }
                               }
                             : null,
