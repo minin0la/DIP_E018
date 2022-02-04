@@ -1,11 +1,11 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'main.dart';
 import 'login.dart';
+import 'signup_page.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class LoginRegisterScreen extends StatelessWidget {
+  const LoginRegisterScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
