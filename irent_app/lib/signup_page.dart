@@ -191,12 +191,14 @@ class _SignupPageState extends State<SignupPage> {
                             ? () async {
                                 if (_formKey.currentState!.validate()) {
                                   await _register();
-                                  await users.add({
-                                    'email': _emailController.text,
-                                    'name': _nameController.text,
-                                    'phone_number':
-                                        int.parse(_phoneNumberController.text),
-                                  }).then((value) => print('User added!'));
+                                  // await users
+                                  //     .doc()({
+                                  //       'email': _emailController.text,
+                                  //       'name': _nameController.text,
+                                  //       'phone_number': int.parse(
+                                  //           _phoneNumberController.text),
+                                  //     })
+                                  //     .then((value) => print('User added!'));
                                   if (_success = true) {
                                     Navigator.push(
                                         context,
@@ -248,10 +250,18 @@ class _SignupPageState extends State<SignupPage> {
     ))
         .user;
     if (user != null) {
-      setState(() {
-        _success = true;
-        _userEmail = user.email ?? '';
-      });
+      await users
+          .doc(user.uid)
+          .set({
+            'email': _emailController.text,
+            'name': _nameController.text,
+            'phone_number': int.parse(_phoneNumberController.text),
+          })
+          .then((value) => setState(() {
+                _success = true;
+                _userEmail = user.email ?? '';
+              }))
+          .catchError((error) => _success = false);
     } else {
       _success = false;
     }

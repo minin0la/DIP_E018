@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'login_register.dart';
+import 'database.dart';
 
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
@@ -19,25 +21,27 @@ class NavigationDrawer extends StatelessWidget {
           margin: EdgeInsets.only(left: 30, top: 30),
           child: Container(
             height: 200,
-            child: DrawerHeader(
-              child: Column(
-                // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  CircleAvatar(
-                    radius: 40,
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Text(
-                    'Stephanie',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                    ),
-                  )
-                ],
-              ),
+            child: FutureBuilder(
+              future: getUserInfo(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                if (snapshot.hasData && snapshot.data!.exists) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    Map<String, dynamic> data =
+                        snapshot.data!.data() as Map<String, dynamic>;
+                    return Center(
+                        // here only return is missing
+                        child: Text(data['name']));
+                  }
+                } else if (snapshot.hasError) {
+                  return Text('no data');
+                }
+                return CircularProgressIndicator();
+              },
             ),
           ),
         ),
