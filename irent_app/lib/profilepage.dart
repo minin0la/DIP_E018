@@ -2,7 +2,10 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
+import 'database.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -40,10 +43,32 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Column(
                     // ignore: prefer_const_literals_to_create_immutables
                     children: [
-                      Text(
-                        'Stephanie',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 28),
+                      FutureBuilder(
+                        future: getUserInfo(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          if (snapshot.hasData && snapshot.data!.exists) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else {
+                              Map<String, dynamic> data =
+                                  snapshot.data!.data() as Map<String, dynamic>;
+                              return Center(
+                                  // here only return is missing
+                                  child: Text(
+                                data['name'],
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 28),
+                              ));
+                            }
+                          } else if (snapshot.hasError) {
+                            return Text('no data');
+                          }
+                          return CircularProgressIndicator();
+                        },
                       ),
                       Text(
                         currentUser!,
