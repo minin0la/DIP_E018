@@ -1,8 +1,9 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use
-
+//firebase firestore https://www.youtube.com/watch?v=1_xKjeQXa3A
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'homepage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -14,9 +15,13 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   bool agree = false;
   bool? _success;
@@ -59,6 +64,7 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     SizedBox(height: 20),
                     TextFormField(
+                        controller: _nameController,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your name';
@@ -111,6 +117,7 @@ class _SignupPageState extends State<SignupPage> {
                       height: 20,
                     ),
                     TextFormField(
+                      controller: _phoneNumberController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your mobile number';
@@ -184,6 +191,12 @@ class _SignupPageState extends State<SignupPage> {
                             ? () async {
                                 if (_formKey.currentState!.validate()) {
                                   await _register();
+                                  await users.add({
+                                    'email': _emailController.text,
+                                    'name': _nameController.text,
+                                    'phone_number':
+                                        int.parse(_phoneNumberController.text),
+                                  }).then((value) => print('User added!'));
                                   if (_success = true) {
                                     Navigator.push(
                                         context,
