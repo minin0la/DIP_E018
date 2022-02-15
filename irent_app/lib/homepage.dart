@@ -1,13 +1,10 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers
 // https://api.flutter.dev/flutter/material/BottomNavigationBar-class.html for Bottom Navigation Bar
 // https://www.youtube.com/watch?v=xoKqQjSDZ60&t=125s for video on bottomnavigationbar implementation
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:irent_app/login_register.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'database.dart';
 import 'drawer.dart';
 import 'profilepage.dart';
+import 'homeview.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,11 +16,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
   final screens = [
-    Center(
-        child: Text(
-      'Home',
-      style: TextStyle(fontSize: 60),
-    )),
+    HomeView(),
     Center(
       child: Text(
         'Bookings',
