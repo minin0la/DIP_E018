@@ -73,11 +73,31 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
+  fonts:
+    - family: SF_Pro_Rounded
+      fonts:
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Black.otf
+          weight: 900
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Heavy.otf
+          weight: 800
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Bold.otf
+          weight: 700
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Semibold.otf
+          weight: 600
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Medium.otf
+          weight: 500
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Regular.otf
+          weight: 400
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Light.otf
+          weight: 300
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Thin.otf
+          weight: 200
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Ultralight.otf
+          weight: 100
+
+    - family: AppIcons
+      fonts:
+        - asset: fonts/AppIcons/AppIcons.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:

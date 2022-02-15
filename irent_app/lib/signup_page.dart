@@ -43,11 +43,17 @@ class _SignupPageState extends State<SignupPage> {
               child: Column(crossAxisAlignment: CrossAxisAlignment.center,
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
+                    SizedBox(
+                      height: 10,
+                    ),
                     Text(
                       'Create Account',
                       textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 27,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'SF_Pro_Rounded',
+                          color: Color(0xFF001D4A)),
                     ),
                     SizedBox(
                       height: 10,
@@ -55,7 +61,10 @@ class _SignupPageState extends State<SignupPage> {
                     Text(
                       'Please create an account with your student email\n (e.g. user@e.ntu.edu.sg)',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.w400),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'SF_Pro_Rounded',
+                          color: Color(0xFF001D4A)),
                     ),
                     SizedBox(height: 20),
                     TextFormField(
@@ -68,17 +77,17 @@ class _SignupPageState extends State<SignupPage> {
                         decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 10),
-                            enabledBorder: OutlineInputBorder(
+                            enabledBorder: UnderlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Colors.grey.shade400)),
-                            border: OutlineInputBorder(
+                            border: UnderlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Colors.grey.shade400)),
                             labelText: 'Name',
                             prefixIcon: Icon(Icons.person),
                             hintText: 'John Smith')),
                     SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     TextFormField(
                       controller: _emailController,
@@ -97,10 +106,10 @@ class _SignupPageState extends State<SignupPage> {
                       decoration: InputDecoration(
                           contentPadding:
                               EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                          enabledBorder: OutlineInputBorder(
+                          enabledBorder: UnderlineInputBorder(
                               borderSide:
                                   BorderSide(color: Colors.grey.shade400)),
-                          border: OutlineInputBorder(
+                          border: UnderlineInputBorder(
                               borderSide:
                                   BorderSide(color: Colors.grey.shade400)),
                           labelText: 'Email',
@@ -108,7 +117,7 @@ class _SignupPageState extends State<SignupPage> {
                           prefixIcon: Icon(Icons.email)),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     TextFormField(
                       validator: (value) {
@@ -120,10 +129,10 @@ class _SignupPageState extends State<SignupPage> {
                       decoration: InputDecoration(
                           contentPadding:
                               EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                          enabledBorder: OutlineInputBorder(
+                          enabledBorder: UnderlineInputBorder(
                               borderSide:
                                   BorderSide(color: Colors.grey.shade400)),
-                          border: OutlineInputBorder(
+                          border: UnderlineInputBorder(
                               borderSide:
                                   BorderSide(color: Colors.grey.shade400)),
                           hintText: '9245XXXX',
@@ -131,7 +140,7 @@ class _SignupPageState extends State<SignupPage> {
                           prefixIcon: Icon(Icons.phone)),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     TextFormField(
                       controller: _passwordController,
@@ -146,10 +155,10 @@ class _SignupPageState extends State<SignupPage> {
                           labelText: 'Password',
                           contentPadding:
                               EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                          enabledBorder: OutlineInputBorder(
+                          enabledBorder: UnderlineInputBorder(
                               borderSide:
                                   BorderSide(color: Colors.grey.shade400)),
-                          border: OutlineInputBorder(
+                          border: UnderlineInputBorder(
                               borderSide:
                                   BorderSide(color: Colors.grey.shade400)),
                           prefixIcon: Icon(Icons.vpn_key_rounded)),
@@ -171,7 +180,9 @@ class _SignupPageState extends State<SignupPage> {
                         SizedBox(
                             width: 250,
                             child: Text(
-                                'By clicking this button, you are agreeing to our Terms and Conditions'))
+                              'By clicking this button, you are agreeing to our Terms and Conditions',
+                              style: TextStyle(color: Color(0xFF001D4A)),
+                            ))
                       ],
                     ),
                     SizedBox(
@@ -179,6 +190,7 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     ButtonTheme(
                       minWidth: 300,
+                      height: 45,
                       child: RaisedButton(
                         onPressed: agree
                             ? () async {
@@ -194,10 +206,10 @@ class _SignupPageState extends State<SignupPage> {
                                 }
                               }
                             : null,
-                        color: Colors.blue,
+                        color: Color(0xFFECA400),
                         child: Text(
                           'Login',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Color(0xFFFBFBFF)),
                         ),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)),
