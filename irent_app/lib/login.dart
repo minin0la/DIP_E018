@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:irent_app/switch_nav.dart';
+import 'package:irent_app/verification.dart';
 import 'homepage.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -19,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordField = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool? _success;
+  bool? _verified;
   String? _userEmail;
 
   @override
@@ -102,12 +104,18 @@ class _LoginPageState extends State<LoginPage> {
                             if (_formKey.currentState!.validate()) {
                               if (_formKey.currentState!.validate()) {
                                 await _signInWithEmailAndPassword();
-                                if (_success = true) {
+                                if (_success == true) {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               const SwitchNavBar()));
+                                } else if (_verified == false) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const VerificationPage()));
                                 }
                               }
                             }
@@ -150,14 +158,15 @@ class _LoginPageState extends State<LoginPage> {
     ))
         .user;
 
-    if (user != null) {
+    if (user != null && !user.emailVerified) {
       setState(() {
-        _success = true;
-        _userEmail = user.email;
+        _success = false;
+        _verified = false;
+        // _userEmail = user.email;
       });
     } else {
       setState(() {
-        _success = false;
+        _success = true;
       });
     }
   }

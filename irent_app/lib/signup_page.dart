@@ -2,6 +2,7 @@
 //firebase firestore https://www.youtube.com/watch?v=1_xKjeQXa3A
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:irent_app/verification.dart';
 import 'homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -210,7 +211,7 @@ class _SignupPageState extends State<SignupPage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                const HomePage()));
+                                                const VerificationPage()));
                                   }
                                 }
                               }
