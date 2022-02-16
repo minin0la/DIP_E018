@@ -1,13 +1,17 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:irent_app/app_icons.dart';
+import 'package:irent_app/database.dart';
 
 class AccountScreen extends StatelessWidget {
   final Color white = const Color(0xFFFBFBFF);
   final Color oxford = const Color(0xFF001D4A);
   final Color aliceblue = const Color(0xFF81A4CD);
   final Color marigold = const Color(0xFFECA400);
+  String? currentuser = FirebaseAuth.instance.currentUser?.email;
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +39,38 @@ class AccountScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
-                            "Stephanie",
-                            style: TextStyle(
-                              color: oxford,
-                              fontFamily: "SF_Pro_Rounded",
-                              fontWeight: FontWeight.w700,
-                              fontSize: 22.0,
-                            ),
+                          FutureBuilder(
+                            future: getUserInfo(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<DocumentSnapshot> snapshot) {
+                              if (snapshot.hasData && snapshot.data!.exists) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                } else {
+                                  Map<String, dynamic> data = snapshot.data!
+                                      .data() as Map<String, dynamic>;
+                                  return Center(
+                                      child: Text(
+                                    data['name'].toUpperCase(),
+                                    style: TextStyle(
+                                      color: oxford,
+                                      fontFamily: "SF_Pro_Rounded",
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 22.0,
+                                    ),
+                                  ));
+                                }
+                              } else if (snapshot.hasError) {
+                                return Text('no data');
+                              }
+                              return CircularProgressIndicator();
+                            },
                           ),
                           Text(
-                            "STEPH001@e.ntu.edu.sg",
+                            currentuser!,
                             style: TextStyle(
                               color: Color(0x99001D4A),
                               fontFamily: "SF_Pro_Rounded",
