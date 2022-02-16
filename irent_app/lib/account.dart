@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:irent_app/app_icons.dart';
 import 'package:irent_app/database.dart';
+import 'login_register.dart';
 
 class AccountScreen extends StatelessWidget {
   final Color white = const Color(0xFFFBFBFF);
@@ -350,7 +351,13 @@ class AccountScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(38.0),
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginRegisterScreen()));
+                },
                 padding: EdgeInsets.all(10.0),
                 color: marigold,
                 textColor: Colors.white,

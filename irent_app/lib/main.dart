@@ -32,7 +32,25 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         primaryColor: Color(0xFFFBFBFF),
       ),
-      home: SwitchNavBar(),
+      home: MainPage(),
     );
   }
+}
+
+class MainPage extends StatelessWidget {
+  const MainPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        body: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return SwitchNavBar();
+            } else {
+              return LoginRegisterScreen();
+            }
+          },
+        ),
+      );
 }
