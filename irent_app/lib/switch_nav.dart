@@ -50,7 +50,7 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
       'Basket',
       style: titleStyle,
     ),
-    AccountScreen(Colors.red),
+    AccountScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -74,7 +74,7 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
               child: GestureDetector(
                 onTap: () {},
                 child: Icon(
-                  AppIcons.notification,
+                  AppIcons.notifications,
                   size: 32,
                   color: Color(0xFF001D4A),
                 ),
