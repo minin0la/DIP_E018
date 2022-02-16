@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'uroc_items.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -30,7 +31,12 @@ class _HomeViewState extends State<HomeView> {
                   width: double.infinity,
                   height: 150,
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const UrocItemsList()));
+                    },
                     child: Card(
                       shape: RoundedRectangleBorder(
                           side: BorderSide(color: Colors.black),
