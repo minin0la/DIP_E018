@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:irent_app/switch_nav.dart';
 import 'homepage.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -106,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const HomePage()));
+                                              const SwitchNavBar()));
                                 }
                               }
                             }
