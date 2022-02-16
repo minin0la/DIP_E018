@@ -26,6 +26,7 @@ class _SignupPageState extends State<SignupPage> {
   bool agree = false;
   bool? _success;
   String _userEmail = '';
+  String _register_reason = '';
 
   @override
   bool value = false;
@@ -191,15 +192,8 @@ class _SignupPageState extends State<SignupPage> {
                             ? () async {
                                 if (_formKey.currentState!.validate()) {
                                   await _register();
-                                  // await users
-                                  //     .doc()({
-                                  //       'email': _emailController.text,
-                                  //       'name': _nameController.text,
-                                  //       'phone_number': int.parse(
-                                  //           _phoneNumberController.text),
-                                  //     })
-                                  //     .then((value) => print('User added!'));
-                                  if (_success = true) {
+
+                                  if (_success == true) {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -225,7 +219,7 @@ class _SignupPageState extends State<SignupPage> {
                             ? ''
                             : (_success!
                                 ? 'Successfully registered $_userEmail'
-                                : 'Registration failed'),
+                                : 'Registration failed ($_register_reason)'),
                       ),
                     )
                   ]),
@@ -244,26 +238,41 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Future<void> _register() async {
-    final User? user = (await _auth.createUserWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-    ))
-        .user;
-    if (user != null) {
-      await users
-          .doc(user.uid)
-          .set({
-            'email': _emailController.text,
-            'name': _nameController.text,
-            'phone_number': int.parse(_phoneNumberController.text),
-          })
-          .then((value) => setState(() {
-                _success = true;
-                _userEmail = user.email ?? '';
-              }))
-          .catchError((error) => _success = false);
-    } else {
-      _success = false;
+    try {
+      final User? user = (await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      ))
+          .user;
+      if (user != null && !user.emailVerified) {
+        await user.sendEmailVerification();
+        await users
+            .doc(user.uid)
+            .set({
+              'email': _emailController.text,
+              'name': _nameController.text,
+              'phone_number': int.parse(_phoneNumberController.text),
+            })
+            .then((value) => setState(() {
+                  _success = true;
+                  _userEmail = user.email ?? '';
+                }))
+            .catchError((error) => _success = false);
+      } else {
+        _success = false;
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        setState(() {
+          _success = false;
+          _register_reason = 'The account already exists for that email.';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _success = false;
+        _register_reason = e.toString();
+      });
     }
   }
 }
