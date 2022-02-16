@@ -26,9 +26,9 @@ class _LoginPageState extends State<LoginPage> {
       resizeToAvoidBottomInset: true,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: IconThemeData(color: Color(0xFFFBFBFF)),
         elevation: 0,
-        backgroundColor: Colors.grey.shade400,
+        backgroundColor: Color(0xFF81A4CD),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -36,15 +36,20 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               Container(
                 width: double.infinity,
-                height: MediaQuery.of(context).size.width / 2,
-                color: Colors.grey.shade400,
+                height: MediaQuery.of(context).size.width * 0.8,
+                color: Color(0xFF81A4CD),
                 child: Container(
-                    margin: EdgeInsets.only(left: 30, top: 30),
-                    child: Text(
-                      'Sign In',
-                      style:
-                          TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-                    )),
+                  margin: EdgeInsets.only(left: 30, top: 0),
+                  child: Text(
+                    'Hello,\nStephanie',
+                    style: TextStyle(
+                      fontSize: 35,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'SF_Pro_Rounded',
+                      color: Color(0xFFFBFBFF),
+                    ),
+                  ),
+                ),
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 50, vertical: 40),
@@ -86,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                                 FloatingLabelBehavior.always),
                       ),
                       SizedBox(
-                        height: 40,
+                        height: 100,
                       ),
                       SizedBox(
                         width: double.infinity,
@@ -108,8 +113,9 @@ class _LoginPageState extends State<LoginPage> {
                           },
                           child: Text('Login'),
                           style: ElevatedButton.styleFrom(
+                              primary: Color(0xFFECA400),
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20))),
+                                  borderRadius: BorderRadius.circular(38))),
                         ),
                       ),
                       Container(
