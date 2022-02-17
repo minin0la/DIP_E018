@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:irent_app/account.dart';
 import 'dart:ui';
 import 'app_icons.dart';
-
+import 'datetimetest.dart';
 import 'package:irent_app/app_icons.dart';
 import 'account.dart';
 
@@ -120,6 +120,13 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
           selectedItemColor: Color(0xFFECA400),
           onTap: _onItemTapped,
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => DateTimeTest()));
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
