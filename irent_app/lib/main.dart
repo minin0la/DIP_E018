@@ -9,7 +9,7 @@ import 'package:irent_app/login.dart';
 import 'package:irent_app/login_register.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:irent_app/not_verified.dart';
 import 'package:irent_app/switch_nav.dart';
 
 void main() async {
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         primaryColor: Color(0xFFFBFBFF),
       ),
-      home: SwitchNavBar(),
+      home: NotVerified(),
     );
   }
 }
