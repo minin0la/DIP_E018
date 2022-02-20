@@ -25,7 +25,7 @@ class _DateTimeTestState extends State<DateTimeTest> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Book Item'),
+          title: Text('DateTime Tester'),
           centerTitle: true,
         ),
         body: Container(

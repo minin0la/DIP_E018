@@ -2,11 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:irent_app/account.dart';
+import 'package:irent_app/qrrtest.dart';
 import 'dart:ui';
 import 'app_icons.dart';
 import 'datetimetest.dart';
 import 'package:irent_app/app_icons.dart';
 import 'account.dart';
+import 'qrrtest.dart';
 
 class SwitchNavBar extends StatefulWidget {
   const SwitchNavBar({Key? key}) : super(key: key);
@@ -121,12 +123,27 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
           onTap: _onItemTapped,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => DateTimeTest()));
-        },
-        child: Icon(Icons.add),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          FloatingActionButton(
+            heroTag: 'datetime_tester',
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => DateTimeTest()));
+            },
+            child: Icon(Icons.add),
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => QrTest()));
+            },
+            tooltip: 'QR Testing',
+            heroTag: 'qr_tester',
+            child: Icon(Icons.add),
+          )
+        ],
       ),
     );
   }
