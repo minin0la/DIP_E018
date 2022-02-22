@@ -22,7 +22,7 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
       fontSize: 25, color: Color(0xFF001D4A), fontWeight: FontWeight.w500);
   static const List<Widget> _titleBar = <Widget>[
     Text(
-      'Home',
+      'iRent',
       style: titleStyle,
     ),
     Text(
