@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:irent_app/app_icons.dart';
+import 'package:irent_app/user_basket.dart';
 
 class user_item_page extends StatefulWidget {
   const user_item_page({Key? key}) : super(key: key);
@@ -481,7 +482,13 @@ class _user_item_pageState extends State<user_item_page> {
                                     fontWeight: FontWeight.normal,
                                     height: 1),
                               )),
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => user_basket()),
+                            );
+                          },
                         ),
                       ],
                     ),
