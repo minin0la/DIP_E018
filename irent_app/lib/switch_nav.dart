@@ -8,6 +8,8 @@ import 'app_icons.dart';
 import 'datetimetest.dart';
 import 'package:irent_app/app_icons.dart';
 import 'package:irent_app/user_home.dart';
+import 'package:irent_app/user_bookings.dart';
+import 'package:irent_app/user_basket.dart';
 import 'account.dart';
 import 'qrrtest.dart';
 
@@ -28,11 +30,11 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
       style: titleStyle,
     ),
     Text(
-      'Bookings',
+      'UROC',
       style: titleStyle,
     ),
     Text(
-      'Basket',
+      'UROC',
       style: titleStyle,
     ),
     Text(
@@ -42,14 +44,8 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
   ];
   final List<Widget> _bodyContents = <Widget>[
     user_home(),
-    Text(
-      'Bookings',
-      style: titleStyle,
-    ),
-    Text(
-      'Basket',
-      style: titleStyle,
-    ),
+    user_bookings(),
+    user_basket(),
     AccountScreen(),
   ];
 
