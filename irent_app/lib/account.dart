@@ -116,31 +116,44 @@ class AccountScreen extends StatelessWidget {
                           child: Container(
                             decoration: BoxDecoration(
                               border: Border(
-                                bottom:
-                                    BorderSide(width: 1.0, color: aliceblue),
+                                bottom: BorderSide(
+                                    width: 1.0, color: Color(0x8081A4CD)),
                               ),
                             ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  "My Profile",
-                                  style: TextStyle(
-                                    color: oxford,
-                                    fontFamily: "SF_Pro_Rounded",
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16.0,
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                              onTap: () {},
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      "My Profile",
+                                      style: TextStyle(
+                                        color: oxford,
+                                        fontFamily: "SF_Pro_Rounded",
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 220),
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: 20,
-                                    color: oxford,
+                                  Expanded(
+                                    flex: 3,
+                                    child: SizedBox(),
                                   ),
-                                )
-                              ],
+                                  Expanded(
+                                    flex: 1,
+                                    child: GestureDetector(
+                                      onTap: () {},
+                                      child: Icon(
+                                        Icons.arrow_forward_ios,
+                                        size: 20,
+                                        color: oxford,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -149,31 +162,44 @@ class AccountScreen extends StatelessWidget {
                           child: Container(
                             decoration: BoxDecoration(
                               border: Border(
-                                bottom:
-                                    BorderSide(width: 1.0, color: aliceblue),
+                                bottom: BorderSide(
+                                    width: 1.0, color: Color(0x8081A4CD)),
                               ),
                             ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  "Change Password",
-                                  style: TextStyle(
-                                    color: oxford,
-                                    fontFamily: "SF_Pro_Rounded",
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16.0,
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                              onTap: () {},
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      "Change Password",
+                                      style: TextStyle(
+                                        color: oxford,
+                                        fontFamily: "SF_Pro_Rounded",
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 160),
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: 20,
-                                    color: oxford,
+                                  Expanded(
+                                    flex: 3,
+                                    child: SizedBox(),
                                   ),
-                                )
-                              ],
+                                  Expanded(
+                                    flex: 1,
+                                    child: GestureDetector(
+                                      onTap: () {},
+                                      child: Icon(
+                                        Icons.arrow_forward_ios,
+                                        size: 20,
+                                        color: oxford,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -182,31 +208,44 @@ class AccountScreen extends StatelessWidget {
                           child: Container(
                             decoration: BoxDecoration(
                               border: Border(
-                                bottom:
-                                    BorderSide(width: 1.0, color: aliceblue),
+                                bottom: BorderSide(
+                                    width: 1.0, color: Color(0x8081A4CD)),
                               ),
                             ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  "History",
-                                  style: TextStyle(
-                                    color: oxford,
-                                    fontFamily: "SF_Pro_Rounded",
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16.0,
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                              onTap: () {},
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      "History",
+                                      style: TextStyle(
+                                        color: oxford,
+                                        fontFamily: "SF_Pro_Rounded",
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: 235),
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: 20,
-                                    color: oxford,
+                                  Expanded(
+                                    flex: 3,
+                                    child: SizedBox(),
                                   ),
-                                )
-                              ],
+                                  Expanded(
+                                    flex: 1,
+                                    child: GestureDetector(
+                                      onTap: () {},
+                                      child: Icon(
+                                        Icons.arrow_forward_ios,
+                                        size: 20,
+                                        color: oxford,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         )
@@ -244,31 +283,44 @@ class AccountScreen extends StatelessWidget {
                             child: Container(
                               decoration: BoxDecoration(
                                 border: Border(
-                                  bottom:
-                                      BorderSide(width: 1.0, color: aliceblue),
+                                  bottom: BorderSide(
+                                      width: 1.0, color: Color(0x8081A4CD)),
                                 ),
                               ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "About Us",
-                                    style: TextStyle(
-                                      color: oxford,
-                                      fontFamily: "SF_Pro_Rounded",
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16.0,
+                              child: GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () {},
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 3,
+                                      child: Text(
+                                        "About Us",
+                                        style: TextStyle(
+                                          color: oxford,
+                                          fontFamily: "SF_Pro_Rounded",
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: 225),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 20,
-                                      color: oxford,
+                                    Expanded(
+                                      flex: 3,
+                                      child: SizedBox(),
                                     ),
-                                  )
-                                ],
+                                    Expanded(
+                                      flex: 1,
+                                      child: GestureDetector(
+                                        onTap: () {},
+                                        child: Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 20,
+                                          color: oxford,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -277,72 +329,50 @@ class AccountScreen extends StatelessWidget {
                             child: Container(
                               decoration: BoxDecoration(
                                 border: Border(
-                                  bottom:
-                                      BorderSide(width: 1.0, color: aliceblue),
+                                  bottom: BorderSide(
+                                      width: 1.0, color: Color(0x8081A4CD)),
                                 ),
                               ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "Feedback",
-                                    style: TextStyle(
-                                      color: oxford,
-                                      fontFamily: "SF_Pro_Rounded",
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16.0,
+                              child: GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () {},
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 3,
+                                      child: Text(
+                                        "Feedback",
+                                        style: TextStyle(
+                                          color: oxford,
+                                          fontFamily: "SF_Pro_Rounded",
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: 220),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 20,
-                                      color: oxford,
+                                    Expanded(
+                                      flex: 3,
+                                      child: SizedBox(),
                                     ),
-                                  )
-                                ],
+                                    Expanded(
+                                      flex: 1,
+                                      child: GestureDetector(
+                                        onTap: () {},
+                                        child: Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 20,
+                                          color: oxford,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom:
-                                      BorderSide(width: 1.0, color: aliceblue),
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "My Profile",
-                                    style: TextStyle(
-                                      color: oxford,
-                                      fontFamily: "SF_Pro_Rounded",
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16.0,
-                                    ),
-                                  ),
-                                  SizedBox(width: 220),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 20,
-                                      color: oxford,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          )
+                          Expanded(flex: 1, child: SizedBox()),
                         ]),
                   )),
-            ),
-            SizedBox(
-              height: 25,
             ),
             SizedBox(
               height: 50,
@@ -360,8 +390,19 @@ class AccountScreen extends StatelessWidget {
                 },
                 padding: EdgeInsets.all(10.0),
                 color: marigold,
-                textColor: Colors.white,
-                child: Text("Logout", style: TextStyle(fontSize: 15)),
+                textColor: white,
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Padding(
+                    padding: EdgeInsets.all(5),
+                    child: Icon(Icons.logout),
+                  ),
+                  Text(
+                    "Logout",
+                    style:
+                        TextStyle(fontSize: 15, fontFamily: "SF_Pro_Rounded"),
+                  ),
+                ]),
               ),
             ),
           ],

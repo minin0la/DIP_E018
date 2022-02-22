@@ -7,6 +7,7 @@ import 'dart:ui';
 import 'app_icons.dart';
 import 'datetimetest.dart';
 import 'package:irent_app/app_icons.dart';
+import 'package:irent_app/user_home.dart';
 import 'account.dart';
 import 'qrrtest.dart';
 
@@ -23,7 +24,7 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
       fontSize: 25, color: Color(0xFF001D4A), fontWeight: FontWeight.w500);
   static const List<Widget> _titleBar = <Widget>[
     Text(
-      'Home',
+      'iRent',
       style: titleStyle,
     ),
     Text(
@@ -40,10 +41,7 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
     ),
   ];
   final List<Widget> _bodyContents = <Widget>[
-    Text(
-      'Home',
-      style: titleStyle,
-    ),
+    user_home(),
     Text(
       'Bookings',
       style: titleStyle,
