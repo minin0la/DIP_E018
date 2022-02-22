@@ -14,32 +14,6 @@ class _user_homeState extends State<user_home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   centerTitle: true,
-      //   title: Text(
-      //     "iRent",
-      //     textAlign: TextAlign.center,
-      //     style: TextStyle(
-      //         color: Color.fromRGBO(0, 29, 74, 1),
-      //         fontFamily: 'SF Pro Rounded',
-      //         fontSize: 30,
-      //         fontWeight: FontWeight.normal,
-      //         height: 1),
-      //   ),
-      //   actions: <Widget>[
-      //     IconButton(
-      //       icon: Icon(
-      //         Icons.notifications_outlined,
-      //         color: Colors.black,
-      //       ),
-      //       onPressed: () {
-      //         // do something
-      //       },
-      //     )
-      //   ],
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      // ),
       body: Column(
         children: [
           Container(
