@@ -78,7 +78,8 @@ class _user_store_urocState extends State<user_store_uroc> {
                         //color: Colors.blue,
                         child: Text.rich(TextSpan(children: [
                           WidgetSpan(
-                              child: Icon(Icons.wallet_giftcard_outlined)),
+                              child: Icon(Icons
+                                  .wallet_giftcard_outlined)), //change the wallet icon
                           TextSpan(
                               text: 'Wallet Balance',
                               style: TextStyle(
