@@ -35,6 +35,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^1.11.0
   firebase_auth: ^3.3.5
+  cloud_firestore: ^3.1.7
+  intl: ^0.17.0
+  qr_flutter: ^4.0.0
 
 dev_dependencies:
   flutter_test:
@@ -58,9 +61,26 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - images/board-game.png
+    - images/borrow.png
+    - images/buying.png
+    - images/checked.png
+    - images/coins.jpeg
+    - images/console.png
+    - images/dice.png
+    - images/embarrassed.png
+    - images/game-boy.png
+    - images/game-console.png
+    - images/irent-logo.png
+    - images/no.png
+    - images/party-popper.png
+    - images/profile.png
+    - images/ps-game-console.png
+    - images/tool-box.png
+    - images/Image_ciss.png
+    - images/Image_uroc.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -73,11 +93,31 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
+  fonts:
+    - family: SF_Pro_Rounded
+      fonts:
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Black.otf
+          weight: 900
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Heavy.otf
+          weight: 800
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Bold.otf
+          weight: 700
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Semibold.otf
+          weight: 600
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Medium.otf
+          weight: 500
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Regular.otf
+          weight: 400
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Light.otf
+          weight: 300
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Thin.otf
+          weight: 200
+        - asset: fonts/sf_pro_rounded/SF-Pro-Rounded-Ultralight.otf
+          weight: 100
+
+    - family: AppIcons
+      fonts:
+        - asset: fonts/AppIcons/AppIcons.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:

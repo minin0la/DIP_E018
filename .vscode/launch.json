@@ -1,0 +1,34 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "irent_app",
+            "cwd": "irent_app",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "irent_app (profile mode)",
+            "cwd": "irent_app",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "irent_app_experimential",
+            "cwd": "irent_app_experimential",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "irent_app_experimential (profile mode)",
+            "cwd": "irent_app_experimential",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        }
+    ]
+}
