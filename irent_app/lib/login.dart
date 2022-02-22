@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:irent_app/not_verified.dart';
 import 'package:irent_app/switch_nav.dart';
 import 'package:irent_app/verification.dart';
 import 'homepage.dart';
@@ -114,8 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              const VerificationPage()));
+                                          builder: (context) => NotVerified()));
                                 }
                               }
                             }

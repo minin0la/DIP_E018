@@ -7,7 +7,6 @@ import 'package:irent_app/switch_nav.dart';
 
 class VerificationPage extends StatefulWidget {
   const VerificationPage({Key? key}) : super(key: key);
-
   @override
   _VerificationPageState createState() => _VerificationPageState();
 }
