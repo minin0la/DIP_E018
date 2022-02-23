@@ -25,7 +25,6 @@ Timestamp bookingEndDate = Timestamp.fromDate(end);
 class _DateTimeTestState extends State<DateTimeTest> {
   DocumentReference users =
       FirebaseFirestore.instance.collection('users').doc(uid);
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -64,6 +63,12 @@ class _DateTimeTestState extends State<DateTimeTest> {
               SizedBox(
                 height: 20,
               ),
+              Container(
+                  width: 300,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: Text('time'),
+                  )),
               Container(
                 width: 200,
                 child: ElevatedButton(
