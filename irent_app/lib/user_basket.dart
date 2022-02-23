@@ -209,7 +209,11 @@ class _user_basketState extends State<user_basket> {
                                                         0, 29, 74, 1),
                                                     fontFamily:
                                                         'SF Pro Rounded',
+<<<<<<< Updated upstream
                                                     fontSize: 10,
+=======
+                                                    fontSize: 9,
+>>>>>>> Stashed changes
                                                     letterSpacing: 0,
                                                     fontWeight:
                                                         FontWeight.w400)),
@@ -276,7 +280,11 @@ class _user_basketState extends State<user_basket> {
                                                         0, 29, 74, 1),
                                                     fontFamily:
                                                         'SF Pro Rounded',
+<<<<<<< Updated upstream
                                                     fontSize: 10,
+=======
+                                                    fontSize: 9,
+>>>>>>> Stashed changes
                                                     letterSpacing: 0,
                                                     fontWeight:
                                                         FontWeight.w400)),
@@ -312,8 +320,12 @@ class _user_basketState extends State<user_basket> {
                                                   Color.fromRGBO(0, 29, 74, 1),
                                               fontFamily: 'SF Pro Rounded',
                                               fontSize: 12,
+<<<<<<< Updated upstream
                                               letterSpacing:
                                                   0 /*percentages not used in flutter. defaulting to zero*/,
+=======
+                                              letterSpacing: 0,
+>>>>>>> Stashed changes
                                               fontWeight: FontWeight.normal,
                                               height: 1),
                                         )),
@@ -616,7 +628,11 @@ class _user_basketState extends State<user_basket> {
                                                         0, 29, 74, 1),
                                                     fontFamily:
                                                         'SF Pro Rounded',
+<<<<<<< Updated upstream
                                                     fontSize: 10,
+=======
+                                                    fontSize: 9,
+>>>>>>> Stashed changes
                                                     letterSpacing: 0,
                                                     fontWeight:
                                                         FontWeight.w400)),
@@ -683,7 +699,11 @@ class _user_basketState extends State<user_basket> {
                                                         0, 29, 74, 1),
                                                     fontFamily:
                                                         'SF Pro Rounded',
+<<<<<<< Updated upstream
                                                     fontSize: 10,
+=======
+                                                    fontSize: 9,
+>>>>>>> Stashed changes
                                                     letterSpacing: 0,
                                                     fontWeight:
                                                         FontWeight.w400)),
