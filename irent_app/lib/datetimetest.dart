@@ -1,8 +1,8 @@
-import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:async/async.dart';
-import 'package:flutter/foundation.dart';
+import 'database.dart';
 
 class DateTimeTest extends StatefulWidget {
   const DateTimeTest({Key? key}) : super(key: key);
@@ -11,17 +11,23 @@ class DateTimeTest extends StatefulWidget {
   _DateTimeTestState createState() => _DateTimeTestState();
 }
 
+String? uid = FirebaseAuth.instance.currentUser?.uid;
+DateTimeRange dateRange = DateTimeRange(
+  start: DateTime.now(),
+  end: DateTime.now(),
+);
+final start = dateRange.start;
+final end = dateRange.end;
+final difference = dateRange.duration;
+Timestamp bookingStartDate = Timestamp.fromDate(start);
+Timestamp bookingEndDate = Timestamp.fromDate(end);
+
 class _DateTimeTestState extends State<DateTimeTest> {
-  DateTimeRange dateRange = DateTimeRange(
-    start: DateTime.now(),
-    end: DateTime.now(),
-  );
+  DocumentReference users =
+      FirebaseFirestore.instance.collection('users').doc(uid);
 
   @override
   Widget build(BuildContext context) {
-    final start = dateRange.start;
-    final end = dateRange.end;
-    final difference = dateRange.duration;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -54,12 +60,36 @@ class _DateTimeTestState extends State<DateTimeTest> {
               SizedBox(
                 height: 10,
               ),
-              Text('Duration: ${difference.inDays} days')
+              Text('Duration: ${difference.inDays} days'),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                width: 200,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20))),
+                  onPressed: () async {
+                    await setBookingDate();
+                  },
+                  child: Text('Book Now'),
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> setBookingDate() async {
+    try {
+      users.update({'startdate': bookingStartDate, 'endDate': bookingEndDate});
+    } catch (e) {
+      print('an error has occured!');
+    }
   }
 
   Future pickDateRange() async {
