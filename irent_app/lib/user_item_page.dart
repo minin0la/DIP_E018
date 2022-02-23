@@ -392,11 +392,13 @@ class _user_item_pageState extends State<user_item_page> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               FloatingActionButton(
+                  heroTag: "btn1",
                   backgroundColor: Color.fromRGBO(219, 228, 238, 1),
                   child: Icon(Icons.add, color: Color.fromRGBO(0, 29, 74, 1)),
                   onPressed: _increamentCount),
               Text('${_count}'),
               FloatingActionButton(
+                heroTag: "btn2",
                 backgroundColor: Color.fromRGBO(219, 228, 238, 1),
                 child: Icon(Icons.remove, color: Color.fromRGBO(0, 29, 74, 1)),
                 onPressed: _decreamentCount,

@@ -81,11 +81,6 @@ flutter:
     - images/profile.png
     - images/ps-game-console.png
     - images/tool-box.png
-<<<<<<< Updated upstream
-    - images/Image_ciss.png
-    - images/Image_uroc.png
-
-=======
     - images/Image_uroc.png
     - images/Image_ciss.png
     - images/Image_fifa22.jpeg
@@ -93,7 +88,6 @@ flutter:
     - images/Image_overcooked.jpg
     - images/Image_supermario.jfif
     - images/Image_mariokartdeluxe.jpg
->>>>>>> Stashed changes
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
