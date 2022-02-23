@@ -83,7 +83,11 @@ flutter:
     - images/tool-box.png
     - images/Image_ciss.png
     - images/Image_uroc.png
-
+    - images/Image_overcooked.jpg
+    - images/Image_fifa22.jpeg
+    - images/Image_madden18.jpg
+    - images/Image_supermario.jfif
+    - images/Image_mariokartdeluxe.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
