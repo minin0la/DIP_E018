@@ -2,10 +2,12 @@
 //firebase firestore https://www.youtube.com/watch?v=1_xKjeQXa3A
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:irent_app/app_icons.dart';
 import 'package:irent_app/not_verified.dart';
 import 'package:irent_app/verification.dart';
 import 'homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:drop_shadow_image/drop_shadow_image.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -17,6 +19,16 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  final Color white = const Color(0xFFFBFBFF);
+  final Color oxford = const Color(0xFF001D4A);
+  final Color indigo = const Color(0xFF27476E);
+  final Color aliceblue = const Color(0x8081A4CD);
+  final Color marigold = const Color(0xFFECA400);
+  final TextStyle labels = TextStyle(
+      color: Color(0x80001D4A), fontFamily: 'SF_Pro_Rounded', fontSize: 16);
+  final TextStyle hints = TextStyle(
+      color: Color(0x80001D4A), fontFamily: 'SF_Pro_Rounded', fontSize: 15);
+
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   final TextEditingController _emailController = TextEditingController();
@@ -35,10 +47,11 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: white,
       resizeToAvoidBottomInset: true,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: IconThemeData(color: oxford),
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
@@ -52,6 +65,20 @@ class _SignupPageState extends State<SignupPage> {
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
                     SizedBox(
+                      height: 25,
+                    ),
+                    Center(
+                      child: DropShadowImage(
+                        image: Image.asset(
+                          'images/irent-logo.png',
+                          width: MediaQuery.of(context).size.width * 0.15,
+                        ),
+                        borderRadius: 10,
+                        offset: Offset(0, 5),
+                        blurRadius: 10,
+                      ),
+                    ),
+                    SizedBox(
                       height: 10,
                     ),
                     Text(
@@ -61,7 +88,7 @@ class _SignupPageState extends State<SignupPage> {
                           fontSize: 27,
                           fontWeight: FontWeight.w600,
                           fontFamily: 'SF_Pro_Rounded',
-                          color: Color(0xFF001D4A)),
+                          color: oxford),
                     ),
                     SizedBox(
                       height: 10,
@@ -72,9 +99,10 @@ class _SignupPageState extends State<SignupPage> {
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontFamily: 'SF_Pro_Rounded',
-                          color: Color(0xFF001D4A)),
+                          color: oxford,
+                          fontSize: 15),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 30),
                     TextFormField(
                         controller: _nameController,
                         validator: (value) {
@@ -87,13 +115,16 @@ class _SignupPageState extends State<SignupPage> {
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 10),
                             enabledBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.grey.shade400)),
-                            border: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.grey.shade400)),
+                                borderSide: BorderSide(color: aliceblue)),
+                            focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: aliceblue)),
                             labelText: 'Name',
-                            prefixIcon: Icon(Icons.person),
+                            labelStyle: labels,
+                            hintStyle: hints,
+                            prefixIcon: Icon(
+                              AppIcons.person,
+                              color: Color(0x80001D4A),
+                            ),
                             hintText: 'John Smith')),
                     SizedBox(
                       height: 10,
@@ -116,14 +147,17 @@ class _SignupPageState extends State<SignupPage> {
                           contentPadding:
                               EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                           enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey.shade400)),
-                          border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey.shade400)),
+                              borderSide: BorderSide(color: aliceblue)),
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: aliceblue)),
                           labelText: 'Email',
-                          hintText: 'admin@e.ntu.edu.sg',
-                          prefixIcon: Icon(Icons.email)),
+                          labelStyle: labels,
+                          hintStyle: hints,
+                          hintText: 'JOHN001@e.ntu.edu.sg',
+                          prefixIcon: Icon(
+                            AppIcons.email,
+                            color: Color(0x80001D4A),
+                          )),
                     ),
                     SizedBox(
                       height: 10,
@@ -140,14 +174,17 @@ class _SignupPageState extends State<SignupPage> {
                           contentPadding:
                               EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                           enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey.shade400)),
-                          border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey.shade400)),
+                              borderSide: BorderSide(color: aliceblue)),
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: aliceblue)),
                           hintText: '9245XXXX',
-                          labelText: 'Mobile No',
-                          prefixIcon: Icon(Icons.phone)),
+                          hintStyle: hints,
+                          labelText: 'Mobile No.',
+                          labelStyle: labels,
+                          prefixIcon: Icon(
+                            AppIcons.phone,
+                            color: Color(0x80001D4A),
+                          )),
                     ),
                     SizedBox(
                       height: 10,
@@ -162,25 +199,29 @@ class _SignupPageState extends State<SignupPage> {
                       },
                       decoration: InputDecoration(
                           hintText: '*******',
+                          hintStyle: hints,
                           labelText: 'Password',
+                          labelStyle: labels,
                           contentPadding:
                               EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                           enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey.shade400)),
-                          border: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey.shade400)),
-                          prefixIcon: Icon(Icons.vpn_key_rounded)),
+                              borderSide: BorderSide(color: aliceblue)),
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: aliceblue)),
+                          prefixIcon: Icon(
+                            AppIcons.password,
+                            color: Color(0x80001D4A),
+                          )),
                       obscureText: true,
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 40,
                     ),
                     Row(
                       children: [
                         // for checkbox validation link, check https://www.kindacode.com/article/flutter-i-agree-to-terms-checkbox-example/
                         Checkbox(
+                            activeColor: indigo,
                             value: agree,
                             onChanged: (value) {
                               setState(() {
@@ -190,13 +231,16 @@ class _SignupPageState extends State<SignupPage> {
                         SizedBox(
                             width: 250,
                             child: Text(
-                              'By clicking this button, you are agreeing to our Terms and Conditions',
-                              style: TextStyle(color: Color(0xFF001D4A)),
+                              'By clicking this button, you are agreeing to our Terms of Services and Privacy Policy',
+                              style: TextStyle(
+                                  color: Color(0xFF001D4A),
+                                  fontFamily: 'SF_Pro_Rounded',
+                                  fontSize: 14),
                             ))
                       ],
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 60,
                     ),
                     ButtonTheme(
                       minWidth: 300,
@@ -219,7 +263,7 @@ class _SignupPageState extends State<SignupPage> {
                             : null,
                         color: Color(0xFFECA400),
                         child: Text(
-                          'Login',
+                          'Register',
                           style: TextStyle(color: Color(0xFFFBFBFF)),
                         ),
                         shape: RoundedRectangleBorder(

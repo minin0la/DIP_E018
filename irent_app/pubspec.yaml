@@ -36,6 +36,7 @@ dependencies:
   firebase_core: ^1.11.0
   firebase_auth: ^3.3.5
   cloud_firestore: ^3.1.7
+  drop_shadow_image: ^0.9.1
   intl: ^0.17.0
   qr_flutter: ^4.0.0
 
@@ -68,10 +69,12 @@ flutter:
     - images/checked.png
     - images/coins.jpeg
     - images/console.png
+    - images/cross_bg.png
     - images/dice.png
     - images/embarrassed.png
     - images/game-boy.png
     - images/game-console.png
+    - images/hand.png
     - images/irent-logo.png
     - images/no.png
     - images/party-popper.png
