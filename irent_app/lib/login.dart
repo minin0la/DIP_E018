@@ -20,6 +20,12 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailField = TextEditingController();
   final TextEditingController _passwordField = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final Color white = const Color(0xFFFBFBFF);
+  final Color oxford = const Color(0xFF001D4A);
+  final Color aliceblue = const Color(0xFF81A4CD);
+  final Color marigold = const Color(0xFFECA400);
+  final Color transparent = const Color(0x4DE3E3E3);
   bool? _success;
   bool? _verified;
   String? _userEmail;
@@ -30,10 +36,9 @@ class _LoginPageState extends State<LoginPage> {
       resizeToAvoidBottomInset: true,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Color(0xFFFBFBFF)),
-        elevation: 0,
-        backgroundColor: Color(0xFF81A4CD),
-      ),
+          iconTheme: IconThemeData(color: white),
+          elevation: 0,
+          backgroundColor: aliceblue),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -41,18 +46,32 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 width: double.infinity,
                 height: MediaQuery.of(context).size.width * 0.8,
-                color: Color(0xFF81A4CD),
-                child: Container(
-                  margin: EdgeInsets.only(left: 30, top: 0),
-                  child: Text(
-                    'Hello,\nStephanie',
-                    style: TextStyle(
-                      fontSize: 35,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'SF_Pro_Rounded',
-                      color: Color(0xFFFBFBFF),
+                color: aliceblue,
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.topLeft,
+                      margin: EdgeInsets.only(left: 30),
+                      child: Text(
+                        'Hello,\nStephanie',
+                        style: TextStyle(
+                          fontSize: 35,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'SF_Pro_Rounded',
+                          color: white,
+                        ),
+                      ),
                     ),
-                  ),
+                    SizedBox(height: 20),
+                    Container(
+                      alignment: Alignment.bottomRight,
+                      margin: EdgeInsets.only(right: 30),
+                      child: Image.asset(
+                        'images/tool-box.png',
+                        height: MediaQuery.of(context).size.height * 0.2,
+                      ),
+                    )
+                  ],
                 ),
               ),
               Container(
