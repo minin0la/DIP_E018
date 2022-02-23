@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:irent_app/not_verified.dart';
 import 'package:irent_app/switch_nav.dart';
+import 'package:irent_app/verification.dart';
 import 'homepage.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -25,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   final Color marigold = const Color(0xFFECA400);
   final Color transparent = const Color(0x4DE3E3E3);
   bool? _success;
+  bool? _verified;
   String? _userEmail;
 
   @override
@@ -121,12 +124,17 @@ class _LoginPageState extends State<LoginPage> {
                             if (_formKey.currentState!.validate()) {
                               if (_formKey.currentState!.validate()) {
                                 await _signInWithEmailAndPassword();
-                                if (_success = true) {
+                                if (_success == true) {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               const SwitchNavBar()));
+                                } else if (_verified == false) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => NotVerified()));
                                 }
                               }
                             }
@@ -169,14 +177,15 @@ class _LoginPageState extends State<LoginPage> {
     ))
         .user;
 
-    if (user != null) {
+    if (user != null && !user.emailVerified) {
       setState(() {
-        _success = true;
-        _userEmail = user.email;
+        _success = false;
+        _verified = false;
+        // _userEmail = user.email;
       });
     } else {
       setState(() {
-        _success = false;
+        _success = true;
       });
     }
   }

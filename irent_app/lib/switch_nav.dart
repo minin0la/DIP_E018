@@ -2,11 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:irent_app/account.dart';
+import 'package:irent_app/qrrtest.dart';
 import 'dart:ui';
 import 'app_icons.dart';
-
+import 'datetimetest.dart';
 import 'package:irent_app/app_icons.dart';
+import 'package:irent_app/user_home.dart';
 import 'account.dart';
+import 'qrrtest.dart';
 
 class SwitchNavBar extends StatefulWidget {
   const SwitchNavBar({Key? key}) : super(key: key);
@@ -21,7 +24,7 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
       fontSize: 25, color: Color(0xFF001D4A), fontWeight: FontWeight.w500);
   static const List<Widget> _titleBar = <Widget>[
     Text(
-      'Home',
+      'iRent',
       style: titleStyle,
     ),
     Text(
@@ -38,10 +41,7 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
     ),
   ];
   final List<Widget> _bodyContents = <Widget>[
-    Text(
-      'Home',
-      style: titleStyle,
-    ),
+    user_home(),
     Text(
       'Bookings',
       style: titleStyle,
@@ -120,6 +120,28 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
           selectedItemColor: Color(0xFFECA400),
           onTap: _onItemTapped,
         ),
+      ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          FloatingActionButton(
+            heroTag: 'datetime_tester',
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => DateTimeTest()));
+            },
+            child: Icon(Icons.add),
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => QrTest()));
+            },
+            tooltip: 'QR Testing',
+            heroTag: 'qr_tester',
+            child: Icon(Icons.add),
+          )
+        ],
       ),
     );
   }

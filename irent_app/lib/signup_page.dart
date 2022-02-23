@@ -3,6 +3,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:irent_app/app_icons.dart';
+import 'package:irent_app/not_verified.dart';
+import 'package:irent_app/verification.dart';
 import 'homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drop_shadow_image/drop_shadow_image.dart';
@@ -254,7 +256,7 @@ class _SignupPageState extends State<SignupPage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                const HomePage()));
+                                                NotVerified()));
                                   }
                                 }
                               }

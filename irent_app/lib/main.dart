@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:irent_app/homepage.dart';
 import 'package:irent_app/login.dart';
 import 'package:irent_app/login_register.dart';
+import 'package:irent_app/verification.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:irent_app/not_verified.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         primaryColor: Color(0xFFFBFBFF),
       ),
-      home: LoginRegisterScreen(),
+      home: MainPage(),
     );
   }
 }
