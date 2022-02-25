@@ -45,6 +45,10 @@ class _user_store_urocState extends State<user_store_uroc> {
               fontSize: 25,
               fontWeight: FontWeight.w500),
         ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
