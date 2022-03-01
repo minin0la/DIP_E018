@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:irent_app/account.dart';
+import 'package:irent_app/item_image_tester.dart';
 import 'package:irent_app/qrrtest.dart';
 import 'dart:ui';
 import 'app_icons.dart';
@@ -135,6 +136,15 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
             },
             tooltip: 'QR Testing',
             heroTag: 'qr_tester',
+            child: Icon(Icons.add),
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ItemImageTester()));
+            },
+            tooltip: 'item_image_test',
+            heroTag: 'item_image_tester',
             child: Icon(Icons.add),
           )
         ],
