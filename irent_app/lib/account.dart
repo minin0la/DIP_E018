@@ -5,6 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:irent_app/app_icons.dart';
 import 'package:irent_app/database.dart';
+import 'package:irent_app/edit_profile.dart';
+import 'package:irent_app/change_passcode.dart';
+import 'package:irent_app/history.dart';
+import 'package:irent_app/about_us.dart';
+import 'package:irent_app/feedback.dart';
 import 'login_register.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -29,8 +34,7 @@ class AccountScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(15.0),
                   child: Row(children: [
                     CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          'https://media-exp1.licdn.com/dms/image/C5603AQEAYIB6hWfkgA/profile-displayphoto-shrink_400_400/0/1602090886800?e=1650499200&v=beta&t=_duzbNOrf3t68Nr_md8-8Z9G4ABb4cAyVYWY4GS85P0'),
+                      child: Image.asset('images/profile.png'),
                       radius: 50,
                     ),
                     SizedBox(width: 20),
@@ -111,144 +115,9 @@ class AccountScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                    width: 1.0, color: Color(0x8081A4CD)),
-                              ),
-                            ),
-                            child: GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              onTap: () {},
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      "My Profile",
-                                      style: TextStyle(
-                                        color: oxford,
-                                        fontFamily: "SF_Pro_Rounded",
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16.0,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: SizedBox(),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: GestureDetector(
-                                      onTap: () {},
-                                      child: Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 20,
-                                        color: oxford,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                    width: 1.0, color: Color(0x8081A4CD)),
-                              ),
-                            ),
-                            child: GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              onTap: () {},
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      "Change Password",
-                                      style: TextStyle(
-                                        color: oxford,
-                                        fontFamily: "SF_Pro_Rounded",
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16.0,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: SizedBox(),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: GestureDetector(
-                                      onTap: () {},
-                                      child: Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 20,
-                                        color: oxford,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                    width: 1.0, color: Color(0x8081A4CD)),
-                              ),
-                            ),
-                            child: GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              onTap: () {},
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 3,
-                                    child: Text(
-                                      "History",
-                                      style: TextStyle(
-                                        color: oxford,
-                                        fontFamily: "SF_Pro_Rounded",
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16.0,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: SizedBox(),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: GestureDetector(
-                                      onTap: () {},
-                                      child: Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 20,
-                                        color: oxford,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
+                        _options(context: context, option: 'My Profile'),
+                        _options(context: context, option: 'Change Password'),
+                        _options(context: context, option: 'History'),
                       ]),
                 ),
               ),
@@ -278,98 +147,8 @@ class AccountScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(
-                                      width: 1.0, color: Color(0x8081A4CD)),
-                                ),
-                              ),
-                              child: GestureDetector(
-                                behavior: HitTestBehavior.translucent,
-                                onTap: () {},
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        "About Us",
-                                        style: TextStyle(
-                                          color: oxford,
-                                          fontFamily: "SF_Pro_Rounded",
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 16.0,
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: SizedBox(),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: GestureDetector(
-                                        onTap: () {},
-                                        child: Icon(
-                                          Icons.arrow_forward_ios,
-                                          size: 20,
-                                          color: oxford,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(
-                                      width: 1.0, color: Color(0x8081A4CD)),
-                                ),
-                              ),
-                              child: GestureDetector(
-                                behavior: HitTestBehavior.translucent,
-                                onTap: () {},
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        "Feedback",
-                                        style: TextStyle(
-                                          color: oxford,
-                                          fontFamily: "SF_Pro_Rounded",
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 16.0,
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: SizedBox(),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: GestureDetector(
-                                        onTap: () {},
-                                        child: Icon(
-                                          Icons.arrow_forward_ios,
-                                          size: 20,
-                                          color: oxford,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                          _options(context: context, option: 'About Us'),
+                          _options(context: context, option: 'Feedback'),
                           Expanded(flex: 1, child: SizedBox()),
                         ]),
                   )),
@@ -406,6 +185,83 @@ class AccountScreen extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _options({required BuildContext context, required String option}) {
+    return Expanded(
+      flex: 1,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(width: 1.0, color: Color(0x8081A4CD)),
+          ),
+        ),
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            if (option == 'My Profile') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const EditProfilePage()),
+              );
+            } else if (option == 'Change Password') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ChangePasscodePage()),
+              );
+            } else if (option == 'History') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HistoryPage()),
+              );
+            } else if (option == 'About Us') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AboutUsPage()),
+              );
+            } else if (option == 'Feedback') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const FeedbackPage()),
+              );
+            }
+          },
+          child: Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: Text(
+                  option,
+                  style: TextStyle(
+                    color: oxford,
+                    fontFamily: "SF_Pro_Rounded",
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: SizedBox(),
+              ),
+              Expanded(
+                flex: 1,
+                child: GestureDetector(
+                  onTap: () {},
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 20,
+                    color: oxford,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

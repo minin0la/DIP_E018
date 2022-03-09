@@ -8,21 +8,20 @@ import 'package:irent_app/app_icons.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
-class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({Key? key}) : super(key: key);
+class ChangePasscodePage extends StatefulWidget {
+  const ChangePasscodePage({Key? key}) : super(key: key);
 
   @override
-  State<EditProfilePage> createState() => _EditProfilePageState();
+  State<ChangePasscodePage> createState() => _ChangePasscodePageState();
 }
 
-class _EditProfilePageState extends State<EditProfilePage> {
+class _ChangePasscodePageState extends State<ChangePasscodePage> {
   final TextEditingController _emailField = TextEditingController();
   final TextEditingController _passwordField = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final Color white = const Color(0xFFFBFBFF);
   final Color oxford = const Color(0xFF001D4A);
-  final Color iceberg = const Color(0xFF27476E);
   final Color aliceblue = const Color(0xFF81A4CD);
   final Color marigold = const Color(0xFFECA400);
   final Color transparent = const Color(0x4DE3E3E3);
@@ -53,7 +52,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         alignment: Alignment.bottomCenter,
                         child: Image.asset(
                           'images/cross-bg-cropped.png',
-                          //height: MediaQuery.of(context).size.height * 0.15,
                         ),
                       ),
                       Column(
@@ -74,7 +72,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           backgroundColor: Colors.transparent,
                           centerTitle: true,
                           title: Text(
-                            'Edit Profile',
+                            'Change Password',
                             style: TextStyle(
                                 color: oxford,
                                 fontFamily: 'SF_Pro_Rounded',
@@ -114,7 +112,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        SizedBox(height: 30),
                         TextFormField(
                           controller: _emailField,
                           validator: (value) {
@@ -124,9 +121,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             return null;
                           },
                           decoration: InputDecoration(
-                              labelText: 'Name',
-                              hintText: 'John Smith',
-                              prefixIcon: Icon(AppIcons.person),
+                              labelText: 'Current Password',
+                              hintText: '********',
+                              prefixIcon: Icon(AppIcons.password),
                               floatingLabelBehavior:
                                   FloatingLabelBehavior.always),
                         ),
@@ -142,9 +139,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             return null;
                           },
                           decoration: InputDecoration(
-                              labelText: 'Email',
-                              hintText: 'JOHN001@e.ntu.edu.sg',
-                              prefixIcon: Icon(AppIcons.email),
+                              labelText: 'New Password',
+                              hintText: '********',
+                              prefixIcon: Icon(AppIcons.password),
                               floatingLabelBehavior:
                                   FloatingLabelBehavior.always),
                         ),
@@ -160,14 +157,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             return null;
                           },
                           decoration: InputDecoration(
-                              labelText: 'Mobile No',
-                              hintText: '9245XXXX',
-                              prefixIcon: Icon(AppIcons.phone),
+                              labelText: 'Confirm New Password',
+                              hintText: '********',
+                              prefixIcon: Icon(AppIcons.password),
                               floatingLabelBehavior:
                                   FloatingLabelBehavior.always),
                         ),
                         SizedBox(
-                          height: 200,
+                          height: MediaQuery.of(context).size.height * 0.3,
                         ),
                         SizedBox(
                           width: 160,
@@ -220,30 +217,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ),
               )
             ],
-          ),
-          Align(
-            alignment: Alignment(0, -0.55),
-            child: Stack(children: [
-              CircleAvatar(
-                backgroundImage: AssetImage('images/profile.png'),
-                radius: 50,
-              ),
-              Positioned(
-                  bottom: -5,
-                  right: -5,
-                  child: RawMaterialButton(
-                    constraints: BoxConstraints.tight(Size(35, 35)),
-                    onPressed: () {},
-                    elevation: 2.0,
-                    fillColor: white,
-                    child: Icon(
-                      Icons.edit,
-                      color: iceberg,
-                      size: 20,
-                    ),
-                    shape: CircleBorder(),
-                  )),
-            ]),
           ),
         ],
       ),
