@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:irent_app/app_icons.dart';
 import 'package:irent_app/database.dart';
@@ -19,7 +20,7 @@ class _TopUpPageState extends State<TopUpPage> {
   final Color white = const Color(0xFFFBFBFF);
   final Color oxford = const Color(0xFF001D4A);
   final Color aliceblue = const Color(0xFF81A4CD);
-  final Color iceberg = const Color(0xFF81A4CD);
+  final Color iceberg = const Color(0xFFDBE4EE);
   final Color marigold = const Color(0xFFECA400);
   final TextStyle titleStyle = const TextStyle(
     fontFamily: "SF_Pro_Rounded",
@@ -32,6 +33,12 @@ class _TopUpPageState extends State<TopUpPage> {
     color: Color(0xFF001D4A),
     fontSize: 15,
     fontWeight: FontWeight.w500,
+  );
+  final TextStyle amountStyle = const TextStyle(
+    fontFamily: "SF_Pro_Rounded",
+    color: Color(0xFF001D4A),
+    fontSize: 20,
+    fontWeight: FontWeight.w700,
   );
   String? currentuser = FirebaseAuth.instance.currentUser?.email;
 
@@ -58,25 +65,120 @@ class _TopUpPageState extends State<TopUpPage> {
               'Select Payment Method',
               style: subtitleStyle,
             ),
-            _radioButton(option: 'PayLah!', value: PaymentType.paylah),
-            _radioButton(option: 'PayNow', value: PaymentType.paynow),
+            SizedBox(height: 15),
+            _radioButton(
+                option: 'PayLah!',
+                value: PaymentType.paylah,
+                image: 'images/paylah.png'),
+            SizedBox(height: 15),
+            _radioButton(
+                option: 'PayNow',
+                value: PaymentType.paynow,
+                image: 'images/payanyone.png'),
+            SizedBox(
+              height: 30,
+            ),
+            Text(
+              'Amount',
+              style: subtitleStyle,
+            ),
+            TextField(
+              decoration: const InputDecoration(
+                hintText: "Enter top up amount",
+                hintStyle: TextStyle(
+                  fontFamily: "SF_Pro_Rounded",
+                  color: Color(0x66001D4A),
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                ),
+                prefixIconConstraints: BoxConstraints(
+                  minHeight: 32,
+                  minWidth: 32,
+                ),
+                prefixIcon: Text(
+                  '\$',
+                  style: TextStyle(
+                    fontFamily: "SF_Pro_Rounded",
+                    color: Color(0xFF001D4A),
+                    fontSize: 25,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              style: amountStyle,
+              textAlign: TextAlign.right,
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly
+              ], // Only numbers can be entered
+            ),
+            Expanded(
+              child: Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 25.0),
+                  child: SizedBox(
+                    width: 160,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Confirm',
+                        style: TextStyle(
+                            color: white,
+                            fontFamily: 'SF_Pro_Rounded',
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          primary: Color(0xFFECA400),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(38))),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _radioButton({required String option, required PaymentType value}) {
+  Widget _radioButton(
+      {required String option,
+      required PaymentType value,
+      required String image}) {
     return Container(
-      color: aliceblue,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: iceberg,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.6),
+            spreadRadius: 3,
+            blurRadius: 7,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
       child: RadioListTile<PaymentType>(
-        title: Text(
-          option,
-          style: TextStyle(
-              fontFamily: 'SF_Pro_Rounded',
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: oxford),
+        title: Row(
+          children: [
+            Image.asset(
+              image,
+              width: 50,
+              height: 50,
+            ),
+            Text(
+              option,
+              style: TextStyle(
+                  fontFamily: 'SF_Pro_Rounded',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: oxford),
+            ),
+          ],
         ),
         value: value,
         groupValue: _paymentType,
@@ -85,8 +187,8 @@ class _TopUpPageState extends State<TopUpPage> {
             _paymentType = value;
           });
         },
-        contentPadding: EdgeInsets.all(0),
         activeColor: oxford,
+        controlAffinity: ListTileControlAffinity.trailing,
       ),
     );
   }
