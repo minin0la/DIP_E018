@@ -39,6 +39,8 @@ dependencies:
   drop_shadow_image: ^0.9.1
   intl: ^0.17.0
   qr_flutter: ^4.0.0
+  firebase_storage: ^10.2.9
+  image_picker: ^0.8.4+11
 
 dev_dependencies:
   flutter_test:
