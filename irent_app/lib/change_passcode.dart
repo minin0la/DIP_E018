@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:irent_app/authservice.dart';
 import 'package:irent_app/login.dart';
 import 'package:irent_app/login_register.dart';
 import 'package:irent_app/switch_nav.dart';
@@ -35,22 +36,6 @@ class _ChangePasscodePageState extends State<ChangePasscodePage> {
   void dispose() {
     confirmPasswordController.dispose();
     super.dispose();
-  }
-
-  changePassword() async {
-    try {
-      await currentUser!.updatePassword(newPassword);
-      FirebaseAuth.instance.signOut();
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => LoginRegisterScreen(),
-          ));
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.black26,
-        content: Text('Your password has been changed... Login again'),
-      ));
-    } catch (e) {}
   }
 
   @override
@@ -205,7 +190,40 @@ class _ChangePasscodePageState extends State<ChangePasscodePage> {
                                 setState(() {
                                   newPassword = confirmPasswordController.text;
                                 });
-                                changePassword();
+                                String updatePassword = await AuthService()
+                                    .changePassword(newPassword);
+                                if (updatePassword == 'success') {
+                                  FirebaseAuth.instance.signOut();
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            LoginRegisterScreen(),
+                                      ));
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    backgroundColor: Colors.black26,
+                                    content: Text(
+                                        'Your password has been changed... Login again'),
+                                  ));
+                                } else if (updatePassword ==
+                                    "requires-recent-login") {
+                                  FirebaseAuth.instance.signOut();
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            LoginRegisterScreen(),
+                                      ));
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    backgroundColor: Colors.black26,
+                                    content: Text(
+                                        'This operation is sensitive and requires recent authentication. Log in again before retrying this request.'),
+                                  ));
+                                } else {
+                                  print(updatePassword);
+                                }
                               }
                             },
                             child: Text(

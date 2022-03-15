@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:irent_app/authservice.dart';
+import 'package:irent_app/database.dart';
 import 'package:irent_app/login_register.dart';
 import 'package:irent_app/profilepage.dart';
 import 'package:irent_app/switch_nav.dart';
@@ -36,19 +38,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final Color transparent = const Color(0x4DE3E3E3);
   bool? _success;
   String? _userEmail;
-
-  changeProfile() async {
-    try {
-      await currentUser!.updateDisplayName(_nameField.text);
-      await currentUser!.updateEmail(_emailField.text);
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => LoginRegisterScreen()));
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Your profile has been updated...Please login again')));
-    } catch (e) {
-      print(e);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,12 +163,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         TextFormField(
                           controller: _mobileNumberField,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your mobile number';
-                            }
-                            return null;
-                          },
+                          // validator: (value) {
+                          //   if (value == null || value.isEmpty) {
+                          //     return 'Please enter your mobile number';
+                          //   }
+                          //   return null;
+                          // },
                           decoration: InputDecoration(
                               labelText: 'Mobile No',
                               hintText: '9245XXXX',
@@ -194,7 +183,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           width: 160,
                           height: 50,
                           child: ElevatedButton(
-                            onPressed: changeProfile,
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                String updateProfile = await AuthService()
+                                    .changeProfile(
+                                        _nameField.text, _emailField.text);
+                                if (updateProfile == 'success') {
+                                  await FirebaseAuth.instance.signOut();
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              LoginRegisterScreen()));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Your profile has been updated...Please login again')));
+                                } else {
+                                  print(updateProfile);
+                                }
+                              }
+                            },
                             child: Text(
                               'Save',
                               style: TextStyle(
@@ -282,6 +291,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void dispose() {
     _emailField.dispose();
     _passwordField.dispose();
+    _mobileNumberField.dispose();
     super.dispose();
   }
 }
