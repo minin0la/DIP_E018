@@ -9,7 +9,8 @@ import 'datetimetest.dart';
 import 'package:irent_app/app_icons.dart';
 import 'package:irent_app/user_home.dart';
 import 'package:irent_app/user_bookings.dart';
-import 'package:irent_app/user_basket.dart';
+import 'package:irent_app/user_return.dart';
+import 'package:irent_app/basket.dart';
 import 'account.dart';
 import 'qrrtest.dart';
 
@@ -44,8 +45,8 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
   ];
   final List<Widget> _bodyContents = <Widget>[
     user_home(),
-    user_bookings(),
-    user_basket(),
+    user_return(),
+    basket(),
     AccountScreen(),
   ];
 
@@ -117,28 +118,27 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
           onTap: _onItemTapped,
         ),
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          FloatingActionButton(
-            heroTag: 'datetime_tester',
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => DateTimeTest()));
-            },
-            child: Icon(Icons.add),
-          ),
-          FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => QrTest()));
-            },
-            tooltip: 'QR Testing',
-            heroTag: 'qr_tester',
-            child: Icon(Icons.add),
-          )
-        ],
-      ),
+      // floatingActionButton: Row(
+      //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //   children: [
+      //     FloatingActionButton(
+      //       heroTag: 'datetime_tester',
+      //       onPressed: () {
+      //         Navigator.push(context,
+      //             MaterialPageRoute(builder: (context) => DateTimeTest()));
+      //       },
+      //       child: Icon(Icons.add),
+      //     ),
+      //     FloatingActionButton(
+      //       onPressed: () {
+      //         Navigator.push(
+      //             context, MaterialPageRoute(builder: (context) => QrTest()));
+      //       },
+      //       tooltip: 'QR Testing',
+      //       heroTag: 'qr_tester',
+      //       //child: Icon(Icons.add),
+      //     )
+      //],
     );
   }
 }
