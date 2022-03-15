@@ -1,19 +1,10 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:irent_app/account.dart';
 import 'package:irent_app/admin/admin_add_store.dart';
 import 'package:irent_app/admin/admin_transactions.dart';
-import 'package:irent_app/qrrtest.dart';
-import 'dart:ui';
 import '../app_icons.dart';
-import '../datetimetest.dart';
 import 'package:irent_app/app_icons.dart';
-import 'package:irent_app/user_home.dart';
-import 'package:irent_app/user_bookings.dart';
-import 'package:irent_app/user_basket.dart';
-import '../account.dart';
-import '../qrrtest.dart';
 import 'admin_home.dart';
 import 'admin_bookings.dart';
 import 'admin_account.dart';
@@ -27,7 +18,12 @@ class AdminSwitchNavBar extends StatefulWidget {
 }
 
 class _AdminSwitchNavBarState extends State<AdminSwitchNavBar> {
+  final Color white = const Color(0xFFFBFBFF);
+  final Color oxford = const Color(0xFF001D4A);
+  final Color aliceblue = const Color(0xFF81A4CD);
   final Color iceberg = const Color(0xFFDBE4EE);
+  final Color marigold = const Color(0xFFECA400);
+  final Color transparent = const Color(0x4DE3E3E3);
   final TextStyle notifTitleStyle = TextStyle(
     fontFamily: 'SF_Pro_Rounded',
     fontSize: 15,
@@ -106,8 +102,7 @@ class _AdminSwitchNavBarState extends State<AdminSwitchNavBar> {
                                 _notifItem(
                                   notif['storeName'].toString(),
                                   notif['itemName'].toString(),
-                                  notif['collectTime'].toString(),
-                                  notif['returnTime'].toString(),
+                                  notif['receiveTime'].toString(),
                                   int.parse(notif['ticketNumber'].toString()),
                                   notif['displayPicture'].toString(),
                                 ),
@@ -174,12 +169,16 @@ class _AdminSwitchNavBarState extends State<AdminSwitchNavBar> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             FloatingActionButton(
+              backgroundColor: marigold,
               heroTag: 'add_store',
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => AddStorePage()));
               },
-              child: Icon(Icons.add),
+              child: Icon(
+                Icons.add,
+                size: 30,
+              ),
             ),
           ],
         ),
@@ -187,8 +186,8 @@ class _AdminSwitchNavBarState extends State<AdminSwitchNavBar> {
     );
   }
 
-  Widget _notifItem(String storeName, String itemName, String collectTime,
-      String returnTime, int ticket, String image) {
+  Widget _notifItem(String storeName, String itemName, String receiveTime,
+      int ticket, String image) {
     final TextStyle storeStyle = TextStyle(
       fontFamily: 'SF_Pro_Rounded',
       fontSize: 15,
@@ -243,7 +242,7 @@ class _AdminSwitchNavBarState extends State<AdminSwitchNavBar> {
                   ),
                   Text(itemName, style: itemStyle),
                   Text(
-                    _notifText(collectTime, returnTime),
+                    'Feedback Received',
                     style: notifStyle,
                   )
                 ],
@@ -252,7 +251,7 @@ class _AdminSwitchNavBarState extends State<AdminSwitchNavBar> {
               Container(
                 alignment: Alignment.topRight,
                 child: Text(
-                  _notifTime(collectTime, returnTime),
+                  _notifTime(receiveTime),
                   style: notifStyle,
                   textAlign: TextAlign.start,
                 ),
@@ -264,9 +263,9 @@ class _AdminSwitchNavBarState extends State<AdminSwitchNavBar> {
     );
   }
 
-  String _notifTime(String collectTime, String returnTime) {
+  String _notifTime(String receiveTime) {
     final int timeStamp =
-        DateTime.parse(returnTime).difference(DateTime.parse(now)).inMinutes;
+        DateTime.parse(now).difference(DateTime.parse(receiveTime)).inMinutes;
 
     return '$timeStamp m ago';
   }
