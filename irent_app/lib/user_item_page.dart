@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:irent_app/app_icons.dart';
-import 'package:irent_app/user_basket.dart';
+import 'package:irent_app/user_return.dart';
 
 class user_item_page extends StatefulWidget {
   const user_item_page({Key? key}) : super(key: key);
@@ -71,6 +71,17 @@ class _user_item_pageState extends State<user_item_page> {
                   colorFilter: new ColorFilter.mode(
                       Color.fromRGBO(129, 164, 205, 0.5), BlendMode.lighten),
                   fit: BoxFit.cover)),
+          child: InkWell(
+            child: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+              size: 40,
+            ),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          alignment: Alignment.bottomLeft,
         ),
         Row(
           children: [
@@ -486,7 +497,7 @@ class _user_item_pageState extends State<user_item_page> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => user_basket()),
+                                  builder: (context) => user_return()),
                             );
                           },
                         ),
