@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:irent_app/user_item_page.dart';
+import 'constants.dart';
 
 import 'package:irent_app/CategoriesScroller.dart';
 
@@ -159,36 +160,66 @@ class _user_store_urocState extends State<user_store_uroc> {
             ),
             CategoriesScroller(),
             Expanded(
-                child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: GridView.count(
-                crossAxisCount: 2,
-                childAspectRatio: (itemWidth / itemHeight),
-                crossAxisSpacing: 20.0,
-                mainAxisSpacing: 20,
-                children: _listItem
-                    .map((item) => InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const user_item_page()));
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                image: DecorationImage(
-                                    image: AssetImage(item),
-                                    fit: BoxFit.cover)),
-                          ),
-                        ))
-                    .toList(),
+              flex: 6,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.only(left: 25, right: 25),
+                child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: ScrollPhysics(),
+                    itemCount: products.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2),
+                    itemBuilder: (context, index) {
+                      for (var product in products) {
+                        return _productDetailsCard(
+                            context: context,
+                            name: productDetails[index]['name'].toString(),
+                            product_category: productDetails[index]
+                                    ['product_category']
+                                .toString(),
+                            pricePerhour: int.parse(productDetails[index]
+                                    ['pricePerhour']
+                                .toString()),
+                            displayPicture: productDetails[index]
+                                    ['displayPicture']
+                                .toString());
+                      }
+                      throw 'No Data Found';
+                    }),
               ),
-            )),
+            ),
           ],
         ),
       ),
     );
   }
+}
+
+Widget _productDetailsCard(
+    {required BuildContext context,
+    required String name,
+    required String product_category,
+    required int pricePerhour,
+    required String displayPicture}) {
+  return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+      child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const user_item_page()),
+            );
+          },
+          child: Container(
+              height: 250,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: new DecorationImage(
+                    image: AssetImage(displayPicture),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ))));
 }
