@@ -13,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:irent_app/not_verified.dart';
 import 'package:irent_app/switch_nav.dart';
 import 'package:irent_app/edit_profile.dart';
+import 'admin/admin_switch_nav.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         primaryColor: Color(0xFFFBFBFF),
       ),
-      home: MainPage(),
+      home: AdminSwitchNavBar(),
     );
   }
 }
@@ -48,6 +49,9 @@ class MainPage extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              if (snapshot.data!.email!.contains('admin')) {
+                return AdminSwitchNavBar();
+              }
               return SwitchNavBar();
             } else {
               return LoginRegisterScreen();
