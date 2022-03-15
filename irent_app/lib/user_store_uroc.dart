@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:irent_app/topup.dart';
 import 'package:irent_app/user_item_page.dart';
 
 import 'package:irent_app/CategoriesScroller.dart';
@@ -110,31 +111,40 @@ class _user_store_urocState extends State<user_store_uroc> {
                       )
                     ],
                   ),
-                  Container(
-                    width: 66,
-                    height: 29,
-                    margin: EdgeInsets.only(left: 90.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5),
-                        topRight: Radius.circular(5),
-                        bottomLeft: Radius.circular(5),
-                        bottomRight: Radius.circular(5),
+                  InkWell(
+                    child: Container(
+                      width: 66,
+                      height: 29,
+                      margin: EdgeInsets.only(left: 90.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(5),
+                          topRight: Radius.circular(5),
+                          bottomLeft: Radius.circular(5),
+                          bottomRight: Radius.circular(5),
+                        ),
+                        color: Color.fromRGBO(39, 71, 110, 1),
                       ),
-                      color: Color.fromRGBO(39, 71, 110, 1),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Top Up',
-                      style: TextStyle(
-                        color: Color.fromRGBO(251, 251, 255, 1),
-                        fontFamily: 'SF Pro Rounded',
-                        fontSize: 12,
-                        letterSpacing:
-                            0 /*percentages not used in flutter. defaulting to zero*/,
-                        fontWeight: FontWeight.normal,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Top Up',
+                        style: TextStyle(
+                          color: Color.fromRGBO(251, 251, 255, 1),
+                          fontFamily: 'SF Pro Rounded',
+                          fontSize: 12,
+                          letterSpacing:
+                              0 /*percentages not used in flutter. defaulting to zero*/,
+                          fontWeight: FontWeight.normal,
+                        ),
                       ),
                     ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TopUpPage()),
+                      );
+                    },
                   )
                 ],
               ),

@@ -55,6 +55,21 @@ class _TopUpPageState extends State<TopUpPage> {
           style: titleStyle,
         ),
         elevation: 0,
+        leading: Row(
+          children: [
+            SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_back,
+                size: 32,
+                color: oxford,
+              ),
+            ),
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(25.0),
