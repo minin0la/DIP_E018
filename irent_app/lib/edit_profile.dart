@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:irent_app/login_register.dart';
+import 'package:irent_app/profilepage.dart';
 import 'package:irent_app/switch_nav.dart';
 import 'homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,7 +19,12 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  final currentUser = FirebaseAuth.instance.currentUser;
+
   final TextEditingController _emailField = TextEditingController();
+  final TextEditingController _nameField = TextEditingController();
+  final TextEditingController _mobileNumberField = TextEditingController();
+
   final TextEditingController _passwordField = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -29,6 +36,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final Color transparent = const Color(0x4DE3E3E3);
   bool? _success;
   String? _userEmail;
+
+  changeProfile() async {
+    try {
+      await currentUser!.updateDisplayName(_nameField.text);
+      await currentUser!.updateEmail(_emailField.text);
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => LoginRegisterScreen()));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Your profile has been updated...Please login again')));
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,10 +137,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       children: [
                         SizedBox(height: 30),
                         TextFormField(
-                          controller: _emailField,
+                          controller: _nameField,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your NTU email';
+                              return 'Please enter your name';
                             }
                             return null;
                           },
@@ -153,10 +173,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           height: 10,
                         ),
                         TextFormField(
-                          controller: _passwordField,
+                          controller: _mobileNumberField,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
+                              return 'Please enter your mobile number';
                             }
                             return null;
                           },
@@ -174,20 +194,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           width: 160,
                           height: 50,
                           child: ElevatedButton(
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                if (_formKey.currentState!.validate()) {
-                                  await _signInWithEmailAndPassword();
-                                  if (_success = true) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const SwitchNavBar()));
-                                  }
-                                }
-                              }
-                            },
+                            onPressed: changeProfile,
                             child: Text(
                               'Save',
                               style: TextStyle(

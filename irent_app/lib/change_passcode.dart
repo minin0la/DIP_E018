@@ -21,6 +21,7 @@ class _ChangePasscodePageState extends State<ChangePasscodePage> {
   final currentUser = FirebaseAuth.instance.currentUser;
   var newPassword = "";
   final newPasswordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final Color white = const Color(0xFFFBFBFF);
@@ -32,7 +33,7 @@ class _ChangePasscodePageState extends State<ChangePasscodePage> {
   String? _userEmail;
 
   void dispose() {
-    newPasswordController.dispose();
+    confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -156,6 +157,7 @@ class _ChangePasscodePageState extends State<ChangePasscodePage> {
                         ),
                         TextFormField(
                           obscureText: true,
+                          controller: newPasswordController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your new password';
@@ -174,9 +176,12 @@ class _ChangePasscodePageState extends State<ChangePasscodePage> {
                         ),
                         TextFormField(
                           obscureText: true,
-                          controller: newPasswordController,
+                          controller: confirmPasswordController,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                confirmPasswordController.text !=
+                                    newPasswordController.text) {
                               return 'Please confirm your new password';
                             }
                             return null;
@@ -198,7 +203,7 @@ class _ChangePasscodePageState extends State<ChangePasscodePage> {
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 setState(() {
-                                  newPassword = newPasswordController.text;
+                                  newPassword = confirmPasswordController.text;
                                 });
                                 changePassword();
                               }
