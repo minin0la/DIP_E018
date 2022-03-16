@@ -45,7 +45,10 @@ class AccountScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(currentuserName!.toUpperCase(),
+                          Text(
+                              currentuserName == null
+                                  ? ("no name")
+                                  : currentuserName!.toUpperCase(),
                               style: TextStyle(
                                 color: oxford,
                                 fontFamily: "SF_Pro_Rounded",
