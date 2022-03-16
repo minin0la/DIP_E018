@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'login.dart';
 import 'signup_page.dart';
 import 'dart:ui';
+import 'package:flutter/gestures.dart';
+import 'package:irent_app/admin/admin_login.dart';
 
 class LoginRegisterScreen extends StatelessWidget {
   final Color white = const Color(0xFFFBFBFF);
@@ -69,7 +71,7 @@ class LoginRegisterScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.only(left: 50, bottom: 100),
+                  padding: EdgeInsets.only(left: 50),
                   width: screenwidth,
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -148,10 +150,31 @@ class LoginRegisterScreen extends StatelessWidget {
                           ),
                         ),
                         Container(
-                            margin: EdgeInsets.only(left: 100, top: 10),
-                            child: Text(
-                              'Login as Admin',
-                              style: TextStyle(color: white),
+                            margin: EdgeInsets.only(left: 100, top: 20),
+                            child: RichText(
+                              text: TextSpan(
+                                text: 'Login as ',
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: 'Admin',
+                                    style: TextStyle(
+                                        decoration: TextDecoration.underline),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const AdminLoginPage()));
+                                      },
+                                  )
+                                ],
+                                style: TextStyle(
+                                  color: white,
+                                  fontFamily: 'SF_Pro_Rounded',
+                                  fontSize: 17,
+                                ),
+                              ),
                             ))
                       ]),
                 ),

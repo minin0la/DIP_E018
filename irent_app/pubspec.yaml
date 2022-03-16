@@ -39,6 +39,8 @@ dependencies:
   drop_shadow_image: ^0.9.1
   intl: ^0.17.0
   qr_flutter: ^4.0.0
+  firebase_storage: ^10.2.8
+  image_picker: ^0.8.4+11
 
 dev_dependencies:
   flutter_test:
@@ -63,29 +65,44 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - images/admin.png
+    - images/appbar.png
     - images/board-game.png
     - images/borrow.png
     - images/buying.png
+    - images/camera.png
     - images/checked.png
-    - images/coins.jpeg
+    - images/coins.png
     - images/console.png
+    - images/cross-bg-cropped.png
+    - images/cross-bg-cropped-2.png
+    - images/cross-bg-halved.png
     - images/cross_bg.png
     - images/dice.png
     - images/embarrassed.png
     - images/game-boy.png
     - images/game-console.png
     - images/hand.png
-    - images/irent-logo.png
-    - images/no.png
-    - images/party-popper.png
-    - images/profile.png
-    - images/ps-game-console.png
-    - images/tool-box.png
-    - images/Image_uroc.png
     - images/Image_ciss.png
     - images/Image_fifa22.jpeg
     - images/Image_madden18.jpg
+    - images/Image_mariokartdeluxe.jpg
     - images/Image_overcooked.jpg
+    - images/Image_uroc.png
+    - images/irent-logo.png
+    - images/no.png
+    - images/party-popper.png
+    - images/paylah.png
+    - images/payanyone.png
+    - images/profile.png
+    - images/ps-game-console.png
+    - images/tool-box.png
+    - images/uroc.jpeg
+    - images/Image_uroc.png
+    - images/Image_ciss.png
+    - images/Image_overcooked.jpg
+    - images/Image_fifa22.jpeg
+    - images/Image_madden18.jpg
     - images/Image_supermario.jfif
     - images/Image_mariokartdeluxe.jpg
 

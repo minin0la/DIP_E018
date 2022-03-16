@@ -5,18 +5,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:irent_app/not_verified.dart';
 import 'package:irent_app/switch_nav.dart';
 import 'package:irent_app/verification.dart';
-import 'homepage.dart';
+import 'admin_switch_nav.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class AdminLoginPage extends StatefulWidget {
+  const AdminLoginPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<AdminLoginPage> createState() => _AdminLoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _AdminLoginPageState extends State<AdminLoginPage> {
   final TextEditingController _emailField = TextEditingController();
   final TextEditingController _passwordField = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                       alignment: Alignment.topLeft,
                       margin: EdgeInsets.only(left: 30),
                       child: Text(
-                        'Hello,\nStephanie',
+                        'Hello,\nAdmin',
                         style: TextStyle(
                           fontSize: 35,
                           fontWeight: FontWeight.w500,
@@ -62,13 +62,12 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
                     Container(
                       alignment: Alignment.bottomRight,
                       margin: EdgeInsets.only(right: 30),
                       child: Image.asset(
-                        'images/tool-box.png',
-                        height: MediaQuery.of(context).size.height * 0.2,
+                        'images/admin.png',
+                        height: MediaQuery.of(context).size.height * 0.25,
                       ),
                     )
                   ],
@@ -129,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const SwitchNavBar()));
+                                              const AdminSwitchNavBar()));
                                 } else if (_verified == false) {
                                   Navigator.push(
                                       context,
@@ -153,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                           _success == null
                               ? ''
                               : (_success!
-                                  ? 'Successfully signed in '
+                                  ? 'Successfully signed in ' + _userEmail!
                                   : 'Sign in failed'),
                           style: TextStyle(color: Colors.red),
                           textAlign: TextAlign.center,
@@ -181,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _success = false;
         _verified = false;
-        _userEmail = user.email;
+        // _userEmail = user.email;
       });
     } else {
       setState(() {

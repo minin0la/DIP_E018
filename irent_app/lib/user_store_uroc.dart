@@ -1,8 +1,12 @@
 import 'dart:ui';
 import 'package:irent_app/database.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:irent_app/topup.dart';
+import 'package:intl/intl.dart';
+import 'package:irent_app/database.dart';
 import 'package:irent_app/user_item_page.dart';
 
 import 'constants.dart';
@@ -38,6 +42,7 @@ class _user_store_urocState extends State<user_store_uroc> {
 
     final double itemHeight = 100;
     final double itemWidth = 120;
+    var formatter = NumberFormat("#,##0.00", "en_US");
 
     return Scaffold(
       appBar: AppBar(
@@ -109,46 +114,75 @@ class _user_store_urocState extends State<user_store_uroc> {
                         height: 28.25,
                         width: 126,
                         //color: Colors.black,
-                        child: Text(
-                          '\$10.25',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            color: Color.fromRGBO(251, 251, 255, 1),
-                            fontFamily: 'SF Pro Rounded',
-                            fontSize: 25,
-                            letterSpacing:
-                                0 /*percentages not used in flutter. defaulting to zero*/,
-                            fontWeight: FontWeight.normal,
-                          ),
+                        child: FutureBuilder(
+                          future: getUserInfo(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<DocumentSnapshot> snapshot) {
+                            if (snapshot.hasData && snapshot.data!.exists) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else {
+                                Map<String, dynamic> data = snapshot.data!
+                                    .data() as Map<String, dynamic>;
+                                return Text(
+                                  "\$" + formatter.format(data['wallet']),
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(251, 251, 255, 1),
+                                    fontFamily: 'SF Pro Rounded',
+                                    fontSize: 25,
+                                    letterSpacing:
+                                        0 /*percentages not used in flutter. defaulting to zero*/,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                );
+                              }
+                            } else if (snapshot.hasError) {
+                              return Text('no data');
+                            }
+                            return CircularProgressIndicator();
+                          },
                         ),
                       )
                     ],
                   ),
-                  Container(
-                    width: 66,
-                    height: 29,
-                    margin: EdgeInsets.only(left: 90.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5),
-                        topRight: Radius.circular(5),
-                        bottomLeft: Radius.circular(5),
-                        bottomRight: Radius.circular(5),
+                  InkWell(
+                    child: Container(
+                      width: 66,
+                      height: 29,
+                      margin: EdgeInsets.only(left: 90.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(5),
+                          topRight: Radius.circular(5),
+                          bottomLeft: Radius.circular(5),
+                          bottomRight: Radius.circular(5),
+                        ),
+                        color: Color.fromRGBO(39, 71, 110, 1),
                       ),
-                      color: Color.fromRGBO(39, 71, 110, 1),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Top Up',
-                      style: TextStyle(
-                        color: Color.fromRGBO(251, 251, 255, 1),
-                        fontFamily: 'SF Pro Rounded',
-                        fontSize: 12,
-                        letterSpacing:
-                            0 /*percentages not used in flutter. defaulting to zero*/,
-                        fontWeight: FontWeight.normal,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Top Up',
+                        style: TextStyle(
+                          color: Color.fromRGBO(251, 251, 255, 1),
+                          fontFamily: 'SF Pro Rounded',
+                          fontSize: 12,
+                          letterSpacing:
+                              0 /*percentages not used in flutter. defaulting to zero*/,
+                          fontWeight: FontWeight.normal,
+                        ),
                       ),
                     ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TopUpPage()),
+                      );
+                    },
                   )
                 ],
               ),
