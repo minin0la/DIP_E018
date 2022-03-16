@@ -11,18 +11,6 @@ Future<DocumentSnapshot> getUserInfo() async {
   return await FirebaseFirestore.instance.collection("users").doc(uid).get();
 }
 
-Future selectImage() async {
-  final image = await ImagePicker().pickImage(
-    source: ImageSource.gallery,
-    maxHeight: 1500,
-    maxWidth: 1500,
-  );
-  if (image != null) {
-    return File(image.path);
-  }
-  return null;
-}
-
 Future uploadProfileImage(_myImage) async {
   final firebase_storage.Reference firebaseStorageRef = firebase_storage
       .FirebaseStorage.instance

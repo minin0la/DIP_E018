@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:irent_app/authservice.dart';
 import 'package:irent_app/database.dart';
 import 'package:irent_app/login_register.dart';
@@ -17,6 +18,7 @@ import 'package:irent_app/app_icons.dart';
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 File? _myImage;
+File? _uploadImage;
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
@@ -190,8 +192,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           child: ElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                if (_myImage != null) {
-                                  await uploadProfileImage(_myImage);
+                                if (_uploadImage != null) {
+                                  await uploadProfileImage(_uploadImage);
                                 }
                                 String updateProfile = await AuthService()
                                     .changeProfile(
@@ -254,17 +256,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     builder:
                         (BuildContext context, AsyncSnapshot<String> image) {
                       if (image.data != "") {
-                        return CircleAvatar(
-                          backgroundImage: NetworkImage(image.data.toString()),
-                          // NetworkImage('https://via.placeholder.com/150'),
-                          // Image.network(image.data.toString()),
-                          radius: 50,
-                        );
+                        return _uploadImage != null
+                            ? (CircleAvatar(
+                                backgroundImage: FileImage(_uploadImage!),
+                                radius: 50,
+                              ))
+                            : (CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage(image.data.toString()),
+                                radius: 50,
+                              ));
                       } else {
-                        return CircleAvatar(
-                          backgroundImage: AssetImage('images/profile.png'),
-                          radius: 50,
-                        );
+                        return _uploadImage != null
+                            ? (CircleAvatar(
+                                backgroundImage: FileImage(_uploadImage!),
+                                radius: 50,
+                              ))
+                            : (CircleAvatar(
+                                backgroundImage:
+                                    AssetImage('images/profile.png'),
+                                radius: 50,
+                              ));
                       }
                     }),
                 Positioned(
@@ -273,7 +285,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     child: RawMaterialButton(
                       constraints: BoxConstraints.tight(Size(35, 35)),
                       onPressed: () async {
-                        _myImage = await selectImage();
+                        await selectImage();
                       },
                       elevation: 2.0,
                       fillColor: white,
@@ -291,6 +303,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
 //Not edited
+  Future selectImage() async {
+    final image = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxHeight: 1500,
+      maxWidth: 1500,
+    );
+    if (image != null) {
+      setState(() => _uploadImage = File(image.path));
+      return File(image.path);
+    }
+    return null;
+  }
+
   Future<void> _signInWithEmailAndPassword() async {
     final User? user = (await _auth.signInWithEmailAndPassword(
       email: _emailField.text,
@@ -315,6 +340,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _emailField.dispose();
     _passwordField.dispose();
     _mobileNumberField.dispose();
+    _uploadImage = null;
     super.dispose();
   }
 }
