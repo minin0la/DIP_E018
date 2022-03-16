@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:irent_app/authservice.dart';
@@ -7,11 +9,14 @@ import 'package:irent_app/database.dart';
 import 'package:irent_app/login_register.dart';
 import 'package:irent_app/profilepage.dart';
 import 'package:irent_app/switch_nav.dart';
+import 'database.dart';
 import 'homepage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:irent_app/app_icons.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
+
+File? _myImage;
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
@@ -185,6 +190,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           child: ElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
+                                if (_myImage != null) {
+                                  await uploadProfileImage(_myImage);
+                                }
                                 String updateProfile = await AuthService()
                                     .changeProfile(
                                         _nameField.text, _emailField.text);
@@ -239,29 +247,44 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ],
           ),
           Align(
-            alignment: Alignment(0, -0.55),
-            child: Stack(children: [
-              CircleAvatar(
-                backgroundImage: AssetImage('images/profile.png'),
-                radius: 50,
-              ),
-              Positioned(
-                  bottom: -5,
-                  right: -5,
-                  child: RawMaterialButton(
-                    constraints: BoxConstraints.tight(Size(35, 35)),
-                    onPressed: () {},
-                    elevation: 2.0,
-                    fillColor: white,
-                    child: Icon(
-                      Icons.edit,
-                      color: iceberg,
-                      size: 20,
-                    ),
-                    shape: CircleBorder(),
-                  )),
-            ]),
-          ),
+              alignment: Alignment(0, -0.55),
+              child: Stack(children: [
+                FutureBuilder(
+                    future: getProfileImage(),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<String> image) {
+                      if (image.data != "") {
+                        return CircleAvatar(
+                          backgroundImage: NetworkImage(image.data.toString()),
+                          // NetworkImage('https://via.placeholder.com/150'),
+                          // Image.network(image.data.toString()),
+                          radius: 50,
+                        );
+                      } else {
+                        return CircleAvatar(
+                          backgroundImage: AssetImage('images/profile.png'),
+                          radius: 50,
+                        );
+                      }
+                    }),
+                Positioned(
+                    bottom: -5,
+                    right: -5,
+                    child: RawMaterialButton(
+                      constraints: BoxConstraints.tight(Size(35, 35)),
+                      onPressed: () async {
+                        _myImage = await selectImage();
+                      },
+                      elevation: 2.0,
+                      fillColor: white,
+                      child: Icon(
+                        Icons.edit,
+                        color: iceberg,
+                        size: 20,
+                      ),
+                      shape: CircleBorder(),
+                    ))
+              ]))
         ],
       ),
     );

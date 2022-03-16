@@ -34,10 +34,32 @@ class AccountScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Row(children: [
-                    CircleAvatar(
-                      child: Image.asset('images/profile.png'),
-                      radius: 50,
-                    ),
+                    // CircleAvatar(
+                    //   child: Image.asset('images/profile.png'),
+                    //   radius: 50,
+                    // ),
+                    FutureBuilder(
+                        future: getProfileImage(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> image) {
+                          if (image.hasData) {
+                            print("Showing Image");
+                            print("Image: " + image.data.toString());
+
+                            return CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(image.data.toString()),
+                              // NetworkImage('https://via.placeholder.com/150'),
+                              // Image.network(image.data.toString()),
+                              radius: 50,
+                            );
+                          } else {
+                            return CircleAvatar(
+                              backgroundImage: AssetImage('images/profile.png'),
+                              radius: 50,
+                            );
+                          }
+                        }),
                     SizedBox(width: 20),
                     Container(
                       //decoration: BoxDecoration(color: Colors.yellow),
