@@ -13,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:irent_app/not_verified.dart';
 import 'package:irent_app/switch_nav.dart';
 import 'package:irent_app/edit_profile.dart';
+import 'admin/admin_switch_nav.dart';
 import 'topup.dart';
 
 void main() async {
@@ -49,6 +50,9 @@ class MainPage extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              if (snapshot.data!.email!.contains('admin')) {
+                return AdminSwitchNavBar();
+              }
               return SwitchNavBar();
             } else {
               return LoginRegisterScreen();
