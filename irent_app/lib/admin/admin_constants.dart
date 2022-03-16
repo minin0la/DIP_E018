@@ -1,36 +1,34 @@
-final now = "2022-03-17 13:20:00";
+final now = "2022-03-16 12:00:00";
 
 var notificationData = [
   {
     "storeName": "UROC",
     "itemName": "Overcooked",
-    "collectTime": "2022-03-17 11:30:00",
-    "returnTime": "2022-03-17 13:30:00",
-    "ticketNumber": 7,
+    "receiveTime": "2022-03-16 11:55:00",
+    "ticketNumber": 59,
     "displayPicture": 'images/Image_uroc.png'
+  },
+  {
+    "storeName": "CISS",
+    "itemName": "Breadboard",
+    "receiveTime": "2022-03-16 11:45:00",
+    "ticketNumber": 43,
+    "displayPicture": 'images/Image_ciss.png'
   },
   {
     "storeName": "UROC",
     "itemName": "Mario Kart Deluxe",
-    "collectTime": "2022-03-17 13:20:00",
-    "returnTime": "2022-03-17 15:00:00",
-    "ticketNumber": 7,
+    "receiveTime": "2022-03-16 11:40:00",
+    "ticketNumber": 28,
     "displayPicture": 'images/Image_uroc.png'
   },
   {
     "storeName": "CISS",
     "itemName": "Jumper Wire",
-    "collectTime": "2022-03-17 11:30:00",
-    "returnTime": "2022-03-17 13:30:00",
-    "ticketNumber": 7,
-    "displayPicture": 'images/Image_ciss.png'
-  },
-  {
-    "storeName": "CISS",
-    "itemName": "Breadboard",
-    "collectTime": "2022-03-17 13:20:00",
-    "returnTime": "2022-03-17 15:00:00",
+    "receiveTime": "2022-03-16 11:30:00",
     "ticketNumber": 7,
     "displayPicture": 'images/Image_ciss.png'
   },
 ];
+
+var categories = <String>['Recreation', 'Laboratory', 'Inventory'];
