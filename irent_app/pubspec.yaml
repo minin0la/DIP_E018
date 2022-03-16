@@ -40,6 +40,8 @@ dependencies:
   intl: ^0.17.0
   qr_flutter: ^4.0.0
   bottom_indicator_bar: ^2.0.0
+  firebase_storage: ^10.2.8
+  image_picker: ^0.8.4+11
 
 dev_dependencies:
   flutter_test:
@@ -91,6 +93,8 @@ flutter:
     - images/irent-logo.png
     - images/no.png
     - images/party-popper.png
+    - images/paylah.png
+    - images/payanyone.png
     - images/profile.png
     - images/ps-game-console.png
     - images/tool-box.png
