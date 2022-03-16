@@ -159,17 +159,6 @@ Widget _historyCard(
                       Text('Collection Time: $collectTime',
                           style: subtitleStyles),
                       Text('Return Time: $returnTime', style: subtitleStyles),
-                      Row(
-                        children: <Widget>[increment_decrement()],
-                      ),
-                      Row(
-                        children: [
-                          //
-                          Column(
-                            children: <Widget>[time()],
-                          ),
-                        ],
-                      ),
                     ],
                   ),
                 ),

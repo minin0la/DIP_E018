@@ -1,7 +1,16 @@
+import 'dart:ui';
+import 'package:irent_app/database.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:irent_app/user_item_page.dart';
+
 import 'constants.dart';
+
+import 'constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:intl/intl.dart';
 
 import 'package:irent_app/CategoriesScroller.dart';
 
@@ -189,6 +198,39 @@ class _user_store_urocState extends State<user_store_uroc> {
                     }),
               ),
             ),
+            InkWell(
+              child: Expanded(
+                flex: 6,
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.only(left: 25, right: 25),
+                  child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: ScrollPhysics(),
+                      itemCount: productDetails.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2),
+                      itemBuilder: (context, index) {
+                        for (var product in productDetails) {
+                          return _productDetailsCard(
+                              context: context,
+                              name: productDetails[index]['name'].toString(),
+                              product_category: productDetails[index]
+                                      ['product_category']
+                                  .toString(),
+                              pricePerhour: int.parse(productDetails[index]
+                                      ['pricePerhour']
+                                  .toString()),
+                              displayPicture: productDetails[index]
+                                      ['displayPicture']
+                                  .toString());
+                        }
+                        throw 'No Data Found';
+                      }),
+                ),
+              ),
+              onTap: () {},
+            ),
           ],
         ),
       ),
@@ -208,7 +250,7 @@ Widget _productDetailsCard(
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const user_item_page()),
+              MaterialPageRoute(builder: (context) => user_item_page()),
             );
           },
           child: Container(

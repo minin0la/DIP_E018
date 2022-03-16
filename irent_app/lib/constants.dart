@@ -28,7 +28,8 @@ var historyData = [
   {
     "name": "Overcooked",
     "qty": 1,
-    "price": 5,
+    "price": 2,
+    "pricePerhour": "1",
     "collectDate": DateFormat.yMd().format(DateTime.now()),
     "returnDate": DateFormat.yMd().format(DateTime.now()),
     "collectTime": DateFormat.jm().format(DateTime.now()),
@@ -39,7 +40,8 @@ var historyData = [
   {
     "name": "Mario Kart Deluxe",
     "qty": 2,
-    "price": 10,
+    "price": 2,
+    "pricePerhour": "1",
     "collectDate": DateFormat.yMd().format(DateTime.now()),
     "returnDate": DateFormat.yMd().format(DateTime.now()),
     "collectTime": DateFormat.jm().format(DateTime.now()),
@@ -50,7 +52,8 @@ var historyData = [
   {
     "name": "FIFA 22",
     "qty": 3,
-    "price": 2,
+    "price": 3,
+    "pricePerhour": "1",
     "collectDate": DateFormat.yMd().format(DateTime.now()),
     "returnDate": DateFormat.yMd().format(DateTime.now()),
     "collectTime": DateFormat.jm().format(DateTime.now()),

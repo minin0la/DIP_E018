@@ -43,6 +43,12 @@ class _timeState extends State<time> {
 
   @override
   Widget build(BuildContext context) {
+    // DateTime time2 = DateFormat.jm().parse(initialValue_end);
+    // DateTime time1 = DateFormat.jm().parse(initialValue_end);
+    // DateTime timestart = DateTime.parse(DateFormat("HH:mm").format(time1));
+    // DateTime timeend = DateTime.parse(DateFormat("HH:mm").format(time2));
+
+    //final difference = timeend.difference(timestart).inHours;
     return Container(
       child: Row(
         children: <Widget>[
@@ -75,9 +81,6 @@ class _timeState extends State<time> {
                           onChanged: (value_start) {
                             setState(() {
                               initialValue_start = value_start.toString();
-                              DateTime time =
-                                  DateFormat('hh:mm').parse(initialValue_start);
-                              print(DateFormat("HH:mm").format(time));
                             });
                           },
                           menuMaxHeight: 150,

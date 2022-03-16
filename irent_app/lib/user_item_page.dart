@@ -2,6 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:irent_app/app_icons.dart';
+
+import 'package:irent_app/user_return.dart';
+
+import 'package:irent_app/basket.dart';
 import 'package:irent_app/user_return.dart';
 
 class user_item_page extends StatefulWidget {
@@ -60,6 +64,7 @@ class _user_item_pageState extends State<user_item_page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Column(children: <Widget>[
         Container(
           height: 340,
@@ -199,7 +204,7 @@ class _user_item_pageState extends State<user_item_page> {
             Column(
               children: [
                 Container(
-                    margin: EdgeInsets.only(left: 15, top: 20),
+                    margin: EdgeInsets.only(left: 5, top: 20),
                     height: 19,
                     width: 175,
                     child: Text(
@@ -320,7 +325,7 @@ class _user_item_pageState extends State<user_item_page> {
             Column(
               children: [
                 Container(
-                    margin: EdgeInsets.only(left: 15, top: 20),
+                    margin: EdgeInsets.only(left: 5, top: 20),
                     height: 19,
                     width: 175,
                     child: Text(
@@ -381,7 +386,7 @@ class _user_item_pageState extends State<user_item_page> {
             Container(
                 height: 22,
                 width: 67,
-                margin: EdgeInsets.only(left: 26, top: 20),
+                margin: EdgeInsets.only(left: 26, top: 10),
                 child: Text(
                   'Quantity',
                   textAlign: TextAlign.left,
@@ -393,32 +398,35 @@ class _user_item_pageState extends State<user_item_page> {
                       fontWeight: FontWeight.normal,
                       height: 1),
                 )),
+            Container(
+              width: 126,
+              height: 40,
+              margin: EdgeInsets.only(left: 140, top: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  FloatingActionButton(
+                      backgroundColor: Color.fromRGBO(219, 228, 238, 1),
+                      child:
+                          Icon(Icons.add, color: Color.fromRGBO(0, 29, 74, 1)),
+                      onPressed: _increamentCount),
+                  Text('${_count}'),
+                  FloatingActionButton(
+                    backgroundColor: Color.fromRGBO(219, 228, 238, 1),
+                    child:
+                        Icon(Icons.remove, color: Color.fromRGBO(0, 29, 74, 1)),
+                    onPressed: _decreamentCount,
+                  )
+                ],
+              ),
+            ),
           ],
         ),
-        Container(
-          width: 126,
-          height: 40,
-          margin: EdgeInsets.only(left: 250),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              FloatingActionButton(
-                  backgroundColor: Color.fromRGBO(219, 228, 238, 1),
-                  child: Icon(Icons.add, color: Color.fromRGBO(0, 29, 74, 1)),
-                  onPressed: _increamentCount),
-              Text('${_count}'),
-              FloatingActionButton(
-                backgroundColor: Color.fromRGBO(219, 228, 238, 1),
-                child: Icon(Icons.remove, color: Color.fromRGBO(0, 29, 74, 1)),
-                onPressed: _decreamentCount,
-              )
-            ],
-          ),
-        ),
         Column(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Container(
-                margin: EdgeInsets.only(top: 12.5),
+                //margin: EdgeInsets.only(bottom: 0),
                 alignment: Alignment.bottomCenter,
                 height: 100,
                 width: 412,
@@ -496,8 +504,7 @@ class _user_item_pageState extends State<user_item_page> {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                  builder: (context) => user_return()),
+                              MaterialPageRoute(builder: (context) => basket()),
                             );
                           },
                         ),

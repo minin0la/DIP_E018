@@ -8,53 +8,13 @@ class date extends StatefulWidget {
 }
 
 class _dateState extends State<date> {
-  DateTime dateTime = DateTime(2022);
-  TimeOfDay _time = TimeOfDay.now();
-  String initialValue = '12 AM';
-
-  var itemList = [
-    '12 AM',
-    '1 AM',
-    '2 AM',
-    '3 AM',
-    '4 AM',
-    '5 AM',
-    '6 AM',
-    '7 AM',
-    '8 AM',
-    '9 AM',
-    '10 AM',
-    '11 AM',
-    '12 PM',
-    '1 PM',
-    '2 PM',
-    '3 PM',
-    '4 PM',
-    '5 PM',
-    '6 PM',
-    '7 PM',
-    '8 PM',
-    '9 PM',
-    '10 PM',
-    '11 PM',
-  ];
-
-  int _count = 0;
-
-  void _increamentCount() {
-    setState(() {
-      _count++;
-    });
-  }
-
-  void _decreamentCount() {
-    setState(() {
-      _count--;
-    });
-  }
+  DateTime dateTimeStart = DateTime(2022);
+  DateTime dateTimeEnd = DateTime(2022);
 
   @override
   Widget build(BuildContext context) {
+    final difference = dateTimeEnd.difference(dateTimeStart).inDays;
+    print(difference);
     return Container(
       child: Row(
         children: <Widget>[
@@ -69,14 +29,14 @@ class _dateState extends State<date> {
                         textDirection: TextDirection.rtl,
                         child: ElevatedButton.icon(
                           onPressed: () async {
-                            DateTime? newDate = await showDatePicker(
+                            DateTime? newDate1 = await showDatePicker(
                                 context: context,
-                                initialDate: dateTime,
+                                initialDate: dateTimeStart,
                                 firstDate: DateTime(1900),
                                 lastDate: DateTime(2300));
-                            if (newDate != null) {
+                            if (newDate1 != null) {
                               setState(() {
-                                dateTime = newDate;
+                                dateTimeStart = newDate1;
                               });
                             }
                           },
@@ -86,7 +46,7 @@ class _dateState extends State<date> {
                             size: 20,
                           ),
                           label: Text(
-                              '${dateTime.day}/${dateTime.month}/${dateTime.year}',
+                              '${dateTimeStart.day}/${dateTimeStart.month}/${dateTimeStart.year}',
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                   color: Color.fromRGBO(0, 29, 74, 1),
@@ -117,14 +77,14 @@ class _dateState extends State<date> {
                     textDirection: TextDirection.rtl,
                     child: ElevatedButton.icon(
                       onPressed: () async {
-                        DateTime? newDate = await showDatePicker(
+                        DateTime? newDate2 = await showDatePicker(
                             context: context,
-                            initialDate: dateTime,
+                            initialDate: dateTimeEnd,
                             firstDate: DateTime(1900),
                             lastDate: DateTime(2300));
-                        if (newDate != null) {
+                        if (newDate2 != null) {
                           setState(() {
-                            dateTime = newDate;
+                            dateTimeEnd = newDate2;
                           });
                         }
                       },
@@ -134,7 +94,7 @@ class _dateState extends State<date> {
                         size: 20,
                       ),
                       label: Text(
-                          '${dateTime.day}/${dateTime.month}/${dateTime.year}',
+                          '${dateTimeEnd.day}/${dateTimeEnd.month}/${dateTimeEnd.year}',
                           textAlign: TextAlign.start,
                           style: TextStyle(
                               color: Color.fromRGBO(0, 29, 74, 1),
