@@ -14,6 +14,7 @@ import 'package:irent_app/not_verified.dart';
 import 'package:irent_app/switch_nav.dart';
 import 'package:irent_app/edit_profile.dart';
 import 'admin/admin_switch_nav.dart';
+import 'topup.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
