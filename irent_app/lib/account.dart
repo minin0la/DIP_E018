@@ -17,7 +17,8 @@ class AccountScreen extends StatelessWidget {
   final Color oxford = const Color(0xFF001D4A);
   final Color aliceblue = const Color(0xFF81A4CD);
   final Color marigold = const Color(0xFFECA400);
-  String? currentuser = FirebaseAuth.instance.currentUser?.email;
+  String? currentuserEmail = FirebaseAuth.instance.currentUser?.email;
+  String? currentuserName = FirebaseAuth.instance.currentUser?.displayName;
 
   @override
   Widget build(BuildContext context) {
@@ -66,38 +67,48 @@ class AccountScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          FutureBuilder(
-                            future: getUserInfo(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<DocumentSnapshot> snapshot) {
-                              if (snapshot.hasData && snapshot.data!.exists) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                } else {
-                                  Map<String, dynamic> data = snapshot.data!
-                                      .data() as Map<String, dynamic>;
-                                  return Center(
-                                      child: Text(
-                                    data['name'].toUpperCase(),
-                                    style: TextStyle(
-                                      color: oxford,
-                                      fontFamily: "SF_Pro_Rounded",
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 22.0,
-                                    ),
-                                  ));
-                                }
-                              } else if (snapshot.hasError) {
-                                return Text('no data');
-                              }
-                              return CircularProgressIndicator();
-                            },
-                          ),
                           Text(
-                            currentuser!,
+                              currentuserName == null
+                                  ? ("no name")
+                                  : currentuserName!.toUpperCase(),
+                              style: TextStyle(
+                                color: oxford,
+                                fontFamily: "SF_Pro_Rounded",
+                                fontWeight: FontWeight.w700,
+                                fontSize: 22.0,
+                              )),
+                          // FutureBuilder(
+                          //   future: getUserInfo(),
+                          //   builder: (BuildContext context,
+                          //       AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          //     if (snapshot.hasData && snapshot.data!.exists) {
+                          //       if (snapshot.connectionState ==
+                          //           ConnectionState.waiting) {
+                          //         return Center(
+                          //           child: CircularProgressIndicator(),
+                          //         );
+                          //       } else {
+                          //         Map<String, dynamic> data = snapshot.data!
+                          //             .data() as Map<String, dynamic>;
+                          //         return Center(
+                          //             child: Text(
+                          //           data['name'].toUpperCase(),
+                          //           style: TextStyle(
+                          //             color: oxford,
+                          //             fontFamily: "SF_Pro_Rounded",
+                          //             fontWeight: FontWeight.w700,
+                          //             fontSize: 22.0,
+                          //           ),
+                          //         ));
+                          //       }
+                          //     } else if (snapshot.hasError) {
+                          //       return Text('no data');
+                          //     }
+                          //     return CircularProgressIndicator();
+                          //   },
+                          // ),
+                          Text(
+                            currentuserEmail!,
                             style: TextStyle(
                               color: Color(0x99001D4A),
                               fontFamily: "SF_Pro_Rounded",

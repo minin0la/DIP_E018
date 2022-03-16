@@ -2,6 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:irent_app/authservice.dart';
+import 'package:irent_app/login.dart';
+import 'package:irent_app/login_register.dart';
 import 'package:irent_app/switch_nav.dart';
 import 'homepage.dart';
 import 'package:irent_app/app_icons.dart';
@@ -16,8 +19,10 @@ class ChangePasscodePage extends StatefulWidget {
 }
 
 class _ChangePasscodePageState extends State<ChangePasscodePage> {
-  final TextEditingController _emailField = TextEditingController();
-  final TextEditingController _passwordField = TextEditingController();
+  final currentUser = FirebaseAuth.instance.currentUser;
+  var newPassword = "";
+  final newPasswordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final Color white = const Color(0xFFFBFBFF);
@@ -27,6 +32,11 @@ class _ChangePasscodePageState extends State<ChangePasscodePage> {
   final Color transparent = const Color(0x4DE3E3E3);
   bool? _success;
   String? _userEmail;
+
+  void dispose() {
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,10 +123,10 @@ class _ChangePasscodePageState extends State<ChangePasscodePage> {
                     child: Column(
                       children: [
                         TextFormField(
-                          controller: _emailField,
+                          obscureText: true,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your NTU email';
+                              return 'Please enter your current password';
                             }
                             return null;
                           },
@@ -131,10 +141,11 @@ class _ChangePasscodePageState extends State<ChangePasscodePage> {
                           height: 10,
                         ),
                         TextFormField(
-                          controller: _emailField,
+                          obscureText: true,
+                          controller: newPasswordController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your NTU email';
+                              return 'Please enter your new password';
                             }
                             return null;
                           },
@@ -149,10 +160,14 @@ class _ChangePasscodePageState extends State<ChangePasscodePage> {
                           height: 10,
                         ),
                         TextFormField(
-                          controller: _passwordField,
+                          obscureText: true,
+                          controller: confirmPasswordController,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
+                            if (value == null ||
+                                value.isEmpty ||
+                                confirmPasswordController.text !=
+                                    newPasswordController.text) {
+                              return 'Please confirm your new password';
                             }
                             return null;
                           },
@@ -172,15 +187,42 @@ class _ChangePasscodePageState extends State<ChangePasscodePage> {
                           child: ElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                if (_formKey.currentState!.validate()) {
-                                  await _signInWithEmailAndPassword();
-                                  if (_success = true) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const SwitchNavBar()));
-                                  }
+                                setState(() {
+                                  newPassword = confirmPasswordController.text;
+                                });
+                                String updatePassword = await AuthService()
+                                    .changePassword(newPassword);
+                                if (updatePassword == 'success') {
+                                  FirebaseAuth.instance.signOut();
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            LoginRegisterScreen(),
+                                      ));
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    backgroundColor: Colors.black26,
+                                    content: Text(
+                                        'Your password has been changed... Login again'),
+                                  ));
+                                } else if (updatePassword ==
+                                    "requires-recent-login") {
+                                  FirebaseAuth.instance.signOut();
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            LoginRegisterScreen(),
+                                      ));
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    backgroundColor: Colors.black26,
+                                    content: Text(
+                                        'This operation is sensitive and requires recent authentication. Log in again before retrying this request.'),
+                                  ));
+                                } else {
+                                  print(updatePassword);
                                 }
                               }
                             },
@@ -224,29 +266,5 @@ class _ChangePasscodePageState extends State<ChangePasscodePage> {
   }
 
 //Not edited
-  Future<void> _signInWithEmailAndPassword() async {
-    final User? user = (await _auth.signInWithEmailAndPassword(
-      email: _emailField.text,
-      password: _passwordField.text,
-    ))
-        .user;
 
-    if (user != null) {
-      setState(() {
-        _success = true;
-        _userEmail = user.email;
-      });
-    } else {
-      setState(() {
-        _success = false;
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _emailField.dispose();
-    _passwordField.dispose();
-    super.dispose();
-  }
 }

@@ -4,9 +4,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:irent_app/authservice.dart';
+import 'package:irent_app/database.dart';
+import 'package:irent_app/login_register.dart';
+import 'package:irent_app/profilepage.dart';
 import 'package:irent_app/switch_nav.dart';
 import 'database.dart';
 import 'homepage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:irent_app/app_icons.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -21,7 +26,12 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  final currentUser = FirebaseAuth.instance.currentUser;
+
   final TextEditingController _emailField = TextEditingController();
+  final TextEditingController _nameField = TextEditingController();
+  final TextEditingController _mobileNumberField = TextEditingController();
+
   final TextEditingController _passwordField = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -121,10 +131,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       children: [
                         SizedBox(height: 30),
                         TextFormField(
-                          controller: _emailField,
+                          controller: _nameField,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your NTU email';
+                              return 'Please enter your name';
                             }
                             return null;
                           },
@@ -157,10 +167,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           height: 10,
                         ),
                         TextFormField(
-                          controller: _passwordField,
+                          controller: _mobileNumberField,
                           // validator: (value) {
                           //   if (value == null || value.isEmpty) {
-                          //     return 'Please enter your password';
+                          //     return 'Please enter your mobile number';
                           //   }
                           //   return null;
                           // },
@@ -183,13 +193,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 if (_myImage != null) {
                                   await uploadProfileImage(_myImage);
                                 }
-                                await _signInWithEmailAndPassword();
-                                if (_success = true) {
-                                  Navigator.push(
+                                String updateProfile = await AuthService()
+                                    .changeProfile(
+                                        _nameField.text, _emailField.text);
+                                if (updateProfile == 'success') {
+                                  await FirebaseAuth.instance.signOut();
+                                  Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              const SwitchNavBar()));
+                                              LoginRegisterScreen()));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Your profile has been updated...Please login again')));
+                                } else {
+                                  print(updateProfile);
                                 }
                               }
                             },
@@ -234,7 +253,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     future: getProfileImage(),
                     builder:
                         (BuildContext context, AsyncSnapshot<String> image) {
-                      if (image.hasData) {
+                      if (image.data != "") {
                         return CircleAvatar(
                           backgroundImage: NetworkImage(image.data.toString()),
                           // NetworkImage('https://via.placeholder.com/150'),
@@ -295,6 +314,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void dispose() {
     _emailField.dispose();
     _passwordField.dispose();
+    _mobileNumberField.dispose();
     super.dispose();
   }
 }
