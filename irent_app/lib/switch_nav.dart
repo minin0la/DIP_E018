@@ -13,6 +13,9 @@ import 'account.dart';
 import 'qrrtest.dart';
 import 'package:intl/intl.dart';
 
+import 'user_basket.dart';
+import 'user_bookings.dart';
+
 class SwitchNavBar extends StatefulWidget {
   const SwitchNavBar({Key? key}) : super(key: key);
 
@@ -51,14 +54,8 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
   ];
   final List<Widget> _bodyContents = <Widget>[
     user_home(),
-    Text(
-      'Bookings',
-      style: titleStyle,
-    ),
-    Text(
-      'Basket',
-      style: titleStyle,
-    ),
+    user_bookings(),
+    user_basket(),
     AccountScreen(),
   ];
 
