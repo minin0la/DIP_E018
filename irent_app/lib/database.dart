@@ -46,8 +46,10 @@ Future<String> getProfileImage() async {
       .FirebaseStorage.instance
       .ref()
       .child("users/$uid/profile_img"); //i is the name of the image
-  // try {
-  var downloadUrl = await firebaseStorageRef.getDownloadURL();
-
-  return (downloadUrl);
+  try {
+    var downloadUrl = await firebaseStorageRef.getDownloadURL();
+    return (downloadUrl);
+  } on FirebaseException catch (e) {
+    return "";
+  }
 }

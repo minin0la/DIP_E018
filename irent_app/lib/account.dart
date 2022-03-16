@@ -42,7 +42,7 @@ class AccountScreen extends StatelessWidget {
                         future: getProfileImage(),
                         builder: (BuildContext context,
                             AsyncSnapshot<String> image) {
-                          if (image.hasData) {
+                          if (image.data != "") {
                             print("Showing Image");
                             print("Image: " + image.data.toString());
 
