@@ -1,36 +1,39 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:irent_app/account.dart';
-import 'package:irent_app/constants.dart';
-import 'package:irent_app/qrrtest.dart';
-import 'dart:ui';
-import 'app_icons.dart';
-import 'datetimetest.dart';
+import 'package:irent_app/admin/admin_add_store.dart';
+import 'package:irent_app/admin/admin_transactions.dart';
+import '../app_icons.dart';
 import 'package:irent_app/app_icons.dart';
-import 'package:irent_app/user_home.dart';
-import 'account.dart';
-import 'qrrtest.dart';
-import 'package:intl/intl.dart';
+import 'admin_home.dart';
+import 'admin_bookings.dart';
+import 'admin_account.dart';
+import 'admin_constants.dart';
 
-class SwitchNavBar extends StatefulWidget {
-  const SwitchNavBar({Key? key}) : super(key: key);
+class AdminSwitchNavBar extends StatefulWidget {
+  const AdminSwitchNavBar({Key? key}) : super(key: key);
 
   @override
-  State<SwitchNavBar> createState() => _SwitchNavBarState();
+  State<AdminSwitchNavBar> createState() => _AdminSwitchNavBarState();
 }
 
-class _SwitchNavBarState extends State<SwitchNavBar> {
-  int _selectedIndex = 0;
+class _AdminSwitchNavBarState extends State<AdminSwitchNavBar> {
+  final Color white = const Color(0xFFFBFBFF);
+  final Color oxford = const Color(0xFF001D4A);
+  final Color aliceblue = const Color(0xFF81A4CD);
   final Color iceberg = const Color(0xFFDBE4EE);
-  static const TextStyle titleStyle = TextStyle(
-      fontSize: 25, color: Color(0xFF001D4A), fontWeight: FontWeight.w500);
+  final Color marigold = const Color(0xFFECA400);
+  final Color transparent = const Color(0x4DE3E3E3);
   final TextStyle notifTitleStyle = TextStyle(
     fontFamily: 'SF_Pro_Rounded',
     fontSize: 15,
     fontWeight: FontWeight.w600,
     color: Color(0xFF001D4A),
   );
+
+  int _selectedIndex = 0;
+  static const TextStyle titleStyle = TextStyle(
+      fontSize: 25, color: Color(0xFF001D4A), fontWeight: FontWeight.w500);
   static const List<Widget> _titleBar = <Widget>[
     Text(
       'iRent',
@@ -41,7 +44,7 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
       style: titleStyle,
     ),
     Text(
-      'Basket',
+      'Transactions',
       style: titleStyle,
     ),
     Text(
@@ -50,16 +53,10 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
     ),
   ];
   final List<Widget> _bodyContents = <Widget>[
-    user_home(),
-    Text(
-      'Bookings',
-      style: titleStyle,
-    ),
-    Text(
-      'Basket',
-      style: titleStyle,
-    ),
-    AccountScreen(),
+    admin_home(),
+    admin_bookings(),
+    admin_transactions(),
+    AdminAccountScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -105,8 +102,7 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
                                 _notifItem(
                                   notif['storeName'].toString(),
                                   notif['itemName'].toString(),
-                                  notif['collectTime'].toString(),
-                                  notif['returnTime'].toString(),
+                                  notif['receiveTime'].toString(),
                                   int.parse(notif['ticketNumber'].toString()),
                                   notif['displayPicture'].toString(),
                                 ),
@@ -150,10 +146,10 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
                 label: "Bookings"),
             BottomNavigationBarItem(
                 icon: Icon(
-                  AppIcons.basket,
+                  AppIcons.wallet,
                   size: 30,
                 ),
-                label: "Basket"),
+                label: "Wallet"),
             BottomNavigationBarItem(
                 icon: Icon(
                   AppIcons.account,
@@ -166,33 +162,32 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
           onTap: _onItemTapped,
         ),
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          FloatingActionButton(
-            heroTag: 'datetime_tester',
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => DateTimeTest()));
-            },
-            child: Icon(Icons.add),
-          ),
-          FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => QrTest()));
-            },
-            tooltip: 'QR Testing',
-            heroTag: 'qr_tester',
-            child: Icon(Icons.add),
-          )
-        ],
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              backgroundColor: marigold,
+              heroTag: 'add_store',
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AddStorePage()));
+              },
+              child: Icon(
+                Icons.add,
+                size: 30,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _notifItem(String storeName, String itemName, String collectTime,
-      String returnTime, int ticket, String image) {
+  Widget _notifItem(String storeName, String itemName, String receiveTime,
+      int ticket, String image) {
     final TextStyle storeStyle = TextStyle(
       fontFamily: 'SF_Pro_Rounded',
       fontSize: 15,
@@ -247,7 +242,7 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
                   ),
                   Text(itemName, style: itemStyle),
                   Text(
-                    _notifText(collectTime, returnTime),
+                    'Feedback Received',
                     style: notifStyle,
                   )
                 ],
@@ -256,7 +251,7 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
               Container(
                 alignment: Alignment.topRight,
                 child: Text(
-                  _notifTime(collectTime, returnTime),
+                  _notifTime(receiveTime),
                   style: notifStyle,
                   textAlign: TextAlign.start,
                 ),
@@ -268,9 +263,9 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
     );
   }
 
-  String _notifTime(String collectTime, String returnTime) {
+  String _notifTime(String receiveTime) {
     final int timeStamp =
-        DateTime.parse(returnTime).difference(DateTime.parse(now)).inMinutes;
+        DateTime.parse(now).difference(DateTime.parse(receiveTime)).inMinutes;
 
     return '$timeStamp m ago';
   }
@@ -290,10 +285,10 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
 
     if (timeToReturn == 10) {
       return """Your borrowing period
-ends in 10 minutes!""";
+ ends in 10 minutes!""";
     } else if (timeToCollect == 0) {
       return """Your item is ready
-to be collected!""";
+ to be collected!""";
     }
     return "";
   }
