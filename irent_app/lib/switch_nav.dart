@@ -15,9 +15,6 @@ import 'account.dart';
 import 'qrrtest.dart';
 import 'package:intl/intl.dart';
 
-import 'user_basket.dart';
-import 'user_bookings.dart';
-
 class SwitchNavBar extends StatefulWidget {
   const SwitchNavBar({Key? key}) : super(key: key);
 
