@@ -153,7 +153,7 @@ class _LoginPageState extends State<LoginPage> {
                           _success == null
                               ? ''
                               : (_success!
-                                  ? 'Successfully signed in ' + _userEmail!
+                                  ? 'Successfully signed in '
                                   : 'Sign in failed'),
                           style: TextStyle(color: Colors.red),
                           textAlign: TextAlign.center,
@@ -181,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _success = false;
         _verified = false;
-        // _userEmail = user.email;
+        _userEmail = user.email;
       });
     } else {
       setState(() {
