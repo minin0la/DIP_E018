@@ -28,7 +28,8 @@ var historyData = [
   {
     "name": "Overcooked",
     "qty": 1,
-    "price": 5,
+    "price": 1,
+    "pricePerhour": "1",
     "collectDate": DateFormat.yMd().format(DateTime.now()),
     "returnDate": DateFormat.yMd().format(DateTime.now()),
     "collectTime": DateFormat.jm().format(DateTime.now()),
@@ -39,7 +40,8 @@ var historyData = [
   {
     "name": "Mario Kart Deluxe",
     "qty": 2,
-    "price": 10,
+    "price": 2,
+    "pricePerhour": "1",
     "collectDate": DateFormat.yMd().format(DateTime.now()),
     "returnDate": DateFormat.yMd().format(DateTime.now()),
     "collectTime": DateFormat.jm().format(DateTime.now()),
@@ -49,8 +51,9 @@ var historyData = [
   },
   {
     "name": "FIFA 22",
-    "qty": 3,
+    "qty": 2,
     "price": 2,
+    "pricePerhour": "1",
     "collectDate": DateFormat.yMd().format(DateTime.now()),
     "returnDate": DateFormat.yMd().format(DateTime.now()),
     "collectTime": DateFormat.jm().format(DateTime.now()),
@@ -72,6 +75,7 @@ var historyDetailsTest = [
   },
 ];
 
+<<<<<<< Updated upstream
 final now = "2022-03-17 13:20:00";
 
 var notificationData = [
@@ -106,5 +110,58 @@ var notificationData = [
     "returnTime": "2022-03-17 15:00:00",
     "ticketNumber": 7,
     "displayPicture": 'images/Image_ciss.png'
+=======
+var stores = [
+  {
+    "store_name": "URCC @ Student Activity Centre",
+    "address":
+        "North Spine, NS3-01-03, 50 Nanyang Ave, Block N3.1, Singapore 639798",
+    "category": "Recreational Games",
+    "displayStorePicture": 'images/Image_uroc.png'
+  },
+  {
+    "store_name": "Centre for Information Sciences and Systems (CISS)",
+    "address": "50 Nanyang Ave S2-B4b-05, Singapore 639798",
+    "category": "EEE Laboratories",
+    "displayStorePicture": 'images/Image_ciss.png'
+  },
+];
+
+var productDetails = [
+  {
+    "id": 'p1',
+    "name": "Mario Kart Deluxe",
+    "product_category": "Console Game",
+    "pricePerhour": "1",
+    "displayPicture": 'images/Image_mariokartdeluxe.jpg'
+  },
+  {
+    "id": 'p2',
+    "name": "Super Mario",
+    "product_category": "Console Game",
+    "pricePerhour": "1",
+    "displayPicture": 'images/Image_supermario.jfif'
+  },
+  {
+    "id": 'p3',
+    "name": "Overcooked",
+    "product_category": "Console Game",
+    "pricePerhour": "1",
+    "displayPicture": 'images/Image_overcooked.jpg'
+  },
+  {
+    "id": 'p4',
+    "name": "Fifa 22",
+    "product_category": "Console Game",
+    "pricePerhour": "1",
+    "displayPicture": 'images/Image_fifa22.jpeg'
+  },
+  {
+    "id": 'p5',
+    "name": "Madden 18",
+    "product_category": "Console Game",
+    "pricePerhour": "1",
+    "displayPicture": 'images/Image_madden18.jpg'
+>>>>>>> Stashed changes
   },
 ];
