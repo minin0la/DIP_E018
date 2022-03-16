@@ -2,8 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:irent_app/authservice.dart';
+import 'package:irent_app/database.dart';
+import 'package:irent_app/login_register.dart';
+import 'package:irent_app/profilepage.dart';
 import 'package:irent_app/switch_nav.dart';
 import 'homepage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:irent_app/app_icons.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -16,7 +21,12 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  final currentUser = FirebaseAuth.instance.currentUser;
+
   final TextEditingController _emailField = TextEditingController();
+  final TextEditingController _nameField = TextEditingController();
+  final TextEditingController _mobileNumberField = TextEditingController();
+
   final TextEditingController _passwordField = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -116,10 +126,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       children: [
                         SizedBox(height: 30),
                         TextFormField(
-                          controller: _emailField,
+                          controller: _nameField,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your NTU email';
+                              return 'Please enter your name';
                             }
                             return null;
                           },
@@ -152,13 +162,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           height: 10,
                         ),
                         TextFormField(
-                          controller: _passwordField,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
-                            }
-                            return null;
-                          },
+                          controller: _mobileNumberField,
+                          // validator: (value) {
+                          //   if (value == null || value.isEmpty) {
+                          //     return 'Please enter your mobile number';
+                          //   }
+                          //   return null;
+                          // },
                           decoration: InputDecoration(
                               labelText: 'Mobile No',
                               hintText: '9245XXXX',
@@ -175,15 +185,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           child: ElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                if (_formKey.currentState!.validate()) {
-                                  await _signInWithEmailAndPassword();
-                                  if (_success = true) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const SwitchNavBar()));
-                                  }
+                                String updateProfile = await AuthService()
+                                    .changeProfile(
+                                        _nameField.text, _emailField.text);
+                                if (updateProfile == 'success') {
+                                  await FirebaseAuth.instance.signOut();
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              LoginRegisterScreen()));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Your profile has been updated...Please login again')));
+                                } else {
+                                  print(updateProfile);
                                 }
                               }
                             },
@@ -274,6 +291,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void dispose() {
     _emailField.dispose();
     _passwordField.dispose();
+    _mobileNumberField.dispose();
     super.dispose();
   }
 }
