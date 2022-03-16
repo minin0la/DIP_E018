@@ -13,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:irent_app/not_verified.dart';
 import 'package:irent_app/switch_nav.dart';
 import 'package:irent_app/edit_profile.dart';
+import 'topup.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
