@@ -15,7 +15,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:irent_app/app_icons.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
-
+String? uid = FirebaseAuth.instance.currentUser?.uid;
+CollectionReference updateProfile =
+    FirebaseFirestore.instance.collection('users');
 File? _myImage;
 
 class EditProfilePage extends StatefulWidget {
@@ -197,6 +199,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                     .changeProfile(
                                         _nameField.text, _emailField.text);
                                 if (updateProfile == 'success') {
+                                  await updateUser();
                                   await FirebaseAuth.instance.signOut();
                                   Navigator.pushReplacement(
                                       context,
@@ -288,6 +291,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ],
       ),
     );
+  }
+
+  Future<void> updateUser() {
+    return updateProfile
+        .doc(uid)
+        .update({
+          'name': _nameField.text,
+          'email': _emailField.text,
+          'phone_number': _mobileNumberField.text
+        })
+        .then((value) => print("User Updated"))
+        .catchError((error) => print("Failed to update user: $error"));
   }
 
 //Not edited

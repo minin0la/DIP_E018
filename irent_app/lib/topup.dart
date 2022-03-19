@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:irent_app/app_icons.dart';
 import 'package:irent_app/database.dart';
+import 'package:irent_app/user_store_uroc.dart';
 import 'login_register.dart';
 
 enum PaymentType { paylah, paynow }
@@ -17,6 +18,12 @@ class TopUpPage extends StatefulWidget {
 }
 
 class _TopUpPageState extends State<TopUpPage> {
+  String? uid = FirebaseAuth.instance.currentUser?.uid;
+  CollectionReference updateWallet =
+      FirebaseFirestore.instance.collection('users');
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _amountField = TextEditingController();
+
   final Color white = const Color(0xFFFBFBFF);
   final Color oxford = const Color(0xFF001D4A);
   final Color aliceblue = const Color(0xFF81A4CD);
@@ -97,35 +104,39 @@ class _TopUpPageState extends State<TopUpPage> {
               'Amount',
               style: subtitleStyle,
             ),
-            TextField(
-              decoration: const InputDecoration(
-                hintText: "Enter top up amount",
-                hintStyle: TextStyle(
-                  fontFamily: "SF_Pro_Rounded",
-                  color: Color(0x66001D4A),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                ),
-                prefixIconConstraints: BoxConstraints(
-                  minHeight: 32,
-                  minWidth: 32,
-                ),
-                prefixIcon: Text(
-                  '\$',
-                  style: TextStyle(
+            Form(
+              key: _formKey,
+              child: TextField(
+                controller: _amountField,
+                decoration: const InputDecoration(
+                  hintText: "Enter top up amount",
+                  hintStyle: TextStyle(
                     fontFamily: "SF_Pro_Rounded",
-                    color: Color(0xFF001D4A),
-                    fontSize: 25,
-                    fontWeight: FontWeight.w700,
+                    color: Color(0x66001D4A),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  prefixIconConstraints: BoxConstraints(
+                    minHeight: 32,
+                    minWidth: 32,
+                  ),
+                  prefixIcon: Text(
+                    '\$',
+                    style: TextStyle(
+                      fontFamily: "SF_Pro_Rounded",
+                      color: Color(0xFF001D4A),
+                      fontSize: 25,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
+                style: amountStyle,
+                textAlign: TextAlign.right,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ], // Only numbers can be entered
               ),
-              style: amountStyle,
-              textAlign: TextAlign.right,
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly
-              ], // Only numbers can be entered
             ),
             Expanded(
               child: Align(
@@ -136,7 +147,13 @@ class _TopUpPageState extends State<TopUpPage> {
                     width: 160,
                     height: 50,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        topUpWallet();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: ((context) => user_store_uroc())));
+                      },
                       child: Text(
                         'Confirm',
                         style: TextStyle(
@@ -206,5 +223,11 @@ class _TopUpPageState extends State<TopUpPage> {
         controlAffinity: ListTileControlAffinity.trailing,
       ),
     );
+  }
+
+  Future<void> topUpWallet() {
+    return updateWallet
+        .doc(uid)
+        .update({'wallet': FieldValue.increment(int.parse(_amountField.text))});
   }
 }
