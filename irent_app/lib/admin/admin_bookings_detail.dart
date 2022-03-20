@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
@@ -11,21 +13,7 @@ import '../constants.dart';
 import 'admin_constants.dart';
 import 'admin_bookings.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-
-class BookingDetailsPage extends StatefulWidget {
-  const BookingDetailsPage({Key? key}) : super(key: key);
-  static const routeName = '/extractArguments';
-
-  @override
-  State<BookingDetailsPage> createState() => _BookingDetailsPageState();
-}
-
-class _BookingDetailsPageState extends State<BookingDetailsPage> {
-  final TextEditingController _emailField = TextEditingController();
-  final TextEditingController _passwordField = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+class BookingDetailsPage extends StatelessWidget {
   final Color white = const Color(0xFFFBFBFF);
   final Color oxford = const Color(0xFF001D4A);
   final Color aliceblue = const Color(0xFF81A4CD);
@@ -33,14 +21,12 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
   final Color marigold = const Color(0xFFECA400);
   final Color transparent = const Color(0x4DE3E3E3);
 
-  bool? _success;
-  String? _userEmail;
+  final BookingsDataModel bookingsDataModel;
+  const BookingDetailsPage({Key? key, required this.bookingsDataModel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final arguments = (ModalRoute.of(context)?.settings.arguments ??
-        <String, dynamic>{}) as Map;
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: white,
@@ -99,28 +85,27 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
           ),
         ),
         Expanded(
-          flex: 6,
-          child: Container(
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.only(left: 30),
-              child: _bookingsDetails(
-                  user: bookingsData[arguments['index']]['user'].toString(),
-                  itemName: bookingsData[arguments['index']]['name'].toString(),
-                  qty: int.parse(
-                      bookingsData[arguments['index']]['qty'].toString()),
-                  price: int.parse(
-                      bookingsData[arguments['index']]['price'].toString()),
-                  collected: bookingsData[arguments['index']]['collectDate']
-                      .toString(),
-                  returned:
-                      bookingsData[arguments['index']]['returnDate'].toString(),
-                  ticketNumber: int.parse(bookingsData[arguments['index']]
-                          ['ticketNumber']
-                      .toString()),
-                  displayPicture: bookingsData[arguments['index']]
-                          ['displayPicture']
-                      .toString())),
-        ),
+            flex: 6,
+            child: SingleChildScrollView(
+              child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.only(left: 30),
+                  child: _bookingsDetails(
+                    user: bookingsDataModel.user,
+                    itemName: bookingsDataModel.name,
+                    qty: int.parse(bookingsDataModel.qty),
+                    price: num.parse(bookingsDataModel.price),
+                    collectDate: bookingsDataModel.collectDate,
+                    returnDate: bookingsDataModel.returnDate,
+                    collectTime: bookingsDataModel.collectTime,
+                    returnTime: bookingsDataModel.returnTime,
+                    ticketNumber: int.parse(bookingsDataModel.ticketNumber),
+                    displayPicture: bookingsDataModel.displayPicture,
+                    itemLoc: bookingsDataModel.itemLoc,
+                    returned: bookingsDataModel.returned,
+                    imgCapture: bookingsDataModel.imgCapture,
+                  )),
+            )),
       ]),
     );
   }
@@ -169,18 +154,35 @@ Widget _bookingsDetails(
     {required String user,
     required String itemName,
     required int qty,
-    required int price,
-    required String collected,
-    required String returned,
+    required num price,
+    required String collectDate,
+    required String returnDate,
+    required String collectTime,
+    required String returnTime,
     required int ticketNumber,
-    required String displayPicture}) {
+    required String displayPicture,
+    required String itemLoc,
+    required String returned,
+    required String imgCapture}) {
+  final TextStyle titleStyles = TextStyle(
+    fontFamily: 'SF_Pro_Rounded',
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: Color(0xFF001D4A),
+    wordSpacing: 1,
+  );
+  final Color dividerColor = Color(0x8081A4CD);
   return Column(
     children: [
+      SizedBox(
+        height: 30,
+      ),
       Row(
         children: [
           Expanded(flex: 1, child: Image.asset(displayPicture)),
+          SizedBox(width: 20),
           Expanded(
-            flex: 3,
+            flex: 2,
             child: Text(
               itemName,
               style: TextStyle(
@@ -190,21 +192,25 @@ Widget _bookingsDetails(
                 color: Color(0xFF001D4A),
                 wordSpacing: 1,
               ),
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.start,
             ),
           ),
         ],
       ),
       Row(
         children: [
-          _fields(
-              title: 'Booking Reference',
-              subtitle: '#$ticketNumber',
-              width: double.infinity),
-          _fields(
-              title: 'User',
-              subtitle: '#$ticketNumber',
-              width: double.infinity),
+          Expanded(
+            flex: 1,
+            child: _fields(
+                title: 'Booking Reference',
+                subtitle: '#$ticketNumber',
+                width: double.infinity),
+          ),
+          Expanded(
+            flex: 1,
+            child:
+                _fields(title: 'User', subtitle: user, width: double.infinity),
+          ),
         ],
       ),
       Row(
@@ -213,16 +219,50 @@ Widget _bookingsDetails(
             flex: 1,
             child: _fields(
                 title: 'Collected at',
-                subtitle: collected,
+                subtitle: '$collectDate, $collectTime',
                 width: double.infinity),
           ),
           Expanded(
             flex: 1,
             child: _fields(
-                title: 'Return at', subtitle: returned, width: double.infinity),
+                title: 'Return at',
+                subtitle: '$returnDate, $returnTime',
+                width: double.infinity),
           ),
         ],
-      )
+      ),
+      Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: _fields(
+                title: 'Item Location',
+                subtitle: itemLoc,
+                width: double.infinity),
+          ),
+          Expanded(
+            flex: 1,
+            child: _fields(
+                title: 'Returned', subtitle: returned, width: double.infinity),
+          ),
+        ],
+      ),
+      Padding(
+        padding: const EdgeInsets.only(top: 30.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Last Captured Image', style: titleStyles),
+            Divider(
+              height: 15,
+              thickness: 1,
+              endIndent: 25,
+              color: dividerColor,
+            ),
+            Center(child: Image.asset(imgCapture, height: 200, width: 200)),
+          ],
+        ),
+      ),
     ],
   );
 }
