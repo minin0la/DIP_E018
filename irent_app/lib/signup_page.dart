@@ -1,13 +1,11 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use
 //firebase firestore https://www.youtube.com/watch?v=1_xKjeQXa3A
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:drop_shadow_image/drop_shadow_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:irent_app/app_icons.dart';
 import 'package:irent_app/not_verified.dart';
-import 'package:irent_app/verification.dart';
-import 'homepage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:drop_shadow_image/drop_shadow_image.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -41,6 +39,7 @@ class _SignupPageState extends State<SignupPage> {
   bool? _success;
   String _userEmail = '';
   String _register_reason = '';
+  String? errorMessage;
 
   @override
   bool value = false;
@@ -247,18 +246,9 @@ class _SignupPageState extends State<SignupPage> {
                       height: 45,
                       child: RaisedButton(
                         onPressed: agree
-                            ? () async {
-                                if (_formKey.currentState!.validate()) {
-                                  await _register();
-
-                                  if (_success == true) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                NotVerified()));
-                                  }
-                                }
+                            ? () {
+                                _register(_emailController.text,
+                                    _passwordController.text);
                               }
                             : null,
                         color: Color(0xFFECA400),
@@ -295,43 +285,53 @@ class _SignupPageState extends State<SignupPage> {
     super.dispose();
   }
 
-  Future<void> _register() async {
-    try {
-      final User? user = (await _auth.createUserWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      ))
-          .user;
-      if (user != null && !user.emailVerified) {
-        await user.sendEmailVerification();
-        await users
-            .doc(user.uid)
-            .set({
-              'email': _emailController.text,
-              'name': _nameController.text,
-              'phone_number': int.parse(_phoneNumberController.text),
-              'wallet': 0
-            })
-            .then((value) => setState(() {
-                  _success = true;
-                  _userEmail = user.email ?? '';
-                }))
-            .catchError((error) => _success = false);
-      } else {
-        _success = false;
+  void _register(String emailField, String passwordField) async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        await _auth
+            .createUserWithEmailAndPassword(
+                email: emailField, password: passwordField)
+            .then((user) => {
+                  user.user?.sendEmailVerification(),
+                  users.doc(user.user?.uid).set({
+                    'email': _emailController.text,
+                    'name': _nameController.text,
+                    'phone_number': int.parse(_phoneNumberController.text),
+                    'wallet': 0
+                  }),
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => NotVerified()))
+                });
+      } on FirebaseAuthException catch (error) {
+        switch (error.code) {
+          case "invalid-email":
+            errorMessage = "Your email address appears to be malformed.";
+            break;
+          case "wrong-password":
+            errorMessage = "Your password is wrong.";
+            break;
+          case "user-not-found":
+            errorMessage = "User with this email doesn't exist.";
+            break;
+          case "user-disabled":
+            errorMessage = "User with this email has been disabled.";
+            break;
+          case "too-many-requests":
+            errorMessage = "Too many requests";
+            break;
+          case "operation-not-allowed":
+            errorMessage = "Signing in with Email and Password is not enabled.";
+            break;
+          case "email-already-in-use":
+            errorMessage = "User with this email already exists.";
+            break;
+          default:
+            errorMessage = "An undefined Error happened.";
+        }
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(errorMessage!)));
+        print(error.code);
       }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') {
-        setState(() {
-          _success = false;
-          _register_reason = 'The account already exists for that email.';
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _success = false;
-        _register_reason = e.toString();
-      });
     }
   }
 }
