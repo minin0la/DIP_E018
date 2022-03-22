@@ -1,20 +1,20 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:irent_app/account.dart';
+import 'package:irent_app/app_icons.dart';
 import 'package:irent_app/constants.dart';
 import 'package:irent_app/qrrtest.dart';
-import 'dart:ui';
+import 'package:irent_app/user_home.dart';
+
+import 'account.dart';
 import 'app_icons.dart';
 import 'datetimetest.dart';
-import 'package:irent_app/app_icons.dart';
-import 'package:irent_app/user_home.dart';
-import 'account.dart';
+import 'new_user_bookings.dart';
 import 'qrrtest.dart';
-import 'package:intl/intl.dart';
-
 import 'user_basket.dart';
-import 'user_bookings.dart';
 
 class SwitchNavBar extends StatefulWidget {
   const SwitchNavBar({Key? key}) : super(key: key);
@@ -54,7 +54,8 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
   ];
   final List<Widget> _bodyContents = <Widget>[
     user_home(),
-    user_bookings(),
+    // user_bookings(),
+    new_user_bookings(),
     user_basket(),
     AccountScreen(),
   ];
