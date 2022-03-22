@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:irent_app/user_store_uroc.dart';
+import 'package:irent_app/admin/admin_add_store.dart';
 import 'dart:ui';
 import '../app_icons.dart';
 
@@ -11,9 +12,32 @@ class admin_home extends StatefulWidget {
 }
 
 class _admin_homeState extends State<admin_home> {
+  final Color marigold = const Color(0xFFECA400);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              backgroundColor: marigold,
+              heroTag: 'add_store',
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AddStorePage()));
+              },
+              child: Icon(
+                Icons.add,
+                size: 30,
+              ),
+            ),
+          ],
+        ),
+      ),
       body: Column(
         children: [
           Container(
@@ -104,7 +128,7 @@ class _admin_homeState extends State<admin_home> {
                   ],
                   borderRadius: BorderRadius.circular(10),
                   image: new DecorationImage(
-                    image: AssetImage('images/Image_uroc.png'),
+                    image: AssetImage('images/uroc.jpeg'),
                     colorFilter: new ColorFilter.mode(
                         Color.fromRGBO(0, 29, 74, 0.6000000238418579),
                         BlendMode.hardLight),
