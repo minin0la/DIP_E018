@@ -12,13 +12,27 @@ import 'package:irent_app/about_us.dart';
 import 'package:irent_app/feedback.dart';
 import 'login_register.dart';
 
-class AccountScreen extends StatelessWidget {
+class AccountScreen extends StatefulWidget {
+  @override
+  State<AccountScreen> createState() => _AccountScreenState();
+}
+
+String? uid = FirebaseAuth.instance.currentUser?.uid;
+
+class _AccountScreenState extends State<AccountScreen> {
   final Color white = const Color(0xFFFBFBFF);
+
   final Color oxford = const Color(0xFF001D4A);
+
   final Color aliceblue = const Color(0xFF81A4CD);
+
   final Color marigold = const Color(0xFFECA400);
+
   String? currentuserEmail = FirebaseAuth.instance.currentUser?.email;
+
   String? currentuserName = FirebaseAuth.instance.currentUser?.displayName;
+
+  CollectionReference nameref = FirebaseFirestore.instance.collection('users');
 
   @override
   Widget build(BuildContext context) {
@@ -38,28 +52,46 @@ class AccountScreen extends StatelessWidget {
                     //   child: Image.asset('images/profile.png'),
                     //   radius: 50,
                     // ),
-                    FutureBuilder(
-                        future: getProfileImage(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<String> image) {
-                          if (image.data != "") {
-                            print("Showing Image");
-                            print("Image: " + image.data.toString());
+                    // StreamBuilder<DocumentSnapshot>(
+                    //   stream: FirebaseFirestore.instance
+                    //       .collection('users')
+                    //       .doc(uid)
+                    //       .snapshots(),
+                    //   builder: (BuildContext context,
+                    //       AsyncSnapshot<DocumentSnapshot> snapshot) {
+                    //     if (snapshot.hasError) {
+                    //       return Text('Something went wrong...');
+                    //     }
+                    //     if (snapshot.connectionState ==
+                    //         ConnectionState.waiting) {
+                    //       return Text('Loading...');
+                    //     }
+                    //     return Text(
+                    //         snapshot.hasData ? snapshot.data!['name'] : '');
+                    //   },
+                    // ),
+                    // FutureBuilder(
+                    //     future: getProfileImage(),
+                    //     builder: (BuildContext context,
+                    //         AsyncSnapshot<String> image) {
+                    //       if (image.data != "") {
+                    //         print("Showing Image");
+                    //         print("Image: " + image.data.toString());
 
-                            return CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage(image.data.toString()),
-                              // NetworkImage('https://via.placeholder.com/150'),
-                              // Image.network(image.data.toString()),
-                              radius: 50,
-                            );
-                          } else {
-                            return CircleAvatar(
-                              backgroundImage: AssetImage('images/profile.png'),
-                              radius: 50,
-                            );
-                          }
-                        }),
+                    //         return CircleAvatar(
+                    //           backgroundImage:
+                    //               NetworkImage(image.data.toString()),
+                    //           // NetworkImage('https://via.placeholder.com/150'),
+                    //           // Image.network(image.data.toString()),
+                    //           radius: 50,
+                    //         );
+                    //       } else {
+                    //         return CircleAvatar(
+                    //           backgroundImage: AssetImage('images/profile.png'),
+                    //           radius: 50,
+                    //         );
+                    //       }
+                    //     }),
                     SizedBox(width: 20),
                     Container(
                       //decoration: BoxDecoration(color: Colors.yellow),
@@ -67,16 +99,30 @@ class AccountScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
-                              currentuserName == null
-                                  ? ("no name")
-                                  : currentuserName!.toUpperCase(),
-                              style: TextStyle(
-                                color: oxford,
-                                fontFamily: "SF_Pro_Rounded",
-                                fontWeight: FontWeight.w700,
-                                fontSize: 22.0,
-                              )),
+                          StreamBuilder<DocumentSnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(uid)
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<DocumentSnapshot> snapshot) {
+                              if (snapshot.hasError) {
+                                return Text('Something went wrong...');
+                              }
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Text('Loading...');
+                              }
+                              return Text(
+                                snapshot.hasData ? snapshot.data!['name'] : '',
+                                style: TextStyle(
+                                    color: oxford,
+                                    fontFamily: "SF_Pro_Rounded",
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 22.0),
+                              );
+                            },
+                          ),
                           // FutureBuilder(
                           //   future: getUserInfo(),
                           //   builder: (BuildContext context,
@@ -204,6 +250,7 @@ class AccountScreen extends StatelessWidget {
                 color: marigold,
                 textColor: white,
                 child:
+                    // ignore: prefer_const_literals_to_create_immutables
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Padding(
                     padding: EdgeInsets.all(5),

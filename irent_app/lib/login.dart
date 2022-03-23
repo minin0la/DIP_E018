@@ -1,11 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:irent_app/not_verified.dart';
 import 'package:irent_app/switch_nav.dart';
-import 'package:irent_app/verification.dart';
-import 'homepage.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -29,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   bool? _success;
   bool? _verified;
   String? _userEmail;
+  String? errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -120,24 +119,9 @@ class _LoginPageState extends State<LoginPage> {
                         width: double.infinity,
                         height: 43,
                         child: ElevatedButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              if (_formKey.currentState!.validate()) {
-                                await _signInWithEmailAndPassword();
-                                if (_success == true) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const SwitchNavBar()));
-                                } else if (_verified == false) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => NotVerified()));
-                                }
-                              }
-                            }
+                          onPressed: () {
+                            _signInWithEmailAndPassword(
+                                _emailField.text, _passwordField.text);
                           },
                           child: Text('Login'),
                           style: ElevatedButton.styleFrom(
@@ -170,23 +154,60 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<void> _signInWithEmailAndPassword() async {
-    final User? user = (await _auth.signInWithEmailAndPassword(
-      email: _emailField.text,
-      password: _passwordField.text,
-    ))
-        .user;
-
-    if (user != null && !user.emailVerified) {
-      setState(() {
-        _success = false;
-        _verified = false;
-        _userEmail = user.email;
-      });
-    } else {
-      setState(() {
-        _success = true;
-      });
+  void _signInWithEmailAndPassword(
+      String emailField, String passwordField) async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        await _auth
+            .signInWithEmailAndPassword(
+                email: emailField, password: passwordField)
+            .then(
+              (user) => {
+                if (user.user?.emailVerified == true)
+                  {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SwitchNavBar())),
+                    // ScaffoldMessenger.of(context)
+                    //     .showSnackBar(SnackBar(content: Text("Login success")))
+                  }
+                else if (user.user?.emailVerified == false)
+                  {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => NotVerified())),
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //     SnackBar(content: Text("Please verify your email")))
+                  }
+              },
+            );
+      } on FirebaseAuthException catch (error) {
+        switch (error.code) {
+          case "invalid-email":
+            errorMessage = "Your email address appears to be malformed.";
+            break;
+          case "wrong-password":
+            errorMessage = "Your password is wrong.";
+            break;
+          case "user-not-found":
+            errorMessage = "User with this email doesn't exist.";
+            break;
+          case "user-disabled":
+            errorMessage = "User with this email has been disabled.";
+            break;
+          case "too-many-requests":
+            errorMessage = "Too many requests";
+            break;
+          case "operation-not-allowed":
+            errorMessage = "Signing in with Email and Password is not enabled.";
+            break;
+          default:
+            errorMessage = "An undefined Error happened.";
+        }
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(errorMessage!)));
+        print(error.code);
+      }
     }
   }
 

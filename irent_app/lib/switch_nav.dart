@@ -14,7 +14,6 @@ import 'package:irent_app/basket.dart';
 import 'account.dart';
 import 'qrrtest.dart';
 import 'package:intl/intl.dart';
-
 import 'user_bookings.dart';
 
 class SwitchNavBar extends StatefulWidget {

@@ -39,6 +39,7 @@ dependencies:
   drop_shadow_image: ^0.9.1
   intl: ^0.17.0
   qr_flutter: ^4.0.0
+  bottom_indicator_bar: ^2.0.0
   firebase_storage: ^10.2.8
   image_picker: ^0.8.4+11
 
@@ -80,6 +81,7 @@ flutter:
     - images/cross_bg.png
     - images/dice.png
     - images/embarrassed.png
+    - images/fifa_cd.jpeg
     - images/game-boy.png
     - images/game-console.png
     - images/hand.png
@@ -90,7 +92,9 @@ flutter:
     - images/Image_overcooked.jpg
     - images/Image_uroc.png
     - images/irent-logo.png
+    - images/mario_kart_cd.jpeg
     - images/no.png
+    - images/overcooked_cd.jpeg
     - images/party-popper.png
     - images/paylah.png
     - images/payanyone.png
@@ -98,6 +102,10 @@ flutter:
     - images/ps-game-console.png
     - images/tool-box.png
     - images/uroc.jpeg
+    - images/wii_empty.png
+    - images/wii_prevImage.png
+    - images/wii_remote.png
+    - images/wii.png
     - images/Image_uroc.png
     - images/Image_ciss.png
     - images/Image_overcooked.jpg
