@@ -10,7 +10,7 @@ class CategoriesScroller extends StatelessWidget {
       physics: BouncingScrollPhysics(),
       scrollDirection: Axis.horizontal,
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 05, horizontal: 20),
+        margin: const EdgeInsets.symmetric(vertical: 05, horizontal: 05),
         child: FittedBox(
           fit: BoxFit.fill,
           alignment: Alignment.topCenter,
@@ -18,7 +18,7 @@ class CategoriesScroller extends StatelessWidget {
             children: <Widget>[
               Container(
                 width: 74,
-                margin: EdgeInsets.only(right: 20),
+                margin: EdgeInsets.only(right: 15),
                 height: categoryHeight,
                 decoration: BoxDecoration(
                     boxShadow: [
