@@ -9,10 +9,18 @@ import 'app_icons.dart';
 import 'datetimetest.dart';
 import 'package:irent_app/app_icons.dart';
 import 'package:irent_app/user_home.dart';
+import 'package:irent_app/user_bookings.dart';
+import 'package:irent_app/basket.dart';
 import 'account.dart';
 import 'qrrtest.dart';
 import 'package:intl/intl.dart';
 
+<<<<<<< Updated upstream
+=======
+import 'user_bookings.dart';
+//import 'user_bookings.dart';
+
+>>>>>>> Stashed changes
 class SwitchNavBar extends StatefulWidget {
   const SwitchNavBar({Key? key}) : super(key: key);
 
@@ -51,6 +59,7 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
   ];
   final List<Widget> _bodyContents = <Widget>[
     user_home(),
+<<<<<<< Updated upstream
     Text(
       'Bookings',
       style: titleStyle,
@@ -59,6 +68,10 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
       'Basket',
       style: titleStyle,
     ),
+=======
+    user_bookings(),
+    basket(),
+>>>>>>> Stashed changes
     AccountScreen(),
   ];
 

@@ -110,6 +110,7 @@ var notificationData = [
     "returnTime": "2022-03-17 15:00:00",
     "ticketNumber": 7,
     "displayPicture": 'images/Image_ciss.png'
+<<<<<<< Updated upstream
 =======
 var stores = [
   {
@@ -161,6 +162,45 @@ var productDetails = [
     "name": "Madden 18",
     "product_category": "Console Game",
     "pricePerhour": "1",
+    "displayPicture": 'images/Image_madden18.jpg'
+>>>>>>> Stashed changes
+=======
+  }
+];
+var productDetails = [
+  {
+    "name": "Mario Kart Deluxe",
+    "product_category": "Console Game",
+    "pricePerhour": "1",
+    "ischecked": false,
+    "displayPicture": 'images/Image_mariokartdeluxe.jpg'
+  },
+  {
+    "name": "Super Mario",
+    "product_category": "Console Game",
+    "pricePerhour": "1",
+    "ischecked": false,
+    "displayPicture": 'images/Image_supermario.jfif'
+  },
+  {
+    "name": "Overcooked",
+    "product_category": "Console Game",
+    "pricePerhour": "1",
+    "ischecked": false,
+    "displayPicture": 'images/Image_overcooked.jpg'
+  },
+  {
+    "name": "Fifa 22",
+    "product_category": "Console Game",
+    "pricePerhour": "1",
+    "ischecked": false,
+    "displayPicture": 'images/Image_fifa22.jpeg'
+  },
+  {
+    "name": "Madden 18",
+    "product_category": "Console Game",
+    "pricePerhour": "1",
+    "ischecked": false,
     "displayPicture": 'images/Image_madden18.jpg'
 >>>>>>> Stashed changes
   },

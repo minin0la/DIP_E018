@@ -1,356 +1,172 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
+import 'package:irent_app/app_icons.dart';
+import 'package:irent_app/date.dart';
+//import 'package:irent_app/icrement_decrement.dart';
+import 'package:irent_app/switch_nav.dart';
+import 'package:irent_app/time.dart';
 import 'package:irent_app/user_notcollect.dart';
+import 'homepage.dart';
+import 'constants.dart';
+import 'package:irent_app/switch_nav.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class user_bookings extends StatefulWidget {
   const user_bookings({Key? key}) : super(key: key);
 
   @override
-  _user_bookingsState createState() => _user_bookingsState();
+  State<user_bookings> createState() => _user_bookingsState();
 }
 
 class _user_bookingsState extends State<user_bookings> {
+  final TextEditingController _emailField = TextEditingController();
+  final TextEditingController _passwordField = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final Color white = const Color(0xFFFBFBFF);
+  final Color oxford = const Color(0xFF001D4A);
+  final Color aliceblue = const Color(0xFF81A4CD);
+  final Color iceberg = const Color(0xFFDBE4EE);
+  final Color marigold = const Color(0xFFECA400);
+  final Color transparent = const Color(0x4DE3E3E3);
+
+  bool? _success;
+  String? _userEmail;
+
+  int _itemCount = 0;
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                  height: 45,
-                  width: 248,
-                  margin: EdgeInsets.only(left: 45, top: 10),
-                  child: Text(
-                    'Confirmed Bookings',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Color.fromRGBO(0, 29, 74, 1),
-                        fontFamily: 'SF Pro Rounded',
-                        fontSize: 25,
-                        letterSpacing: 0,
-                        fontWeight: FontWeight.w600,
-                        height: 1),
-                  )),
-            ],
+      resizeToAvoidBottomInset: false,
+      backgroundColor: white,
+      body: Column(children: [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.fromLTRB(25, 5, 25, 5),
+          child: Text(
+            'Confirmed Bookings',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                color: oxford,
+                fontFamily: 'SF_Pro_Rounded',
+                fontSize: 25,
+                fontWeight: FontWeight.w500),
           ),
-          Column(
-            children: [
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => user_notcollect()));
-                },
-                child: Container(
-                    margin: EdgeInsets.only(top: 12.5),
-                    alignment: Alignment.bottomCenter,
-                    height: 141,
-                    width: 326,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Color.fromRGBO(129, 164, 205, 1),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 30),
-                          height: 48,
-                          width: 48,
-                          color: Colors.black,
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                    height: 18,
-                                    width: 165,
-                                    margin: EdgeInsets.only(top: 20, left: 15),
-                                    child: Text(
-                                      'Wii Game Console',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          color: Color.fromRGBO(0, 29, 74, 1),
-                                          fontFamily: 'SF Pro Rounded',
-                                          fontSize: 15,
-                                          letterSpacing: 0,
-                                          fontWeight: FontWeight.w500,
-                                          height: 1),
-                                    ))
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                    height: 14,
-                                    width: 165,
-                                    margin: EdgeInsets.only(top: 5, left: 15),
-                                    child: Text(
-                                      'Qty: 2   |   Price: \$4',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          color: Color.fromRGBO(0, 29, 74, 1),
-                                          fontFamily: 'SF Pro Rounded',
-                                          fontSize: 12,
-                                          letterSpacing: 0,
-                                          fontWeight: FontWeight.normal,
-                                          height: 1),
-                                    ))
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                    height: 14,
-                                    width: 165,
-                                    margin: EdgeInsets.only(top: 5, left: 15),
-                                    child: Text(
-                                      'Date: 01/01/2020 - 01/01/2020',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          color: Color.fromRGBO(0, 29, 74, 1),
-                                          fontFamily: 'SF Pro Rounded',
-                                          fontSize: 12,
-                                          letterSpacing: 0,
-                                          fontWeight: FontWeight.normal,
-                                          height: 1),
-                                    ))
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                    height: 14,
-                                    width: 165,
-                                    margin: EdgeInsets.only(top: 5, left: 15),
-                                    child: Text(
-                                      'Collection Time: 1 PM',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          color: Color.fromRGBO(0, 29, 74, 1),
-                                          fontFamily: 'SF Pro Rounded',
-                                          fontSize: 12,
-                                          letterSpacing: 0,
-                                          fontWeight: FontWeight.normal,
-                                          height: 1),
-                                    ))
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                    height: 14,
-                                    width: 165,
-                                    margin: EdgeInsets.only(top: 5, left: 15),
-                                    child: Text(
-                                      'Return Time: 3 PM',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          color: Color.fromRGBO(0, 29, 74, 1),
-                                          fontFamily: 'SF Pro Rounded',
-                                          fontSize: 12,
-                                          letterSpacing: 0,
-                                          fontWeight: FontWeight.normal,
-                                          height: 1),
-                                    ))
-                              ],
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                    height: 20,
-                                    width: 30,
-                                    margin: EdgeInsets.only(top: 20, left: 15),
-                                    child: Text(
-                                      '# 99',
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          color: Color.fromRGBO(0, 29, 74, 1),
-                                          fontFamily: 'SF Pro Rounded',
-                                          fontSize: 15,
-                                          letterSpacing: 0,
-                                          fontWeight: FontWeight.normal,
-                                          height: 1),
-                                    ))
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                  height: 35,
-                                  width: 35,
-                                  margin: EdgeInsets.only(top: 20, left: 15),
-                                  child: Icon(Icons.arrow_forward_ios_outlined),
-                                )
-                              ],
-                            ),
-                          ],
-                        )
-                      ],
-                    )),
-              )
-            ],
+        ),
+        Expanded(
+          flex: 6,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.only(left: 25, right: 25),
+            child: ListView.builder(
+                itemCount: historyData.length,
+                itemBuilder: (context, index) {
+                  for (var product in historyData) {
+                    return _historyCard(
+                        context: context,
+                        itemName: historyData[index]['name'].toString(),
+                        qty: int.parse(historyData[index]['qty'].toString()),
+                        price:
+                            int.parse(historyData[index]['price'].toString()),
+                        collectDate:
+                            historyData[index]['collectDate'].toString(),
+                        returnDate: historyData[index]['returnDate'].toString(),
+                        collectTime:
+                            historyData[index]['collectTime'].toString(),
+                        returnTime: historyData[index]['returnTime'].toString(),
+                        ticketNumber: int.parse(
+                            historyData[index]['ticketNumber'].toString()),
+                        displayPicture:
+                            historyData[index]['displayPicture'].toString());
+                  }
+                  throw 'No Data Found';
+                }),
           ),
-          Column(
-            children: [
-              Container(
-                  margin: EdgeInsets.only(top: 12.5),
-                  alignment: Alignment.bottomCenter,
-                  height: 141,
-                  width: 326,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Color.fromRGBO(129, 164, 205, 1),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(left: 30),
-                        height: 48,
-                        width: 48,
-                        color: Colors.black,
-                      ),
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                  height: 18,
-                                  width: 165,
-                                  margin: EdgeInsets.only(top: 20, left: 15),
-                                  child: Text(
-                                    'Wii Game Console',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(0, 29, 74, 1),
-                                        fontFamily: 'SF Pro Rounded',
-                                        fontSize: 15,
-                                        letterSpacing: 0,
-                                        fontWeight: FontWeight.w500,
-                                        height: 1),
-                                  ))
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                  height: 14,
-                                  width: 165,
-                                  margin: EdgeInsets.only(top: 5, left: 15),
-                                  child: Text(
-                                    'Qty: 2   |   Price: \$4',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(0, 29, 74, 1),
-                                        fontFamily: 'SF Pro Rounded',
-                                        fontSize: 12,
-                                        letterSpacing: 0,
-                                        fontWeight: FontWeight.normal,
-                                        height: 1),
-                                  ))
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                  height: 14,
-                                  width: 165,
-                                  margin: EdgeInsets.only(top: 5, left: 15),
-                                  child: Text(
-                                    'Date: 01/01/2020 - 01/01/2020',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(0, 29, 74, 1),
-                                        fontFamily: 'SF Pro Rounded',
-                                        fontSize: 12,
-                                        letterSpacing: 0,
-                                        fontWeight: FontWeight.normal,
-                                        height: 1),
-                                  ))
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                  height: 14,
-                                  width: 165,
-                                  margin: EdgeInsets.only(top: 5, left: 15),
-                                  child: Text(
-                                    'Collection Time: 1 PM',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(0, 29, 74, 1),
-                                        fontFamily: 'SF Pro Rounded',
-                                        fontSize: 12,
-                                        letterSpacing: 0,
-                                        fontWeight: FontWeight.normal,
-                                        height: 1),
-                                  ))
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                  height: 14,
-                                  width: 165,
-                                  margin: EdgeInsets.only(top: 5, left: 15),
-                                  child: Text(
-                                    'Return Time: 3 PM',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(0, 29, 74, 1),
-                                        fontFamily: 'SF Pro Rounded',
-                                        fontSize: 12,
-                                        letterSpacing: 0,
-                                        fontWeight: FontWeight.normal,
-                                        height: 1),
-                                  ))
-                            ],
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                  height: 20,
-                                  width: 30,
-                                  margin: EdgeInsets.only(top: 20, left: 15),
-                                  child: Text(
-                                    '# 99',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(0, 29, 74, 1),
-                                        fontFamily: 'SF Pro Rounded',
-                                        fontSize: 15,
-                                        letterSpacing: 0,
-                                        fontWeight: FontWeight.normal,
-                                        height: 1),
-                                  ))
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                height: 35,
-                                width: 35,
-                                margin: EdgeInsets.only(top: 20, left: 15),
-                                child: Icon(Icons.arrow_forward_ios_outlined),
-                              )
-                            ],
-                          ),
-                        ],
-                      )
-                    ],
-                  )),
-            ],
-          ),
-        ],
-      ),
+        ),
+      ]),
     );
   }
+}
+
+Widget _historyCard(
+    {required BuildContext context,
+    required String itemName,
+    required int qty,
+    required int price,
+    required String collectDate,
+    required String returnDate,
+    required String collectTime,
+    required String returnTime,
+    required int ticketNumber,
+    required String displayPicture}) {
+  final TextStyle subtitleStyles = TextStyle(
+    fontFamily: 'SF_Pro_Rounded',
+    fontSize: 15,
+    fontWeight: FontWeight.w300,
+    color: Color(0xFF001D4A),
+    wordSpacing: 1,
+  );
+  int _itemCount = 0;
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const user_notcollect()),
+        );
+      },
+      child: Card(
+        color: Color(0xFF81A4CD),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        elevation: 1,
+        child: Padding(
+          padding:
+              const EdgeInsets.only(left: 10.0, right: 10, top: 15, bottom: 15),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 6,
+                child: ListTile(
+                  leading: Image.asset(
+                    displayPicture,
+                    height: 48,
+                    width: 48,
+                  ),
+                  title: Text(
+                    itemName,
+                    style: TextStyle(
+                      fontFamily: 'SF_Pro_Rounded',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF001D4A),
+                    ),
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Qty: $qty   |   Price: \$$price',
+                          style: subtitleStyles),
+                      Text('Date: $collectDate - $returnDate',
+                          style: subtitleStyles),
+                      Text('Collection Time: $collectTime',
+                          style: subtitleStyles),
+                      Text('Return Time: $returnTime', style: subtitleStyles),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
 }
