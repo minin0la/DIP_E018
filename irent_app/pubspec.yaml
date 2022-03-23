@@ -98,6 +98,9 @@ flutter:
     - images/ps-game-console.png
     - images/tool-box.png
     - images/uroc.jpeg
+    - images/wii_empty.png
+    - images/wii_prevImage.png
+    - images/wii_remote.png
     - images/Image_uroc.png
     - images/Image_ciss.png
     - images/Image_overcooked.jpg
