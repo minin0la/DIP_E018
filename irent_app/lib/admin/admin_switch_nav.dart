@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:irent_app/admin/admin_add_store.dart';
 import 'package:irent_app/admin/admin_transactions.dart';
 import '../app_icons.dart';
 import 'package:irent_app/app_icons.dart';
@@ -160,27 +159,6 @@ class _AdminSwitchNavBarState extends State<AdminSwitchNavBar> {
           currentIndex: _selectedIndex,
           selectedItemColor: Color(0xFFECA400),
           onTap: _onItemTapped,
-        ),
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            FloatingActionButton(
-              backgroundColor: marigold,
-              heroTag: 'add_store',
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddStorePage()));
-              },
-              child: Icon(
-                Icons.add,
-                size: 30,
-              ),
-            ),
-          ],
         ),
       ),
     );

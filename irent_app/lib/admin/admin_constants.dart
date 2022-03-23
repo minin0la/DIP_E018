@@ -35,6 +35,43 @@ var notificationData = [
 
 var categories = <String>['Recreation', 'Laboratory', 'Inventory'];
 
+var transactionData = [
+  {
+    "ticketNumber": 168,
+    "paymentDate": "22-03-2022",
+    "totalAmount": 12.5,
+  },
+  {
+    "ticketNumber": 156,
+    "paymentDate": "21-03-2022",
+    "totalAmount": 6.15,
+  },
+  {
+    "ticketNumber": 137,
+    "paymentDate": "20-03-2022",
+    "totalAmount": 3,
+  },
+  {
+    "ticketNumber": 99,
+    "paymentDate": "19-03-2022",
+    "totalAmount": 7.5,
+  },
+  {
+    "ticketNumber": 74,
+    "paymentDate": "18-03-2022",
+    "totalAmount": 5,
+  },
+  {
+    "ticketNumber": 59,
+    "paymentDate": "17-03-2022",
+    "totalAmount": 2.5,
+  },
+  {
+    "ticketNumber": 28,
+    "paymentDate": "16-03-2022",
+    "totalAmount": 10,
+  }
+];
 var bookingsData = [
   {
     "user": 'MICH0090@e.ntu.edu.sg',
