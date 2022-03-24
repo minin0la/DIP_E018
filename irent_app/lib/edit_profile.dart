@@ -152,15 +152,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         TextFormField(
                           controller: _emailField,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your NTU email';
-                            }
-                            return null;
-                          },
+                          // validator: (value) {
+                          //   if (value == null || value.isEmpty) {
+                          //     return 'Please enter your NTU email';
+                          //   }
+                          //   return null;
+                          // },
                           decoration: InputDecoration(
+                              enabled: false,
                               labelText: 'Email',
-                              hintText: 'JOHN001@e.ntu.edu.sg',
+                              hintText:
+                                  FirebaseAuth.instance.currentUser?.email,
                               prefixIcon: Icon(AppIcons.email),
                               floatingLabelBehavior:
                                   FloatingLabelBehavior.always),
@@ -168,21 +170,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         SizedBox(
                           height: 10,
                         ),
-                        TextFormField(
-                          controller: _mobileNumberField,
-                          // validator: (value) {
-                          //   if (value == null || value.isEmpty) {
-                          //     return 'Please enter your mobile number';
-                          //   }
-                          //   return null;
-                          // },
-                          decoration: InputDecoration(
-                              labelText: 'Mobile No',
-                              hintText: '9245XXXX',
-                              prefixIcon: Icon(AppIcons.phone),
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always),
-                        ),
+                        // TextFormField(
+                        //   controller: _mobileNumberField,
+                        //   // validator: (value) {
+                        //   //   if (value == null || value.isEmpty) {
+                        //   //     return 'Please enter your mobile number';
+                        //   //   }
+                        //   //   return null;
+                        //   // },
+                        //   decoration: InputDecoration(
+                        //       labelText: 'Mobile No',
+                        //       hintText: '9245XXXX',
+                        //       prefixIcon: Icon(AppIcons.phone),
+                        //       floatingLabelBehavior:
+                        //           FloatingLabelBehavior.always),
+                        // ),
                         SizedBox(
                           height: 200,
                         ),
@@ -195,21 +197,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 if (_myImage != null) {
                                   await uploadProfileImage(_myImage);
                                 }
-                                String updateProfile = await AuthService()
-                                    .changeProfile(
-                                        _nameField.text, _emailField.text);
+                                String updateProfile =
+                                    await AuthService().changeProfile(
+                                        uid,
+                                        _nameField.text,
+                                        // _emailField.text,
+                                        // _mobileNumberField,
+                                        _myImage);
                                 if (updateProfile == 'success') {
-                                  await updateUser();
-                                  await FirebaseAuth.instance.signOut();
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              LoginRegisterScreen()));
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           content: Text(
-                                              'Your profile has been updated...Please login again')));
+                                              'Your profile has been updated.')));
                                 } else {
                                   print(updateProfile);
                                 }

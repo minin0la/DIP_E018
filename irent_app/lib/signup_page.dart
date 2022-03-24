@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:irent_app/app_icons.dart';
 import 'package:irent_app/not_verified.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -286,6 +287,11 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   void _register(String emailField, String passwordField) async {
+    final firebase_storage.Reference firebaseStorageRef = firebase_storage
+        .FirebaseStorage.instance
+        .ref()
+        .child("users/default/profile.png");
+    var downloadUrl = await firebaseStorageRef.getDownloadURL();
     if (_formKey.currentState!.validate()) {
       try {
         await _auth
@@ -298,7 +304,8 @@ class _SignupPageState extends State<SignupPage> {
                     'name': _nameController.text,
                     'phone_number': int.parse(_phoneNumberController.text),
                     'wallet': 0,
-                    'role': 'user'
+                    'role': 'user',
+                    'profileURL': downloadUrl.toString()
                   }),
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => NotVerified()))

@@ -33,7 +33,6 @@ Future uploadProfileImage(_myImage) async {
     firebase_storage.TaskSnapshot storageSnapshot = await uploadTask;
     var downloadUrl = await storageSnapshot.ref.getDownloadURL();
     final String url = downloadUrl.toString();
-    print(url);
     //You might want to set this as the _auth.currentUser().photourl
 
   } on FirebaseException catch (e) {
