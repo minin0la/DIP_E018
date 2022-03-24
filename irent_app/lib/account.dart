@@ -12,11 +12,19 @@ import 'package:irent_app/about_us.dart';
 import 'package:irent_app/feedback.dart';
 import 'login_register.dart';
 
-class AccountScreen extends StatelessWidget {
+class AccountScreen extends StatefulWidget {
+  @override
+  State<AccountScreen> createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends State<AccountScreen> {
   final Color white = const Color(0xFFFBFBFF);
   final Color oxford = const Color(0xFF001D4A);
   final Color aliceblue = const Color(0xFF81A4CD);
   final Color marigold = const Color(0xFFECA400);
+
+  String? uid = FirebaseAuth.instance.currentUser?.uid;
+
   String? currentuserEmail = FirebaseAuth.instance.currentUser?.email;
   String? currentuserName = FirebaseAuth.instance.currentUser?.displayName;
 

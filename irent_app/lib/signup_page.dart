@@ -297,7 +297,8 @@ class _SignupPageState extends State<SignupPage> {
                     'email': _emailController.text,
                     'name': _nameController.text,
                     'phone_number': int.parse(_phoneNumberController.text),
-                    'wallet': 0
+                    'wallet': 0,
+                    'role': 'user'
                   }),
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => NotVerified()))
