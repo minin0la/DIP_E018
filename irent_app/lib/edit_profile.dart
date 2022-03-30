@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:irent_app/account.dart';
 import 'package:irent_app/authservice.dart';
 import 'package:irent_app/database.dart';
 import 'package:irent_app/login_register.dart';
@@ -18,7 +19,6 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 String? uid = FirebaseAuth.instance.currentUser?.uid;
 CollectionReference updateProfile =
     FirebaseFirestore.instance.collection('users');
-File? _myImage;
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
@@ -45,6 +45,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final Color transparent = const Color(0x4DE3E3E3);
   bool? _success;
   String? _userEmail;
+  String? _userName;
+  File? _myImage;
+  File? selectedImage;
+
+  // File _myImageState = File('');
 
   @override
   Widget build(BuildContext context) {
@@ -152,12 +157,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         TextFormField(
                           controller: _emailField,
-                          // validator: (value) {
-                          //   if (value == null || value.isEmpty) {
-                          //     return 'Please enter your NTU email';
-                          //   }
-                          //   return null;
-                          // },
                           decoration: InputDecoration(
                               enabled: false,
                               labelText: 'Email',
@@ -197,20 +196,24 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 if (_myImage != null) {
                                   await uploadProfileImage(_myImage);
                                 }
-                                String updateProfile =
-                                    await AuthService().changeProfile(
-                                        uid,
-                                        _nameField.text,
-                                        // _emailField.text,
-                                        // _mobileNumberField,
-                                        _myImage);
+                                String updateProfile = await AuthService()
+                                    .changeProfile(
+                                        uid, _nameField.text, _myImage);
                                 if (updateProfile == 'success') {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           content: Text(
                                               'Your profile has been updated.')));
+                                  Navigator.pop(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              AccountScreen()));
                                 } else {
-                                  print(updateProfile);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Your profile has been updated.')));
                                 }
                               }
                             },
@@ -251,20 +254,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
           Align(
               alignment: Alignment(0, -0.55),
               child: Stack(children: [
-                FutureBuilder(
-                    future: getProfileImage(),
-                    builder:
-                        (BuildContext context, AsyncSnapshot<String> image) {
-                      if (image.data != "") {
+                StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(uid)
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Something went wrong...');
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text('Loading...');
+                      }
+                      if (snapshot.hasData) {
                         return CircleAvatar(
-                          backgroundImage: NetworkImage(image.data.toString()),
-                          // NetworkImage('https://via.placeholder.com/150'),
-                          // Image.network(image.data.toString()),
+                          backgroundImage: _myImage == null
+                              ? (NetworkImage(snapshot.data!['profileURL']))
+                              : (FileImage(_myImage as File) as ImageProvider),
                           radius: 50,
                         );
                       } else {
                         return CircleAvatar(
-                          backgroundImage: AssetImage('images/profile.png'),
                           radius: 50,
                         );
                       }
@@ -275,7 +286,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     child: RawMaterialButton(
                       constraints: BoxConstraints.tight(Size(35, 35)),
                       onPressed: () async {
-                        _myImage = await selectImage();
+                        selectedImage = await selectImage();
+                        if (selectedImage != null) {
+                          setState(() {
+                            _myImage = selectedImage as File;
+                          });
+                        }
                       },
                       elevation: 2.0,
                       fillColor: white,
@@ -329,6 +345,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _emailField.dispose();
     _passwordField.dispose();
     _mobileNumberField.dispose();
+    _myImage = null;
     super.dispose();
   }
 }
