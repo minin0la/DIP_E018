@@ -68,27 +68,29 @@ class _user_paymentState extends State<user_payment> {
             width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.only(left: 25, right: 25),
             child: ListView.builder(
-                itemCount: historyData.length,
+                itemCount: bookingsData.length,
                 itemBuilder: (context, index) {
-                  for (var product in historyData) {
+                  for (var product in bookingsData) {
                     return _historyCard(
                         context: context,
-                        itemName: historyData[index]['name'].toString(),
-                        qty: int.parse(historyData[index]['qty'].toString()),
-                        price:
-                            int.parse(historyData[index]['price'].toString()),
-                        pricePerhour:
-                            int.parse(historyData[index]['price'].toString()),
+                        itemName: bookingsData[index]['name'].toString(),
+                        qty: int.parse(bookingsData[index]['qty'].toString()),
+                        // price:
+                        //     int.parse(bookingsData[index]['price'].toString()),
+                        pricePerhour: int.parse(
+                            bookingsData[index]['pricePerhour'].toString()),
                         collectDate:
-                            historyData[index]['collectDate'].toString(),
-                        returnDate: historyData[index]['returnDate'].toString(),
+                            bookingsData[index]['collectDate'].toString(),
+                        returnDate:
+                            bookingsData[index]['returnDate'].toString(),
                         collectTime:
-                            historyData[index]['collectTime'].toString(),
-                        returnTime: historyData[index]['returnTime'].toString(),
+                            bookingsData[index]['collectTime'].toString(),
+                        returnTime:
+                            bookingsData[index]['returnTime'].toString(),
                         ticketNumber: int.parse(
-                            historyData[index]['ticketNumber'].toString()),
+                            bookingsData[index]['ticketNumber'].toString()),
                         displayPicture:
-                            historyData[index]['displayPicture'].toString());
+                            bookingsData[index]['displayPicture'].toString());
                   }
                   throw 'No Data Found';
                 }),
@@ -146,7 +148,9 @@ class _user_paymentState extends State<user_payment> {
                     Column(
                       children: [
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            showAlertDialog(context);
+                          },
                           child: Container(
                               margin: EdgeInsets.only(left: 100, top: 22),
                               height: 53,
@@ -188,7 +192,7 @@ Widget _historyCard(
     {required BuildContext context,
     required String itemName,
     required int qty,
-    required int price,
+    // required int price,
     required int pricePerhour,
     required String collectDate,
     required String returnDate,
@@ -207,7 +211,6 @@ Widget _historyCard(
   return Padding(
     padding: const EdgeInsets.only(bottom: 8.0),
     child: GestureDetector(
-      onTap: () {},
       child: Card(
         color: Color(0xFF81A4CD),
         shape: RoundedRectangleBorder(
@@ -451,5 +454,48 @@ Widget _historyCard(
         ),
       ),
     ),
+  );
+}
+
+showAlertDialog(BuildContext context) {
+  // set up the buttons
+  shape:
+  RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0));
+  color:
+  Color(0xFFDBE4EE);
+  Widget okButton = ElevatedButton(
+    style: ElevatedButton.styleFrom(
+        primary: const Color(0xFF001D4A),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(38))),
+    child: Text(
+      "OK",
+      style: TextStyle(
+          color: Color(0xFFFBFBFF),
+          fontFamily: 'SF_Pro_Rounded',
+          fontSize: 18,
+          fontWeight: FontWeight.w700),
+    ),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+    backgroundColor: Color(0xFFDBE4EE),
+    title: Text("Insufficient Balance"),
+    content: Text("Please top-up your iRent walet to make this booking."),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
   );
 }

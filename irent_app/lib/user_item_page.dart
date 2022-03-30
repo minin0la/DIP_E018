@@ -41,11 +41,11 @@ class _user_item_pageState extends State<user_item_page> {
   final Color marigold = const Color(0xFFECA400);
   final Color transparent = const Color(0x4DE3E3E3);
 
-  DateTime dateTime1 = DateTime(2022);
-  DateTime dateTime2 = DateTime(2022);
+  DateTime dateTime1 = DateTime.now();
+  DateTime dateTime2 = DateTime.now();
   TimeOfDay _time = TimeOfDay.now();
-  String initialValue1 = '12 AM';
-  String initialValue2 = '12 AM';
+  String initialValue1 = '1 PM';
+  String initialValue2 = '2 PM';
 
   var itemList = [
     '12 AM',
