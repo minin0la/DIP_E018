@@ -58,6 +58,19 @@ class _user_bookingsState extends State<user_bookings> {
                 fontWeight: FontWeight.w500),
           ),
         ),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.fromLTRB(25, 5, 25, 5),
+          child: Text(
+            'Ongoing Bookings',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                color: oxford,
+                fontFamily: 'SF_Pro_Rounded',
+                fontSize: 25,
+                fontWeight: FontWeight.w500),
+          ),
+        ),
         Expanded(
           flex: 6,
           child: Container(
