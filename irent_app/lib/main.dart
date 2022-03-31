@@ -4,6 +4,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:irent_app/login_register.dart';
 import 'package:irent_app/switch_nav.dart';
 import 'admin/admin_switch_nav.dart';
 import 'firebase_options.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         primaryColor: Color(0xFFFBFBFF),
       ),
-      home: SwitchNavBar(),
+      home: MainPage(),
     );
   }
 }
@@ -47,7 +48,7 @@ class MainPage extends StatelessWidget {
               }
               return SwitchNavBar();
             } else {
-              return SwitchNavBar();
+              return LoginRegisterScreen();
               //LoginRegisterScreen();
             }
           },
