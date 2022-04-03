@@ -172,12 +172,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         // ),
                         TextFormField(
                           controller: _nameField,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your name';
-                            }
-                            return null;
-                          },
+                          // validator: (value) {
+                          //   if (value == null || value.isEmpty) {
+                          //     return 'Please enter your name';
+                          //   }
+                          //   return null;
+                          // },
                           decoration: InputDecoration(
                               labelText: 'Name',
                               // hintText: 'John Smith',
@@ -228,27 +228,36 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           child: ElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                if (_myImage != null) {
-                                  await uploadProfileImage(_myImage);
-                                }
-                                String updateProfile = await AuthService()
-                                    .changeProfile(
-                                        uid, _nameField.text, _myImage);
-                                if (updateProfile == 'success') {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              'Your profile has been updated.')));
+                                if ((_nameField.text != "") ||
+                                    _myImage != null) {
+                                  String nameChange = _nameField.text;
+                                  if (_nameField.text == "") {
+                                    nameChange = nameHint;
+                                  }
+                                  String updateProfile = await AuthService()
+                                      .changeProfile(uid, nameChange, _myImage);
+                                  if (updateProfile == 'success') {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Your profile has been updated.')));
+                                    Navigator.pop(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AccountScreen()));
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Error: Your profile is not updated.')));
+                                  }
+                                } else {
                                   Navigator.pop(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               AccountScreen()));
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              'Your profile has been updated.')));
                                 }
                               }
                             },
