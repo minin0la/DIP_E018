@@ -6,8 +6,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:irent_app/login_register.dart';
 import 'package:irent_app/switch_nav.dart';
+
 import 'admin/admin_switch_nav.dart';
 import 'firebase_options.dart';
+import 'login_register.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

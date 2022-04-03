@@ -163,28 +163,6 @@ class _SwitchNavBarState extends State<SwitchNavBar> {
           onTap: _onItemTapped,
         ),
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          FloatingActionButton(
-            heroTag: 'datetime_tester',
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => DateTimeTest()));
-            },
-            child: Icon(Icons.add),
-          ),
-          FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => QrTest()));
-            },
-            tooltip: 'QR Testing',
-            heroTag: 'qr_tester',
-            child: Icon(Icons.add),
-          )
-        ],
-      ),
     );
   }
 

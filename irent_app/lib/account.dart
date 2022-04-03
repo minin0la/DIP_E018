@@ -3,13 +3,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:irent_app/app_icons.dart';
-import 'package:irent_app/database.dart';
-import 'package:irent_app/edit_profile.dart';
-import 'package:irent_app/change_passcode.dart';
-import 'package:irent_app/history.dart';
 import 'package:irent_app/about_us.dart';
+import 'package:irent_app/change_passcode.dart';
+import 'package:irent_app/edit_profile.dart';
 import 'package:irent_app/feedback.dart';
+import 'package:irent_app/history.dart';
+
 import 'login_register.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -27,6 +26,10 @@ class _AccountScreenState extends State<AccountScreen> {
   final Color marigold = const Color(0xFFECA400);
 
   String? uid = FirebaseAuth.instance.currentUser?.uid;
+
+  String? currentuserEmail = FirebaseAuth.instance.currentUser?.email;
+
+  String? currentuserName = FirebaseAuth.instance.currentUser?.displayName;
 
   CollectionReference nameref = FirebaseFirestore.instance.collection('users');
 
