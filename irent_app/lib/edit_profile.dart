@@ -48,6 +48,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String? _userName;
   File? _myImage;
   File? selectedImage;
+  String nameHint = "";
+  String emailHint = "";
 
   // File _myImageState = File('');
 
@@ -137,52 +139,53 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     child: Column(
                       children: [
                         SizedBox(height: 30),
-                        StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection('users')
-                              .doc(uid)
-                              .snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<DocumentSnapshot> snapshot) {
-                            if (snapshot.hasError) {
-                              return Text('Something went wrong...');
-                            }
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Text('Loading...');
-                            }
-                            return TextFormField(
-                              controller: _nameField,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your name';
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                  labelText: 'Name',
-                                  hintText: snapshot.data!['name'],
-                                  prefixIcon: Icon(AppIcons.person),
-                                  floatingLabelBehavior:
-                                      FloatingLabelBehavior.always),
-                            );
-                          },
-                        ),
-                        // TextFormField(
-                        // controller: _nameField,
-                        // validator: (value) {
-                        //   if (value == null || value.isEmpty) {
-                        //     return 'Please enter your name';
-                        //   }
-                        //   return null;
-                        // },
-                        // decoration: InputDecoration(
-                        //     labelText: 'Name',
-                        //     hintText: 'John Smith',
-                        //     prefixIcon: Icon(AppIcons.person),
-                        //     floatingLabelBehavior:
-                        //         FloatingLabelBehavior.always),
+                        // StreamBuilder(
+                        //   stream: FirebaseFirestore.instance
+                        //       .collection('users')
+                        //       .doc(uid)
+                        //       .snapshots(),
+                        //   builder: (BuildContext context,
+                        //       AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        //     if (snapshot.hasError) {
+                        //       return Text('Something went wrong...');
+                        //     }
+                        //     if (snapshot.connectionState ==
+                        //         ConnectionState.waiting) {
+                        //       return Text('Loading...');
+                        //     }
+                        //     return TextFormField(
+                        //       controller: _nameField,
+                        //       validator: (value) {
+                        //         if (value == null || value.isEmpty) {
+                        //           return 'Please enter your name';
+                        //         }
+                        //         return null;
+                        //       },
+                        //       decoration: InputDecoration(
+                        //           labelText: 'Name',
+                        //           hintText: snapshot.data!['name'],
+                        //           prefixIcon: Icon(AppIcons.person),
+                        //           floatingLabelBehavior:
+                        //               FloatingLabelBehavior.always),
+                        //     );
+                        //   },
                         // ),
+                        TextFormField(
+                          controller: _nameField,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your name';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                              labelText: 'Name',
+                              // hintText: 'John Smith',
+                              hintText: nameHint,
+                              prefixIcon: Icon(AppIcons.person),
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.always),
+                        ),
                         SizedBox(
                           height: 10,
                         ),
@@ -191,8 +194,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           decoration: InputDecoration(
                               enabled: false,
                               labelText: 'Email',
-                              hintText:
-                                  FirebaseAuth.instance.currentUser?.email,
+                              hintText: emailHint,
+                              // hintText:
+                              //     FirebaseAuth.instance.currentUser?.email,
                               prefixIcon: Icon(AppIcons.email),
                               floatingLabelBehavior:
                                   FloatingLabelBehavior.always),
@@ -369,6 +373,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
         _success = false;
       });
     }
+  }
+
+  @override
+  void initState() {
+    CollectionReference userCollection =
+        FirebaseFirestore.instance.collection('users');
+    userCollection.doc(uid).get().then((DocumentSnapshot datas) {
+      try {
+        setState(() {
+          nameHint = datas.get(FieldPath(['name']));
+          emailHint = datas.get(FieldPath(['email']));
+        });
+      } on StateError catch (e) {
+        print('No nested field exists!');
+      }
+    });
+    super.initState();
   }
 
   @override
