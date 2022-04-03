@@ -97,6 +97,11 @@ class _AdminEditItemPageState extends State<AdminEditItemPage> {
                       _inputFields(
                           field: 'Name',
                           initialValue: widget.itemDataModel.name),
+                      _dropDown(
+                          context: context,
+                          items: widget.itemDataModel.itemCategories[0],
+                          field: 'Category',
+                          itemCat: widget.itemDataModel.productCategory),
                       Row(
                         children: [
                           Expanded(
@@ -297,8 +302,10 @@ class _AdminEditItemPageState extends State<AdminEditItemPage> {
   Widget _dropDown(
       {required BuildContext context,
       required List<String> items,
-      required String field}) {
+      required String field,
+      required String itemCat}) {
     var dropdownValue;
+
     return Row(
       children: [
         Expanded(
@@ -326,15 +333,15 @@ class _AdminEditItemPageState extends State<AdminEditItemPage> {
                   iconEnabledColor: Color(0xFF001D4A),
                   elevation: 16,
                   style: fieldStyle,
+                  value: dropdownValue,
+                  isDense: true,
                   hint: Padding(
                     padding: const EdgeInsets.only(left: 15.0),
                     child: Text('Select', style: fieldStyle),
                   ),
-                  value: dropdownValue,
-                  isDense: true,
                   onChanged: (newValue) {
                     setState(() {
-                      dropdownValue = newValue;
+                      dropdownValue = newValue!;
                     });
                   },
                   items: items.map((String value) {

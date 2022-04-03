@@ -38,6 +38,12 @@ class AdminStoreItemsPage extends StatelessWidget {
     final List itemCat = storeDataModel.itemCategories[0];
     final List items = storeDataModel.items[0];
 
+    final List<CatDataModel> catListData = List.generate(
+        items.length,
+        (index) => CatDataModel(
+              storeDataModel.itemCategories,
+            ));
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -70,7 +76,8 @@ class AdminStoreItemsPage extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => AdminAddItemPage()));
+                        builder: (context) =>
+                            AdminAddItemPage(catDataModel: catListData[0])));
               },
               child: Icon(
                 Icons.add,
@@ -570,4 +577,10 @@ class ItemDataModel {
 
   ItemDataModel(this.itemCategories, this.id, this.name, this.productCategory,
       this.pricePerHour, this.quantity, this.displayPicture);
+}
+
+class CatDataModel {
+  final List itemCategories;
+
+  CatDataModel(this.itemCategories);
 }

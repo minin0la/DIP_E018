@@ -10,6 +10,9 @@ import 'admin_constants.dart';
 import 'admin_store_items.dart';
 
 class AdminAddItemPage extends StatefulWidget {
+  final CatDataModel catDataModel;
+  const AdminAddItemPage({Key? key, required this.catDataModel})
+      : super(key: key);
   @override
   _AdminAddItemPageState createState() => _AdminAddItemPageState();
 }
@@ -90,6 +93,10 @@ class _AdminAddItemPageState extends State<AdminAddItemPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _inputFields(field: 'Name'),
+                      _dropDown(
+                          context: context,
+                          items: widget.catDataModel.itemCategories[0],
+                          field: 'Category'),
                       Row(
                         children: [
                           Expanded(
@@ -290,19 +297,19 @@ class _AdminAddItemPageState extends State<AdminAddItemPage> {
                     padding: const EdgeInsets.only(left: 15.0),
                     child: Text('Select', style: fieldStyle),
                   ),
+                  items: items.map((String value) {
+                    return new DropdownMenuItem<String>(
+                      value: value,
+                      child: new Text(value),
+                    );
+                  }).toList(),
                   value: dropdownValue,
                   isDense: true,
-                  onChanged: (newValue) {
+                  onChanged: (String? newValue) {
                     setState(() {
                       dropdownValue = newValue;
                     });
                   },
-                  items: items.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
                 ),
               ),
             ),
