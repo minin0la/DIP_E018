@@ -17,8 +17,6 @@ class AccountScreen extends StatefulWidget {
   State<AccountScreen> createState() => _AccountScreenState();
 }
 
-String? uid = FirebaseAuth.instance.currentUser?.uid;
-
 class _AccountScreenState extends State<AccountScreen> {
   final Color white = const Color(0xFFFBFBFF);
 
@@ -27,6 +25,8 @@ class _AccountScreenState extends State<AccountScreen> {
   final Color aliceblue = const Color(0xFF81A4CD);
 
   final Color marigold = const Color(0xFFECA400);
+
+  String? uid = FirebaseAuth.instance.currentUser?.uid;
 
   String? currentuserEmail = FirebaseAuth.instance.currentUser?.email;
 
