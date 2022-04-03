@@ -99,7 +99,7 @@ class _user_item_pageState extends State<user_item_page> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
                 image: DecorationImage(
-                    image: AssetImage(widget.product_displayPicture),
+                    image: NetworkImage(widget.product_displayPicture),
                     colorFilter: new ColorFilter.mode(
                         Color.fromRGBO(129, 164, 205, 0.5), BlendMode.lighten),
                     fit: BoxFit.cover)),

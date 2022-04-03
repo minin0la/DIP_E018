@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:ui';
 import 'package:irent_app/basket.dart';
 import 'package:irent_app/database.dart';
@@ -187,28 +189,71 @@ class _user_store_urocState extends State<user_store_uroc> {
             child: Container(
               width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.only(left: 5, right: 5),
-              child: GridView.builder(
-                  shrinkWrap: true,
-                  physics: ScrollPhysics(),
-                  itemCount: productDetails.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-                  itemBuilder: (context, index) {
-                    for (var product in productDetails) {
-                      return _productDetailsCard(
-                          context: context,
-                          name: productDetails[index]['name'].toString(),
-                          product_category: productDetails[index]
-                                  ['product_category']
-                              .toString(),
-                          pricePerhour: int.parse(
-                              productDetails[index]['pricePerhour'].toString()),
-                          displayPicture: productDetails[index]
-                                  ['displayPicture']
-                              .toString());
-                    }
-                    throw 'No Data Found';
-                  }),
+              child: StreamBuilder(
+                stream:
+                    FirebaseFirestore.instance.collection('items').snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return GridView.count(
+                    physics: ScrollPhysics(),
+                    crossAxisCount: 2,
+                    shrinkWrap: true,
+                    children: snapshot.data!.docs.map((document) {
+                      if (document['isBooked'] == false) {
+                        return _productDetailsCard(
+                            context: context,
+                            name: document['name'],
+                            product_category: document['product_category'],
+                            pricePerhour: document['pricePerhour'],
+                            displayPicture: document['itemImageUrl']);
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 5),
+                        child: Container(
+                          foregroundDecoration: BoxDecoration(
+                              color: Colors.grey,
+                              backgroundBlendMode: BlendMode.saturation),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: new DecorationImage(
+                              image: NetworkImage(document['itemImageUrl']),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+              // child: GridView.builder(
+              //     shrinkWrap: true,
+              //     physics: ScrollPhysics(),
+              //     itemCount: productDetails.length,
+              //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //         crossAxisCount: 2),
+              //     itemBuilder: (context, index) {
+              //       for (var product in productDetails) {
+              //         return _productDetailsCard(
+              //             context: context,
+              //             name: productDetails[index]['name'].toString(),
+              //             product_category: productDetails[index]
+              //                     ['product_category']
+              //                 .toString(),
+              //             pricePerhour: int.parse(
+              //                 productDetails[index]['pricePerhour'].toString()),
+              //             displayPicture: productDetails[index]
+              //                     ['displayPicture']
+              //                 .toString());
+              //       }
+              //       throw 'No Data Found';
+              //     }),
             ),
           ),
         ]),
@@ -241,7 +286,7 @@ Widget _productDetailsCard(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: new DecorationImage(
-                image: AssetImage(displayPicture),
+                image: NetworkImage(displayPicture),
                 fit: BoxFit.cover,
               ),
             ),

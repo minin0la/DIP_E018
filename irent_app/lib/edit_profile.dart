@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:irent_app/account.dart';
@@ -137,52 +138,53 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     child: Column(
                       children: [
                         SizedBox(height: 30),
-                        StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection('users')
-                              .doc(uid)
-                              .snapshots(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<DocumentSnapshot> snapshot) {
-                            if (snapshot.hasError) {
-                              return Text('Something went wrong...');
-                            }
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Text('Loading...');
-                            }
-                            return TextFormField(
-                              controller: _nameField,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your name';
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                  labelText: 'Name',
-                                  hintText: snapshot.data!['name'],
-                                  prefixIcon: Icon(AppIcons.person),
-                                  floatingLabelBehavior:
-                                      FloatingLabelBehavior.always),
-                            );
-                          },
-                        ),
-                        // TextFormField(
-                        // controller: _nameField,
-                        // validator: (value) {
-                        //   if (value == null || value.isEmpty) {
-                        //     return 'Please enter your name';
-                        //   }
-                        //   return null;
-                        // },
-                        // decoration: InputDecoration(
-                        //     labelText: 'Name',
-                        //     hintText: 'John Smith',
-                        //     prefixIcon: Icon(AppIcons.person),
-                        //     floatingLabelBehavior:
-                        //         FloatingLabelBehavior.always),
+                        // StreamBuilder(
+                        //   stream: FirebaseFirestore.instance
+                        //       .collection('users')
+                        //       .doc(uid)
+                        //       .snapshots(),
+                        //   builder: (BuildContext context,
+                        //       AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        //     if (snapshot.hasError) {
+                        //       return Text('Something went wrong...');
+                        //     }
+                        //     if (snapshot.connectionState ==
+                        //         ConnectionState.waiting) {
+                        //       return Text('Loading...');
+                        //     }
+                        //     return TextFormField(
+                        //       controller: _nameField,
+                        //       validator: (value) {
+                        //         if (value == null || value.isEmpty) {
+                        //           return 'Please enter your name';
+                        //         }
+                        //         return null;
+                        //       },
+                        //       decoration: InputDecoration(
+                        //           labelText: 'Name',
+                        //           hintText: snapshot.data!['name'],
+                        //           prefixIcon: Icon(AppIcons.person),
+                        //           floatingLabelBehavior:
+                        //               FloatingLabelBehavior.always),
+                        //     );
+                        //   },
                         // ),
+                        TextFormField(
+                          controller: _nameField,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your name';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                              labelText: 'Name',
+                              hintText: FirebaseAuth
+                                  .instance.currentUser?.displayName,
+                              prefixIcon: Icon(AppIcons.person),
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.always),
+                        ),
                         SizedBox(
                           height: 10,
                         ),
