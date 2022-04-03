@@ -160,3 +160,111 @@ var bookingsData = [
     "imgCapture": 'images/fifa_cd.jpeg'
   },
 ];
+
+var stores = [
+  {
+    "storeName": "UR0C @ Student Activity Centre",
+    "storeAddress":
+        "North Spine, NS3-01-03, 50 Nanyang Ave, Block N3.1, Singapore 639798",
+    "category": "Recreational Games",
+    "storeBanner": 'images/uroc.jpeg',
+    'itemCategories': [
+      'Consoles',
+      'CD Games',
+      'Board Games',
+      'Card Games',
+      'Spaces'
+    ],
+    'items': [
+      {
+        "id": 'p1',
+        "name": "Mario Kart Deluxe",
+        "product_category": "Console Game",
+        "pricePerhour": "1",
+        "quantity": "3",
+        "displayPicture": 'images/Image_mariokartdeluxe.jpg'
+      },
+      {
+        "id": 'p2',
+        "name": "Super Mario",
+        "product_category": "Console Game",
+        "pricePerhour": "1",
+        "quantity": "5",
+        "displayPicture": 'images/Image_supermario.jfif'
+      },
+      {
+        "id": 'p3',
+        "name": "Overcooked",
+        "product_category": "Console Game",
+        "pricePerhour": "1",
+        "quantity": "2",
+        "displayPicture": 'images/Image_overcooked.jpg'
+      },
+      {
+        "id": 'p4',
+        "name": "Fifa 22",
+        "product_category": "Console Game",
+        "pricePerhour": "1",
+        "quantity": "3",
+        "displayPicture": 'images/Image_fifa22.jpeg'
+      },
+      {
+        "id": 'p5',
+        "name": "Madden 18",
+        "product_category": "Console Game",
+        "pricePerhour": "1",
+        "quantity": "1",
+        "displayPicture": 'images/Image_madden18.jpg'
+      }
+    ]
+  },
+  {
+    "storeName": "Centre for Information Sciences and Systems (CISS)",
+    "storeAddress": "50 Nanyang Ave S2-B4b-05, Singapore 639798",
+    "category": "EEE Laboratories",
+    "storeBanner": 'images/Image_ciss.png',
+    'itemCategories': ['Tools', 'Cables', 'Components', 'Breadboard', 'Spaces'],
+    'items': [
+      {
+        "id": 'p1',
+        "name": "Breadboard",
+        "product_category": "Console Game",
+        "pricePerhour": "1",
+        "quantity": "3",
+        "displayPicture": 'images/ciss_lab/breadboard.jpeg'
+      },
+      {
+        "id": 'p2',
+        "name": "Jumper Wires",
+        "product_category": "Console Game",
+        "pricePerhour": "1",
+        "quantity": "5",
+        "displayPicture": 'images/ciss_lab/jumper_wires.webp'
+      },
+      {
+        "id": 'p3',
+        "name": "Multimeter",
+        "product_category": "Console Game",
+        "pricePerhour": "1",
+        "quantity": "2",
+        "displayPicture": 'images/ciss_lab/multimeter.jpeg'
+      },
+      {
+        "id": 'p4',
+        "name": "Screwdriver",
+        "product_category": "Console Game",
+        "pricePerhour": "1",
+        "quantity": "3",
+        "displayPicture": 'images/ciss_lab/screwdriver.webp'
+      },
+      {
+        "id": 'p5',
+        "name": "Wafer",
+        "product_category": "Console Game",
+        "pricePerhour": "1",
+        "quantity": "1",
+        "displayPicture": 'images/ciss_lab/wafer.jpeg'
+      }
+    ]
+  },
+];
