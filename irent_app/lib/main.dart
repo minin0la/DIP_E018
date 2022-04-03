@@ -2,28 +2,12 @@
 // /https://www.youtube.com/watch?v=zpbyJ7GVMVU
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:irent_app/account.dart';
-
-import 'package:irent_app/datetimetest.dart';
-import 'package:irent_app/homepage.dart';
-import 'package:irent_app/login.dart';
+import 'package:flutter/material.dart';
 import 'package:irent_app/login_register.dart';
-import 'package:irent_app/user_home.dart';
-import 'package:irent_app/user_bookings.dart';
-import 'package:irent_app/verification.dart';
-import 'firebase_options.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:irent_app/not_verified.dart';
 import 'package:irent_app/switch_nav.dart';
-import 'package:irent_app/edit_profile.dart';
 import 'admin/admin_switch_nav.dart';
-import 'topup.dart';
-
-import 'package:irent_app/edit_profile.dart';
-import 'package:irent_app/user_bookings.dart';
-import 'package:irent_app/account.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,7 +29,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         primaryColor: Color(0xFFFBFBFF),
       ),
-      home: SwitchNavBar(),
+      home: MainPage(),
     );
   }
 }
@@ -64,7 +48,7 @@ class MainPage extends StatelessWidget {
               }
               return SwitchNavBar();
             } else {
-              return SwitchNavBar();
+              return LoginRegisterScreen();
               //LoginRegisterScreen();
             }
           },

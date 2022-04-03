@@ -17,8 +17,6 @@ class AccountScreen extends StatefulWidget {
   State<AccountScreen> createState() => _AccountScreenState();
 }
 
-String? uid = FirebaseAuth.instance.currentUser?.uid;
-
 class _AccountScreenState extends State<AccountScreen> {
   final Color white = const Color(0xFFFBFBFF);
 
@@ -28,9 +26,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   final Color marigold = const Color(0xFFECA400);
 
-  String? currentuserEmail = FirebaseAuth.instance.currentUser?.email;
-
-  String? currentuserName = FirebaseAuth.instance.currentUser?.displayName;
+  String? uid = FirebaseAuth.instance.currentUser?.uid;
 
   CollectionReference nameref = FirebaseFirestore.instance.collection('users');
 
@@ -48,122 +44,58 @@ class _AccountScreenState extends State<AccountScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Row(children: [
-                    // CircleAvatar(
-                    //   child: Image.asset('images/profile.png'),
-                    //   radius: 50,
-                    // ),
-                    // StreamBuilder<DocumentSnapshot>(
-                    //   stream: FirebaseFirestore.instance
-                    //       .collection('users')
-                    //       .doc(uid)
-                    //       .snapshots(),
-                    //   builder: (BuildContext context,
-                    //       AsyncSnapshot<DocumentSnapshot> snapshot) {
-                    //     if (snapshot.hasError) {
-                    //       return Text('Something went wrong...');
-                    //     }
-                    //     if (snapshot.connectionState ==
-                    //         ConnectionState.waiting) {
-                    //       return Text('Loading...');
-                    //     }
-                    //     return Text(
-                    //         snapshot.hasData ? snapshot.data!['name'] : '');
-                    //   },
-                    // ),
-                    // FutureBuilder(
-                    //     future: getProfileImage(),
-                    //     builder: (BuildContext context,
-                    //         AsyncSnapshot<String> image) {
-                    //       if (image.data != "") {
-                    //         print("Showing Image");
-                    //         print("Image: " + image.data.toString());
-
-                    //         return CircleAvatar(
-                    //           backgroundImage:
-                    //               NetworkImage(image.data.toString()),
-                    //           // NetworkImage('https://via.placeholder.com/150'),
-                    //           // Image.network(image.data.toString()),
-                    //           radius: 50,
-                    //         );
-                    //       } else {
-                    //         return CircleAvatar(
-                    //           backgroundImage: AssetImage('images/profile.png'),
-                    //           radius: 50,
-                    //         );
-                    //       }
-                    //     }),
-                    SizedBox(width: 20),
-                    Container(
-                      //decoration: BoxDecoration(color: Colors.yellow),
-                      height: 50,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          StreamBuilder<DocumentSnapshot>(
-                            stream: FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(uid)
-                                .snapshots(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<DocumentSnapshot> snapshot) {
-                              if (snapshot.hasError) {
-                                return Text('Something went wrong...');
-                              }
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Text('Loading...');
-                              }
-                              return Text(
-                                snapshot.hasData ? snapshot.data!['name'] : '',
-                                style: TextStyle(
-                                    color: oxford,
-                                    fontFamily: "SF_Pro_Rounded",
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 22.0),
-                              );
-                            },
-                          ),
-                          // FutureBuilder(
-                          //   future: getUserInfo(),
-                          //   builder: (BuildContext context,
-                          //       AsyncSnapshot<DocumentSnapshot> snapshot) {
-                          //     if (snapshot.hasData && snapshot.data!.exists) {
-                          //       if (snapshot.connectionState ==
-                          //           ConnectionState.waiting) {
-                          //         return Center(
-                          //           child: CircularProgressIndicator(),
-                          //         );
-                          //       } else {
-                          //         Map<String, dynamic> data = snapshot.data!
-                          //             .data() as Map<String, dynamic>;
-                          //         return Center(
-                          //             child: Text(
-                          //           data['name'].toUpperCase(),
-                          //           style: TextStyle(
-                          //             color: oxford,
-                          //             fontFamily: "SF_Pro_Rounded",
-                          //             fontWeight: FontWeight.w700,
-                          //             fontSize: 22.0,
-                          //           ),
-                          //         ));
-                          //       }
-                          //     } else if (snapshot.hasError) {
-                          //       return Text('no data');
-                          //     }
-                          //     return CircularProgressIndicator();
-                          //   },
-                          // ),
-                          Text(
-                            currentuserEmail!,
-                            style: TextStyle(
-                              color: Color(0x99001D4A),
-                              fontFamily: "SF_Pro_Rounded",
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16.0,
+                    StreamBuilder<DocumentSnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(uid)
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Something went wrong...');
+                        }
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Text('Loading...');
+                        }
+                        if (snapshot.hasData) {
+                          return Row(children: [
+                            CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(snapshot.data!['profileURL']),
+                              radius: 50,
                             ),
-                          ),
-                        ],
-                      ),
+                            SizedBox(width: 20),
+                            Container(
+                                //decoration: BoxDecoration(color: Colors.yellow),
+                                height: 50,
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        snapshot.data!['name'],
+                                        style: TextStyle(
+                                            color: oxford,
+                                            fontFamily: "SF_Pro_Rounded",
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 22.0),
+                                      ),
+                                      Text(
+                                        snapshot.data!['email'],
+                                        style: TextStyle(
+                                          color: Color(0x99001D4A),
+                                          fontFamily: "SF_Pro_Rounded",
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                    ]))
+                          ]);
+                        } else {
+                          return Container();
+                        }
+                      },
                     ),
                   ]),
                 ),
