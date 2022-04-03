@@ -113,6 +113,11 @@ flutter:
     - images/Image_madden18.jpg
     - images/Image_supermario.jfif
     - images/Image_mariokartdeluxe.jpg
+    - images/ciss_lab/breadboard.jpeg
+    - images/ciss_lab/jumper_wires.webp
+    - images/ciss_lab/multimeter.jpeg
+    - images/ciss_lab/screwdriver.webp
+    - images/ciss_lab/wafer.jpeg
 
 
 
