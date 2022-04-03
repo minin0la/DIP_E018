@@ -5,7 +5,7 @@ from firebase_admin import firestore
 class fb:
 
     def init():
-        cred = credentials.Certificate("./key/dip-ee018-firebase-adminsdk-b6phy-7152e25998.json")
+        cred = credentials.Certificate("./key/firebase.json")
         firebase_admin.initialize_app(cred)
 
     def updateuserfb():
