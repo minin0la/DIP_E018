@@ -47,7 +47,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
             children: [
               Container(
                 width: double.infinity,
-                height: MediaQuery.of(context).size.width * 0.6,
+                height: MediaQuery.of(context).size.width * 0.7,
                 color: aliceblue,
                 child: Column(
                   children: [
@@ -100,6 +100,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                         height: screenheight * 0.03,
                       ),
                       TextFormField(
+                        obscureText: true,
                         controller: _passwordField,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
