@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:irent_app/not_verified.dart';
@@ -165,22 +166,59 @@ class _LoginPageState extends State<LoginPage> {
                 email: emailField, password: passwordField)
             .then(
               (user) => {
-                if (user.user?.emailVerified == true)
-                  {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SwitchNavBar())),
-                    // ScaffoldMessenger.of(context)
-                    //     .showSnackBar(SnackBar(content: Text("Login success")))
-                  }
-                else if (user.user?.emailVerified == false)
-                  {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => NotVerified())),
-                    // ScaffoldMessenger.of(context).showSnackBar(
-                    //     SnackBar(content: Text("Please verify your email")))
-                  }
+                FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(user.user?.uid)
+                    .get()
+                    .then((value) => {
+                          if (value.exists)
+                            {
+                              if (value.data()?['role'] == "user")
+                                {
+                                  if (user.user?.emailVerified == true)
+                                    {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const SwitchNavBar())),
+                                    }
+                                  else if (user.user?.emailVerified == false)
+                                    {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  NotVerified())),
+                                    }
+                                }
+                              else
+                                {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text("User is an admin")))
+                                }
+                            }
+                          else
+                            {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content:
+                                          Text('User is not in the database')))
+                            }
+                        }),
+                // if (user.user?.emailVerified == true)
+                //   {
+                //     Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (context) => const SwitchNavBar())),
+                //   }
+                // else if (user.user?.emailVerified == false)
+                //   {
+                //     Navigator.push(context,
+                //         MaterialPageRoute(builder: (context) => NotVerified())),
+                //   }
               },
             );
       } on FirebaseAuthException catch (error) {

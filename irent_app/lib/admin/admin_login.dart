@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:irent_app/not_verified.dart';
@@ -29,6 +30,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
   bool? _success;
   bool? _verified;
   String? _userEmail;
+  String? errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -123,22 +125,9 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                         height: 43,
                         child: ElevatedButton(
                           onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              if (_formKey.currentState!.validate()) {
-                                await _signInWithEmailAndPassword();
-                                if (_success == true) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const AdminSwitchNavBar()));
-                                } else if (_verified == false) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => NotVerified()));
-                                }
-                              }
+                            {
+                              _signInWithEmailAndPassword(
+                                  _emailField.text, _passwordField.text);
                             }
                           },
                           child: Text('Login'),
@@ -172,23 +161,78 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
     );
   }
 
-  Future<void> _signInWithEmailAndPassword() async {
-    final User? user = (await _auth.signInWithEmailAndPassword(
-      email: _emailField.text,
-      password: _passwordField.text,
-    ))
-        .user;
+  void _signInWithEmailAndPassword(
+      String emailField, String passwordField) async {
+    String role;
+    if (_formKey.currentState!.validate()) {
+      try {
+        await _auth
+            .signInWithEmailAndPassword(
+                email: emailField, password: passwordField)
+            .then(
+              (user) => {
+                FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(user.user?.uid)
+                    .get()
+                    .then((value) => {
+                          if (value.exists)
+                            {
+                              if (value.data()?['role'] == "admin")
+                                {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const AdminSwitchNavBar())),
+                                }
+                              else
+                                {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text("User is not admin")))
+                                }
+                            }
+                          else
+                            {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content:
+                                          Text('User is not in the database')))
+                            }
+                        }),
 
-    if (user != null && !user.emailVerified) {
-      setState(() {
-        _success = false;
-        _verified = false;
-        // _userEmail = user.email;
-      });
-    } else {
-      setState(() {
-        _success = true;
-      });
+                // ScaffoldMessenger.of(context)
+                //     .showSnackBar(SnackBar(content: Text("Login success")))
+              },
+            );
+      } on FirebaseAuthException catch (error) {
+        switch (error.code) {
+          case "invalid-email":
+            errorMessage = "Your email address appears to be malformed.";
+            break;
+          case "wrong-password":
+            errorMessage = "Your password is wrong.";
+            break;
+          case "user-not-found":
+            errorMessage = "User with this email doesn't exist.";
+            break;
+          case "user-disabled":
+            errorMessage = "User with this email has been disabled.";
+            break;
+          case "too-many-requests":
+            errorMessage = "Too many requests";
+            break;
+          case "operation-not-allowed":
+            errorMessage = "Signing in with Email and Password is not enabled.";
+            break;
+          default:
+            errorMessage = "An undefined Error happened.";
+        }
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(errorMessage!)));
+        print(error.code);
+      }
     }
   }
 

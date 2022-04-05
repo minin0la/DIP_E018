@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:irent_app/account.dart';
 import 'package:irent_app/authservice.dart';
 import 'package:irent_app/database.dart';
 import 'package:irent_app/login_register.dart';
@@ -18,7 +19,6 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 String? uid = FirebaseAuth.instance.currentUser?.uid;
 CollectionReference updateProfile =
     FirebaseFirestore.instance.collection('users');
-File? _myImage;
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
@@ -45,6 +45,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final Color transparent = const Color(0x4DE3E3E3);
   bool? _success;
   String? _userEmail;
+  String? _userName;
+  File? _myImage;
+  File? selectedImage;
+  String nameHint = "";
+  String emailHint = "";
+
+  // File _myImageState = File('');
 
   @override
   Widget build(BuildContext context) {
@@ -132,17 +139,49 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     child: Column(
                       children: [
                         SizedBox(height: 30),
+                        // StreamBuilder(
+                        //   stream: FirebaseFirestore.instance
+                        //       .collection('users')
+                        //       .doc(uid)
+                        //       .snapshots(),
+                        //   builder: (BuildContext context,
+                        //       AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        //     if (snapshot.hasError) {
+                        //       return Text('Something went wrong...');
+                        //     }
+                        //     if (snapshot.connectionState ==
+                        //         ConnectionState.waiting) {
+                        //       return Text('Loading...');
+                        //     }
+                        //     return TextFormField(
+                        //       controller: _nameField,
+                        //       validator: (value) {
+                        //         if (value == null || value.isEmpty) {
+                        //           return 'Please enter your name';
+                        //         }
+                        //         return null;
+                        //       },
+                        //       decoration: InputDecoration(
+                        //           labelText: 'Name',
+                        //           hintText: snapshot.data!['name'],
+                        //           prefixIcon: Icon(AppIcons.person),
+                        //           floatingLabelBehavior:
+                        //               FloatingLabelBehavior.always),
+                        //     );
+                        //   },
+                        // ),
                         TextFormField(
                           controller: _nameField,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your name';
-                            }
-                            return null;
-                          },
+                          // validator: (value) {
+                          //   if (value == null || value.isEmpty) {
+                          //     return 'Please enter your name';
+                          //   }
+                          //   return null;
+                          // },
                           decoration: InputDecoration(
                               labelText: 'Name',
-                              hintText: 'John Smith',
+                              // hintText: 'John Smith',
+                              hintText: nameHint,
                               prefixIcon: Icon(AppIcons.person),
                               floatingLabelBehavior:
                                   FloatingLabelBehavior.always),
@@ -152,15 +191,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         TextFormField(
                           controller: _emailField,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your NTU email';
-                            }
-                            return null;
-                          },
                           decoration: InputDecoration(
+                              enabled: false,
                               labelText: 'Email',
-                              hintText: 'JOHN001@e.ntu.edu.sg',
+                              hintText: emailHint,
+                              // hintText:
+                              //     FirebaseAuth.instance.currentUser?.email,
                               prefixIcon: Icon(AppIcons.email),
                               floatingLabelBehavior:
                                   FloatingLabelBehavior.always),
@@ -168,21 +204,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         SizedBox(
                           height: 10,
                         ),
-                        TextFormField(
-                          controller: _mobileNumberField,
-                          // validator: (value) {
-                          //   if (value == null || value.isEmpty) {
-                          //     return 'Please enter your mobile number';
-                          //   }
-                          //   return null;
-                          // },
-                          decoration: InputDecoration(
-                              labelText: 'Mobile No',
-                              hintText: '9245XXXX',
-                              prefixIcon: Icon(AppIcons.phone),
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always),
-                        ),
+                        // TextFormField(
+                        //   controller: _mobileNumberField,
+                        //   // validator: (value) {
+                        //   //   if (value == null || value.isEmpty) {
+                        //   //     return 'Please enter your mobile number';
+                        //   //   }
+                        //   //   return null;
+                        //   // },
+                        //   decoration: InputDecoration(
+                        //       labelText: 'Mobile No',
+                        //       hintText: '9245XXXX',
+                        //       prefixIcon: Icon(AppIcons.phone),
+                        //       floatingLabelBehavior:
+                        //           FloatingLabelBehavior.always),
+                        // ),
                         SizedBox(
                           height: screenheight * 0.22,
                         ),
@@ -192,26 +228,36 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           child: ElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                if (_myImage != null) {
-                                  await uploadProfileImage(_myImage);
-                                }
-                                String updateProfile = await AuthService()
-                                    .changeProfile(
-                                        _nameField.text, _emailField.text);
-                                if (updateProfile == 'success') {
-                                  await updateUser();
-                                  await FirebaseAuth.instance.signOut();
-                                  Navigator.pushReplacement(
+                                if ((_nameField.text != "") ||
+                                    _myImage != null) {
+                                  String nameChange = _nameField.text;
+                                  if (_nameField.text == "") {
+                                    nameChange = nameHint;
+                                  }
+                                  String updateProfile = await AuthService()
+                                      .changeProfile(uid, nameChange, _myImage);
+                                  if (updateProfile == 'success') {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Your profile has been updated.')));
+                                    Navigator.pop(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AccountScreen()));
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Error: Your profile is not updated.')));
+                                  }
+                                } else {
+                                  Navigator.pop(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              LoginRegisterScreen()));
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              'Your profile has been updated...Please login again')));
-                                } else {
-                                  print(updateProfile);
+                                              AccountScreen()));
                                 }
                               }
                             },
@@ -252,20 +298,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
           Align(
               alignment: Alignment(0, -0.55),
               child: Stack(children: [
-                FutureBuilder(
-                    future: getProfileImage(),
-                    builder:
-                        (BuildContext context, AsyncSnapshot<String> image) {
-                      if (image.data != "") {
+                StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(uid)
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Something went wrong...');
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text('Loading...');
+                      }
+                      if (snapshot.hasData) {
                         return CircleAvatar(
-                          backgroundImage: NetworkImage(image.data.toString()),
-                          // NetworkImage('https://via.placeholder.com/150'),
-                          // Image.network(image.data.toString()),
+                          backgroundImage: _myImage == null
+                              ? (NetworkImage(snapshot.data!['profileURL']))
+                              : (FileImage(_myImage as File) as ImageProvider),
                           radius: 50,
                         );
                       } else {
                         return CircleAvatar(
-                          backgroundImage: AssetImage('images/profile.png'),
                           radius: 50,
                         );
                       }
@@ -276,7 +330,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     child: RawMaterialButton(
                       constraints: BoxConstraints.tight(Size(35, 35)),
                       onPressed: () async {
-                        _myImage = await selectImage();
+                        selectedImage = await selectImage();
+                        if (selectedImage != null) {
+                          setState(() {
+                            _myImage = selectedImage as File;
+                          });
+                        }
                       },
                       elevation: 2.0,
                       fillColor: white,
@@ -326,10 +385,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   @override
+  void initState() {
+    CollectionReference userCollection =
+        FirebaseFirestore.instance.collection('users');
+    userCollection.doc(uid).get().then((DocumentSnapshot datas) {
+      try {
+        setState(() {
+          nameHint = datas.get(FieldPath(['name']));
+          emailHint = datas.get(FieldPath(['email']));
+        });
+      } on StateError catch (e) {
+        print('No nested field exists!');
+      }
+    });
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _emailField.dispose();
     _passwordField.dispose();
     _mobileNumberField.dispose();
+    _myImage = null;
     super.dispose();
   }
 }

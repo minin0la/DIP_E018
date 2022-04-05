@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:irent_app/admin/admin_constants.dart';
+import 'package:irent_app/admin/admin_qr_page.dart';
 import 'package:irent_app/switch_nav.dart';
 import 'admin_store_items.dart';
 
@@ -180,7 +181,12 @@ class _AdminEditItemPageState extends State<AdminEditItemPage> {
                             child: Align(
                               alignment: Alignment.topLeft,
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => AdminQRPage()));
+                                },
                                 child: Text(
                                   'Press here to get QR Code',
                                   style: TextStyle(
