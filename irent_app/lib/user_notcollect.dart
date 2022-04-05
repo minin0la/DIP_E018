@@ -27,25 +27,29 @@ class _user_notcollectState extends State<user_notcollect> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Column(
-        children: [
-          Container(
-              width: 321,
-              height: 96,
-              margin: EdgeInsets.only(left: 40, top: 20),
-              child: Text(
-                'Oops! \nIt not time to Collect \nyour item yet. \nPlease come back later.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Color.fromRGBO(0, 29, 74, 1),
-                    fontFamily: 'SF Pro Rounded',
-                    fontSize: 20,
-                    letterSpacing:
-                        0 /*percentages not used in flutter. defaulting to zero*/,
-                    fontWeight: FontWeight.normal,
-                    height: 1),
-              )),
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset("images/embarrassed.png", height: 160, width: 160),
+            SizedBox(height: 60),
+            Container(
+                width: 321,
+                height: 96,
+                child: Text(
+                  'Oops! \nIt not time to Collect \nyour item yet. \nPlease come back later.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Color.fromRGBO(0, 29, 74, 1),
+                      fontFamily: 'SF Pro Rounded',
+                      fontSize: 20,
+                      letterSpacing:
+                          0 /*percentages not used in flutter. defaulting to zero*/,
+                      fontWeight: FontWeight.normal,
+                      height: 1),
+                )),
+          ],
+        ),
       ),
     );
   }
