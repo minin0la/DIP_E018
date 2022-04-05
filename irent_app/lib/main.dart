@@ -2,30 +2,14 @@
 // /https://www.youtube.com/watch?v=zpbyJ7GVMVU
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:irent_app/account.dart';
-import 'package:irent_app/admin/admin_store_items.dart';
-
-import 'package:irent_app/datetimetest.dart';
-import 'package:irent_app/homepage.dart';
-import 'package:irent_app/login.dart';
+import 'package:flutter/material.dart';
 import 'package:irent_app/login_register.dart';
-import 'package:irent_app/user_home.dart';
-import 'package:irent_app/user_bookings.dart';
-import 'package:irent_app/verification.dart';
-import 'firebase_options.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:irent_app/not_verified.dart';
 import 'package:irent_app/switch_nav.dart';
-import 'package:irent_app/edit_profile.dart';
-import 'admin/admin_switch_nav.dart';
-import 'login_register.dart';
-import 'topup.dart';
 
-import 'package:irent_app/edit_profile.dart';
-import 'package:irent_app/user_bookings.dart';
-import 'package:irent_app/account.dart';
+import 'admin/admin_switch_nav.dart';
+import 'firebase_options.dart';
+import 'login_register.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,8 +50,7 @@ class MainPage extends StatelessWidget {
               }
               return SwitchNavBar();
             } else {
-              return SwitchNavBar();
-              //LoginRegisterScreen();
+              return LoginRegisterScreen();
             }
           },
         ),

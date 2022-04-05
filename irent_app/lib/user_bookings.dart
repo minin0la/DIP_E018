@@ -5,6 +5,9 @@ import 'package:irent_app/constants.dart';
 import 'package:irent_app/user_notcollect.dart';
 import 'bookings_details.dart';
 import 'app_icons.dart';
+import 'homepage.dart';
+import 'package:irent_app/switch_nav.dart';
+import 'user_qr_page.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
