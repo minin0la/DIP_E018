@@ -33,7 +33,6 @@ Future uploadProfileImage(_myImage) async {
     firebase_storage.TaskSnapshot storageSnapshot = await uploadTask;
     var downloadUrl = await storageSnapshot.ref.getDownloadURL();
     final String url = downloadUrl.toString();
-    print(url);
     //You might want to set this as the _auth.currentUser().photourl
 
   } on FirebaseException catch (e) {
@@ -42,6 +41,19 @@ Future uploadProfileImage(_myImage) async {
 }
 
 Future<String> getProfileImage() async {
+  final firebase_storage.Reference firebaseStorageRef = firebase_storage
+      .FirebaseStorage.instance
+      .ref()
+      .child("users/$uid/profile_img"); //i is the name of the image
+  try {
+    var downloadUrl = await firebaseStorageRef.getDownloadURL();
+    return (downloadUrl);
+  } on FirebaseException catch (e) {
+    return "";
+  }
+}
+
+Future<String> getProfileName() async {
   final firebase_storage.Reference firebaseStorageRef = firebase_storage
       .FirebaseStorage.instance
       .ref()
