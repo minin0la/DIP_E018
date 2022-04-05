@@ -152,7 +152,7 @@ class _user_paymentState extends State<user_payment> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        user_payment_successful()));
+                                        user_payment_successful())); //if insufficient ballance =>  showAlertDialog(context);
                           },
                           child: Container(
                               margin: EdgeInsets.only(left: 100, top: 22),
@@ -458,5 +458,54 @@ Widget _historyCard(
         ),
       ),
     ),
+  );
+}
+
+showAlertDialog(BuildContext context) {
+  // set up the buttons
+  shape:
+  RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0));
+  color:
+  Color(0xFFDBE4EE);
+  Widget okButton = ElevatedButton(
+    style: ElevatedButton.styleFrom(
+        primary: const Color(0xFF001D4A),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(38))),
+    child: Text(
+      "OK",
+      style: TextStyle(
+          color: Color(0xFFFBFBFF),
+          fontFamily: 'SF_Pro_Rounded',
+          fontSize: 18,
+          fontWeight: FontWeight.w700),
+    ),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+    backgroundColor: Color(0xFFDBE4EE),
+    title: Text("Insufficient Balance"),
+    content: Text("Please top-up your iRent walet to make this booking."),
+    actions: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 30, width: 100, child: okButton),
+        ],
+      ),
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
   );
 }
