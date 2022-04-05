@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:irent_app/user_payment_successful.dart';
 //import '../size_config.dart';
 import 'constants.dart';
 import 'user_bookings.dart';
@@ -146,7 +147,13 @@ class _user_paymentState extends State<user_payment> {
                     Column(
                       children: [
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        user_payment_successful()));
+                          },
                           child: Container(
                               margin: EdgeInsets.only(left: 100, top: 22),
                               height: 53,

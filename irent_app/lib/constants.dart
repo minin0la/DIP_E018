@@ -165,6 +165,45 @@ var productDetails = [
   }
 ];
 
+var bookingsData = [
+  {
+    "name": "Overcooked",
+    "qty": 1,
+    "pricePerhour": 1,
+    "price": 5,
+    "collectDate": DateFormat.yMd().format(DateTime(2022, 3, 19)),
+    "returnDate": DateFormat.yMd().format(DateTime.now()),
+    "collectTime": DateFormat.jm().format(DateTime.now()),
+    "returnTime": DateFormat.jm().format(DateTime.now()),
+    "ticketNumber": 7,
+    "displayPicture": 'images/Image_overcooked.jpg'
+  },
+  {
+    "name": "Mario Kart Deluxe",
+    "qty": 2,
+    "pricePerhour": 1,
+    "price": 10,
+    "collectDate": DateFormat.yMd().format(DateTime.now()),
+    "returnDate": '-',
+    "collectTime": DateFormat.jm().format(DateTime.now()),
+    "returnTime": '-',
+    "ticketNumber": 28,
+    "displayPicture": 'images/Image_mariokartdeluxe.jpg'
+  },
+  {
+    "name": "FIFA 22",
+    "qty": 3,
+    "pricePerhour": 1,
+    "price": 2.5,
+    "collectDate": DateFormat.yMd().format(DateTime.now()),
+    "returnDate": '-',
+    "collectTime": DateFormat.jm().format(DateTime.now()),
+    "returnTime": '-',
+    "ticketNumber": 9,
+    "displayPicture": 'images/Image_fifa22.jpeg'
+  },
+];
+
 final Map userQR = {
   'username': 'user',
   'key':

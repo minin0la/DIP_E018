@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart' as intl;
+import 'package:intl/intl.dart';
 import 'package:irent_app/app_icons.dart';
 import 'package:irent_app/checkbox.dart';
 import 'package:irent_app/date.dart';
@@ -13,16 +13,18 @@ import 'constants.dart';
 import 'user_payment.dart';
 import 'package:irent_app/switch_nav.dart';
 
+final FirebaseAuth _auth = FirebaseAuth.instance;
+
 class basket extends StatefulWidget {
   final product_displayPicture;
   final product_name;
   final product_category;
   final product_price;
-  final product_count;
-  final product_starttime;
-  final product_endtime;
-  final product_startdate;
-  final product_enddate;
+  var product_count;
+  var product_starttime;
+  var product_endtime;
+  var product_startdate;
+  var product_enddate;
   basket(
       {this.product_displayPicture,
       this.product_name,
@@ -33,8 +35,6 @@ class basket extends StatefulWidget {
       this.product_endtime,
       this.product_startdate,
       this.product_starttime});
-
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   State<basket> createState() => _basketState();
@@ -47,52 +47,6 @@ class _basketState extends State<basket> {
   final Color iceberg = const Color(0xFFDBE4EE);
   final Color marigold = const Color(0xFFECA400);
   final Color transparent = const Color(0x4DE3E3E3);
-  bool _value = false;
-  DateTime dateTime1 = DateTime(2022);
-  DateTime dateTime2 = DateTime(2022);
-  String initialValue1 = '12 AM';
-  String initialValue2 = '12 AM';
-
-  var itemList = [
-    '12 AM',
-    '1 AM',
-    '2 AM',
-    '3 AM',
-    '4 AM',
-    '5 AM',
-    '6 AM',
-    '7 AM',
-    '8 AM',
-    '9 AM',
-    '10 AM',
-    '11 AM',
-    '12 PM',
-    '1 PM',
-    '2 PM',
-    '3 PM',
-    '4 PM',
-    '5 PM',
-    '6 PM',
-    '7 PM',
-    '8 PM',
-    '9 PM',
-    '10 PM',
-    '11 PM',
-  ];
-
-  int _count = 1;
-
-  void _increamentCount() {
-    setState(() {
-      _count++;
-    });
-  }
-
-  void _decreamentCount() {
-    setState(() {
-      _count--;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,366 +68,28 @@ class _basketState extends State<basket> {
                 fontWeight: FontWeight.w500),
           ),
         ),
-        Container(
-          height: 200,
-          width: MediaQuery.of(context).size.width * 0.85,
-          child: Card(
-            color: Color(0xFF81A4CD),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 35.0, top: 15, bottom: 15),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 48,
-                    width: 48,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      image: new DecorationImage(
-                        image: AssetImage(widget.product_displayPicture),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${widget.product_name}',
-                        style: TextStyle(
-                          fontFamily: 'SF_Pro_Rounded',
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF001D4A),
-                        ),
-                      ),
-                      Text(
-                        '\$${widget.product_price} / Hour',
-                        style: TextStyle(
-                          fontFamily: 'SF_Pro_Rounded',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF001D4A),
-                        ),
-                      ),
-                      Text('Start Date             End Date',
-                          style: TextStyle(
-                            fontFamily: 'SF_Pro_Rounded',
-                            fontSize: 15,
-                            fontWeight: FontWeight.w300,
-                            color: Color(0xFF001D4A),
-                            wordSpacing: 1,
-                          )),
-                      Row(
-                        children: [
-                          Container(
-                            child: Row(
-                              children: <Widget>[
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Container(
-                                          height: 30,
-                                          width: 105,
-                                          child: Directionality(
-                                              textDirection: TextDirection.rtl,
-                                              child: ElevatedButton.icon(
-                                                onPressed: () async {
-                                                  DateTime? newDate1 =
-                                                      await showDatePicker(
-                                                          context: context,
-                                                          initialDate:
-                                                              dateTime1,
-                                                          firstDate:
-                                                              DateTime(1900),
-                                                          lastDate:
-                                                              DateTime(2300));
-                                                  if (newDate1 != null) {
-                                                    setState(() {
-                                                      dateTime1 = newDate1;
-                                                    });
-                                                  }
-                                                },
-                                                icon: Icon(
-                                                  Icons.keyboard_arrow_down,
-                                                  color: Color.fromRGBO(
-                                                      0, 29, 74, 1),
-                                                  size: 20,
-                                                ),
-                                                label: Text(
-                                                    '${widget.product_startdate}',
-                                                    textAlign: TextAlign.start,
-                                                    style: TextStyle(
-                                                        color: Color.fromRGBO(
-                                                            0, 29, 74, 1),
-                                                        fontFamily:
-                                                            'SF Pro Rounded',
-                                                        fontSize: 10,
-                                                        letterSpacing: 0,
-                                                        fontWeight:
-                                                            FontWeight.normal)),
-                                                style: ElevatedButton.styleFrom(
-                                                  fixedSize:
-                                                      const Size(158, 41),
-                                                  primary: Color.fromRGBO(
-                                                      219, 228, 238, 1),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0),
-                                                  ),
-                                                ),
-                                              )),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 30, width: 5)
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    Container(
-                                      height: 30,
-                                      width: 105,
-                                      child: Directionality(
-                                          textDirection: TextDirection.rtl,
-                                          child: ElevatedButton.icon(
-                                            onPressed: () async {
-                                              DateTime? newDate2 =
-                                                  await showDatePicker(
-                                                      context: context,
-                                                      initialDate: dateTime2,
-                                                      firstDate: DateTime(1900),
-                                                      lastDate: DateTime(2300));
-                                              if (newDate2 != null) {
-                                                setState(() {
-                                                  dateTime2 = newDate2;
-                                                });
-                                              }
-                                            },
-                                            icon: Icon(
-                                              Icons.keyboard_arrow_down,
-                                              color:
-                                                  Color.fromRGBO(0, 29, 74, 1),
-                                              size: 20,
-                                            ),
-                                            label: Text(
-                                                '${widget.product_enddate}',
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        0, 29, 74, 1),
-                                                    fontFamily:
-                                                        'SF Pro Rounded',
-                                                    fontSize: 10,
-                                                    letterSpacing: 0,
-                                                    fontWeight:
-                                                        FontWeight.normal)),
-                                            style: ElevatedButton.styleFrom(
-                                              fixedSize: const Size(158, 41),
-                                              primary: Color.fromRGBO(
-                                                  219, 228, 238, 1),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10.0),
-                                              ),
-                                            ),
-                                          )),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      Text('Start Time             End Time',
-                          style: TextStyle(
-                            fontFamily: 'SF_Pro_Rounded',
-                            fontSize: 15,
-                            fontWeight: FontWeight.w300,
-                            color: Color(0xFF001D4A),
-                            wordSpacing: 1,
-                          )),
-                      Row(
-                        children: [
-                          Container(
-                            child: Row(
-                              children: <Widget>[
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Container(
-                                          height: 30,
-                                          width: 105,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                              primary: Color.fromRGBO(
-                                                  219, 228, 238, 1),
-                                              fixedSize: const Size(158, 41),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10.0),
-                                              ),
-                                            ),
-                                            onPressed: () {},
-                                            child: Container(
-                                              child: DropdownButton(
-                                                style: TextStyle(
-                                                    color: Color.fromRGBO(
-                                                        0, 29, 74, 1),
-                                                    fontSize: 10),
-                                                dropdownColor: Color.fromRGBO(
-                                                    219, 228, 238, 1),
-                                                icon: Icon(
-                                                    Icons.keyboard_arrow_down,
-                                                    color: Color.fromRGBO(
-                                                        0, 29, 74, 1)),
-                                                underline: Container(),
-                                                value: initialValue1,
-                                                onChanged: (value1) {
-                                                  setState(() {
-                                                    initialValue1 =
-                                                        value1.toString();
-                                                  });
-                                                },
-                                                menuMaxHeight: 150,
-                                                focusNode: FocusNode(),
-                                                isExpanded: true,
-                                                items: itemList.map((item1) {
-                                                  return DropdownMenuItem(
-                                                      value: item1,
-                                                      child: Text(
-                                                          '${widget.product_starttime}'));
-                                                }).toList(),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 30,
-                                      width: 5,
-                                    )
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    Container(
-                                      height: 30,
-                                      width: 105,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          primary:
-                                              Color.fromRGBO(219, 228, 238, 1),
-                                          fixedSize: const Size(158, 41),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                          ),
-                                        ),
-                                        onPressed: () {},
-                                        child: Container(
-                                          child: DropdownButton(
-                                            style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    0, 29, 74, 1),
-                                                fontSize: 10),
-                                            dropdownColor: Color.fromRGBO(
-                                                219, 228, 238, 1),
-                                            icon: Icon(
-                                                Icons.keyboard_arrow_down,
-                                                color: Color.fromRGBO(
-                                                    0, 29, 74, 1)),
-                                            underline: Container(),
-                                            value: initialValue2,
-                                            onChanged: (value2) {
-                                              setState(() {
-                                                initialValue2 =
-                                                    value2.toString();
-                                              });
-                                            },
-                                            menuMaxHeight: 150,
-                                            focusNode: FocusNode(),
-                                            isExpanded: true,
-                                            items: itemList.map((item2) {
-                                              return DropdownMenuItem(
-                                                  value: item2,
-                                                  child: Text(
-                                                      '${widget.product_endtime}'));
-                                            }).toList(),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      Row(children: [
-                        Container(
-                          padding: EdgeInsets.only(top: 10),
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                decoration: BoxDecoration(
-                                    color: Color.fromRGBO(219, 228, 238, 1),
-                                    shape: BoxShape.circle),
-                                child: InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        _count -= 1;
-                                      });
-                                    },
-                                    child: Icon(Icons.remove,
-                                        color: Color.fromRGBO(0, 29, 74, 1),
-                                        size: 20)),
-                              ),
-                              SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: Text(
-                                    '${widget.product_count}',
-                                    textAlign: TextAlign.center,
-                                  )),
-                              Container(
-                                decoration: BoxDecoration(
-                                    color: Color.fromRGBO(219, 228, 238, 1),
-                                    shape: BoxShape.circle),
-                                child: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      _count += 1;
-                                    });
-                                  },
-                                  child: Icon(
-                                    Icons.add,
-                                    color: Color.fromRGBO(0, 29, 74, 1),
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ])
-                    ],
-                  ),
-                ],
-              ),
-            ),
+        Expanded(
+          flex: 6,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.only(left: 25, right: 25),
+            child: ListView.builder(
+                itemCount: productDetails.length,
+                itemBuilder: (context, index) {
+                  for (var product in productDetails) {
+                    return _productDetails(
+                        context: context,
+                        name: productDetails[index]['name'].toString(),
+                        product_category: productDetails[index]
+                                ['product_category']
+                            .toString(),
+                        pricePerhour: int.parse(
+                            productDetails[index]['pricePerhour'].toString()),
+                        displayPicture:
+                            productDetails[index]['displayPicture'].toString());
+                  }
+                  throw 'No Data Found';
+                }),
           ),
         ),
         Column(
@@ -560,19 +176,7 @@ class _basketState extends State<basket> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => user_payment(
-                                        product_displayPicture:
-                                            widget.product_displayPicture,
-                                        product_price: widget.product_price,
-                                        product_startdate:
-                                            widget.product_startdate,
-                                        product_enddate: widget.product_enddate,
-                                        product_starttime:
-                                            widget.product_starttime,
-                                        product_endtime: widget.product_endtime,
-                                        product_count: widget.product_count,
-                                        product_name: widget.product_name,
-                                      )),
+                                  builder: (context) => user_payment()),
                             );
                           },
                         ),
@@ -583,30 +187,178 @@ class _basketState extends State<basket> {
           ],
         ),
       ]),
-      //bottomNavigationBar: SwitchNavBar(),
     );
   }
+}
+
+Widget _productDetails(
+    {required BuildContext context,
+    required String name,
+    required String product_category,
+    required int pricePerhour,
+    required String displayPicture}) {
+  final TextStyle subtitleStyles = TextStyle(
+    fontFamily: 'SF_Pro_Rounded',
+    fontSize: 15,
+    fontWeight: FontWeight.w300,
+    color: Color(0xFF001D4A),
+    wordSpacing: 1,
+  );
+
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: Card(
+      color: Color(0xFF81A4CD),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      elevation: 1,
+      child: Padding(
+        padding:
+            const EdgeInsets.only(left: 10.0, right: 10, top: 15, bottom: 15),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: (Column(
+                children: [checkbox()],
+              )),
+            ),
+            Expanded(
+                flex: 2,
+                child: Column(
+                  children: [
+                    Container(
+                      height: 48,
+                      width: 48,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        image: new DecorationImage(
+                          image: AssetImage(displayPicture),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+            Expanded(
+              flex: 11,
+              child: ListTile(
+                title: Row(
+                  children: [
+                    Container(
+                      width: 180,
+                      child: Text(
+                        name,
+                        style: TextStyle(
+                          fontFamily: 'SF_Pro_Rounded',
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF001D4A),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: InkWell(
+                          onTap: () {
+                            showAlertDialog(context);
+                          },
+                          child: Container(
+                            child: Icon(Icons.close),
+                          )),
+                    ),
+                  ],
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '\$$pricePerhour /hour',
+                      style: TextStyle(
+                        fontFamily: 'SF_Pro_Rounded',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF001D4A),
+                      ),
+                    ),
+                    Text('Start Date           End Date',
+                        style: subtitleStyles),
+                    Row(
+                      children: [date()],
+                    ),
+                    Text('Start Time           End Time',
+                        style: subtitleStyles),
+                    Row(
+                      children: [time()],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Row(
+                        children: [increment_decrement()],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
 
 showAlertDialog(BuildContext context) {
   // set up the buttons
 
   Widget noButton = TextButton(
-    child: Text("No"),
-    onPressed: () {},
+    style: ElevatedButton.styleFrom(
+        primary: const Color(0xFFFBFBFF),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(38))),
+    child: Text(
+      "No",
+      style: TextStyle(
+          color: Color(0xFF001D4A),
+          fontFamily: 'SF_Pro_Rounded',
+          fontSize: 18,
+          fontWeight: FontWeight.w700),
+    ),
+    onPressed: () {
+      Navigator.pop(context);
+    },
   );
+
   Widget yesButton = TextButton(
-    child: Text("Yes"),
+    style: ElevatedButton.styleFrom(
+        primary: const Color(0xFF001D4A),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(38))),
+    child: Text(
+      "Yes",
+      style: TextStyle(
+          color: Color(0xFFFBFBFF),
+          fontFamily: 'SF_Pro_Rounded',
+          fontSize: 18,
+          fontWeight: FontWeight.w700),
+    ),
     onPressed: () {},
   );
 
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+    backgroundColor: Color(0xFFDBE4EE),
     //title: Text("Notice"),
-    content: Text("Do you want to remove this?"),
+    content: Text("Do you want to remove this item?"),
     actions: [
-      noButton,
-      yesButton,
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 35, width: 100, child: noButton),
+          SizedBox(height: 35, width: 100, child: yesButton),
+        ],
+      ),
     ],
   );
 

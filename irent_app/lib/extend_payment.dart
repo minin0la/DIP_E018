@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:irent_app/user_bookings.dart';
+import 'user_bookings.dart';
 
-class user_payment_successful extends StatefulWidget {
-  const user_payment_successful({Key? key}) : super(key: key);
+class extend_payment extends StatefulWidget {
+  const extend_payment({Key? key}) : super(key: key);
 
   @override
-  State<user_payment_successful> createState() =>
-      _user_payment_successfulState();
+  State<extend_payment> createState() => _extend_paymentState();
 }
 
-class _user_payment_successfulState extends State<user_payment_successful> {
+class _extend_paymentState extends State<extend_payment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
