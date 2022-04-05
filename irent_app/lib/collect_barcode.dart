@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class collect_barcode extends StatefulWidget {
   const collect_barcode({Key? key}) : super(key: key);
