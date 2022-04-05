@@ -50,8 +50,7 @@ class MainPage extends StatelessWidget {
               }
               return SwitchNavBar();
             } else {
-              return SwitchNavBar();
-              //LoginRegisterScreen();
+              return LoginRegisterScreen();
             }
           },
         ),
