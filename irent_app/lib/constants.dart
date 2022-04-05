@@ -71,7 +71,8 @@ var historyDetailsTest = [
     "collected": DateFormat.yMd().add_jm().format(DateTime.now()),
     "returned": DateFormat.yMd().add_jm().format(DateTime.now()),
     "ticketNumber": 7,
-    "displayPicture": 'images/Image_overcooked.jpg'
+    "displayPicture": 'images/Image_overcooked.jpg',
+    "payments": {"bookFee": 5, "extensionFee": 2, "lateFee": 5.25}
   },
 ];
 

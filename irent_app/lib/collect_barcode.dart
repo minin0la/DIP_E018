@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:irent_app/constants.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'constants.dart';
+import 'dart:convert';
 
 class collect_barcode extends StatefulWidget {
   const collect_barcode({Key? key}) : super(key: key);
@@ -29,21 +32,19 @@ class _collect_barcodeState extends State<collect_barcode> {
         elevation: 0,
       ),
       body: Center(
-        child: Column(children: [
-          Container(
-              padding: EdgeInsets.only(top: 60),
-              child: Text(
-                'Scan this QR code \nto return your item',
-                style: TextStyle(
-                    color: Color(0xFF001D4A),
-                    fontFamily: 'SF_Pro_Rounded',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500),
-              )),
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text(
+            'Scan this QR code \nto return your item',
+            style: TextStyle(
+                color: Color(0xFF001D4A),
+                fontFamily: 'SF_Pro_Rounded',
+                fontSize: 20,
+                fontWeight: FontWeight.w500),
+          ),
           Container(
               padding: EdgeInsets.only(top: 40),
               child: QrImage(
-                data: controller.text,
+                data: json.encode(userQR),
                 size: 200,
               )),
           Container(

@@ -95,34 +95,23 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
         ),
         Expanded(
           flex: 6,
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.only(left: 30),
-            child: ListView.builder(
-                itemCount: historyDetailsTest.length,
-                itemBuilder: (context, index) {
-                  for (var product in historyData) {
-                    return _historyDetails(
-                        itemName: historyDetailsTest[index]['name'].toString(),
-                        qty: int.parse(
-                            historyDetailsTest[index]['qty'].toString()),
-                        price: int.parse(
-                            historyDetailsTest[index]['price'].toString()),
-                        collected:
-                            historyDetailsTest[index]['collectDate'].toString(),
-                        returned:
-                            historyDetailsTest[index]['returnDate'].toString(),
-                        ticketNumber: int.parse(historyDetailsTest[index]
-                                ['ticketNumber']
-                            .toString()),
-                        displayPicture: historyDetailsTest[index]
-                                ['displayPicture']
-                            .toString());
-                  }
-                  throw 'No Data Found';
-                }),
-          ),
-        ),
+          child: Column(children: [
+            Container(
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.only(left: 30, top: 30),
+                child: _historyDetails(
+                    itemName: historyDetailsTest[0]['name'].toString(),
+                    qty: int.parse(historyDetailsTest[0]['qty'].toString()),
+                    price: int.parse(historyDetailsTest[0]['price'].toString()),
+                    collected: historyDetailsTest[0]['collected'].toString(),
+                    returned: historyDetailsTest[0]['returned'].toString(),
+                    ticketNumber: int.parse(
+                        historyDetailsTest[0]['ticketNumber'].toString()),
+                    displayPicture:
+                        historyDetailsTest[0]['displayPicture'].toString())),
+            _fees(),
+          ]),
+        )
       ]),
     );
   }
@@ -217,5 +206,85 @@ Widget _historyDetails(
         ],
       )
     ],
+  );
+}
+
+Widget _fees() {
+  final TextStyle titleStyles = TextStyle(
+    fontFamily: 'SF_Pro_Rounded',
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: Color(0xFF001D4A),
+    wordSpacing: 1,
+  );
+  final TextStyle subtitleStyles = TextStyle(
+    fontFamily: 'SF_Pro_Rounded',
+    fontSize: 13,
+    fontWeight: FontWeight.w400,
+    color: Color(0xFF001D4A),
+    wordSpacing: 1,
+  );
+  final Color dividerColor = Color(0x8081A4CD);
+  return Padding(
+    padding: const EdgeInsets.only(left: 30, top: 30),
+    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text('Fees', style: titleStyles),
+      Divider(
+        height: 15,
+        thickness: 1,
+        endIndent: 25,
+        color: dividerColor,
+      ),
+      Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Row(
+              children: [
+                Expanded(
+                    flex: 3, child: Text('Rental Fee', style: subtitleStyles)),
+                Expanded(flex: 1, child: Text('\$5', style: subtitleStyles)),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Row(
+              children: [
+                Expanded(
+                    flex: 3,
+                    child: Text('Extension Fee', style: subtitleStyles)),
+                Expanded(flex: 1, child: Text('\$2', style: subtitleStyles)),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Row(
+              children: [
+                Expanded(
+                    flex: 3, child: Text('Late Fee', style: subtitleStyles)),
+                Expanded(flex: 1, child: Text('\$5.25', style: subtitleStyles)),
+              ],
+            ),
+          ),
+          Divider(
+            height: 15,
+            thickness: 1,
+            endIndent: 25,
+            color: dividerColor,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Row(
+              children: [
+                Expanded(flex: 3, child: Text('Total', style: titleStyles)),
+                Expanded(flex: 1, child: Text('\$12.25', style: titleStyles)),
+              ],
+            ),
+          ),
+        ],
+      )
+    ]),
   );
 }

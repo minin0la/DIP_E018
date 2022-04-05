@@ -226,17 +226,7 @@ Widget _productDetailsCard(
   return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
       child: GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => user_item_page(
-                      product_displayPicture: displayPicture,
-                      product_name: name,
-                      product_category: product_category,
-                      product_price: pricePerhour)),
-            );
-          },
+          onTap: () {},
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),

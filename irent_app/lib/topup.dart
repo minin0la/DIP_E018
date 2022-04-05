@@ -149,10 +149,7 @@ class _TopUpPageState extends State<TopUpPage> {
                     child: ElevatedButton(
                       onPressed: () {
                         topUpWallet();
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: ((context) => user_store_uroc())));
+                        Navigator.pop(context);
                       },
                       child: Text(
                         'Confirm',
