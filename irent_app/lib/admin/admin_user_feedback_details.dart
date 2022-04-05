@@ -24,6 +24,8 @@ class UserFeedbackDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenheight = MediaQuery.of(context).size.height;
+    final screenwidth = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: white,
@@ -83,50 +85,55 @@ class UserFeedbackDetailsPage extends StatelessWidget {
         ),
         Expanded(
           flex: 6,
-          child: Column(
-            children: [
-              Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.only(left: 30),
-                  child: _feedbackDetails(
-                      user: feedbackDataModel.user,
-                      itemName: feedbackDataModel.itemName,
-                      submissionTime: feedbackDataModel.submissionTime,
-                      ticketNumber: int.parse(feedbackDataModel.ticketNumber),
-                      feedbackType: feedbackDataModel.feedbackType,
-                      comment: feedbackDataModel.comment,
-                      displayPicture: feedbackDataModel.displayPicture)),
-              SizedBox(
-                height: 150,
-              ),
-              SizedBox(
-                height: 50,
-                width: 150,
-                child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(38.0),
-                  ),
-                  onPressed: () {
-                    //Deletes entry from Issues
-                  },
-                  padding: EdgeInsets.all(10.0),
-                  color: marigold,
-                  textColor: white,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Resolved",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontFamily: "SF_Pro_Rounded",
-                        color: white,
-                        fontWeight: FontWeight.w700,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.only(left: 30),
+                    child: _feedbackDetails(
+                        user: feedbackDataModel.user,
+                        itemName: feedbackDataModel.itemName,
+                        submissionTime: feedbackDataModel.submissionTime,
+                        ticketNumber: int.parse(feedbackDataModel.ticketNumber),
+                        feedbackType: feedbackDataModel.feedbackType,
+                        comment: feedbackDataModel.comment,
+                        displayPicture: feedbackDataModel.displayPicture)),
+                SizedBox(
+                  height: screenheight * 0.15,
+                ),
+                SizedBox(
+                  height: 50,
+                  width: 150,
+                  child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(38.0),
+                    ),
+                    onPressed: () {
+                      //Deletes entry from Issues
+                    },
+                    padding: EdgeInsets.all(10.0),
+                    color: marigold,
+                    textColor: white,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Resolved",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontFamily: "SF_Pro_Rounded",
+                          color: white,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+                SizedBox(
+                  height: screenheight * 0.05,
+                ),
+              ],
+            ),
           ),
         ),
       ]),

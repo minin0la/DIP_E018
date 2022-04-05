@@ -48,6 +48,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenheight = MediaQuery.of(context).size.height;
+    final screenwidth = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: white,
@@ -70,17 +72,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         alignment: Alignment.bottomCenter,
                         child: Image.asset(
                           'images/cross-bg-cropped.png',
-                          //height: MediaQuery.of(context).size.height * 0.15,
+                          //height: screenheight * 0.15,
                         ),
                       ),
                       Column(
                         children: [
-                          SizedBox(height: 80),
+                          SizedBox(height: screenheight * 0.1),
                           Container(
                             alignment: Alignment.bottomRight,
                             child: Image.asset(
                               'images/appbar.png',
-                              height: MediaQuery.of(context).size.height * 0.15,
+                              height: screenheight * 0.15,
                             ),
                           )
                         ],
@@ -101,9 +103,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           elevation: 0,
                           leading: Row(
                             children: [
-                              SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.05),
+                              SizedBox(width: screenwidth * 0.05),
                               GestureDetector(
                                 onTap: () {
                                   Navigator.pop(context);
@@ -184,7 +184,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                   FloatingLabelBehavior.always),
                         ),
                         SizedBox(
-                          height: 200,
+                          height: screenheight * 0.22,
                         ),
                         SizedBox(
                           width: 160,

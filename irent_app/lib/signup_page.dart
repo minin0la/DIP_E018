@@ -45,6 +45,8 @@ class _SignupPageState extends State<SignupPage> {
   bool value = false;
   @override
   Widget build(BuildContext context) {
+    final screenwidth = MediaQuery.of(context).size.width;
+    final screenheight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: white,
       resizeToAvoidBottomInset: true,
@@ -64,7 +66,7 @@ class _SignupPageState extends State<SignupPage> {
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
                     SizedBox(
-                      height: 25,
+                      height: screenheight * 0.01,
                     ),
                     Center(
                       child: DropShadowImage(
@@ -214,7 +216,7 @@ class _SignupPageState extends State<SignupPage> {
                       obscureText: true,
                     ),
                     SizedBox(
-                      height: 40,
+                      height: screenheight * 0.03,
                     ),
                     Row(
                       children: [
@@ -239,7 +241,7 @@ class _SignupPageState extends State<SignupPage> {
                       ],
                     ),
                     SizedBox(
-                      height: 60,
+                      height: screenheight * 0.1,
                     ),
                     ButtonTheme(
                       minWidth: 300,

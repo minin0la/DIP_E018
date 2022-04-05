@@ -36,9 +36,12 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenheight = MediaQuery.of(context).size.height;
+    final screenwidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(25.0),
+        padding: const EdgeInsets.only(
+            left: 25.0, right: 25.0, bottom: 25.0, top: 10),
         child: Column(
           children: [
             Expanded(
@@ -170,7 +173,7 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: screenheight * 0.01,
             ),
             Expanded(
               flex: 3,
@@ -202,7 +205,7 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: screenheight * 0.01,
             ),
             Expanded(
               flex: 3,
@@ -233,7 +236,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   )),
             ),
             SizedBox(
-              height: 50,
+              height: screenheight * 0.07,
               width: 150,
               child: RaisedButton(
                 shape: RoundedRectangleBorder(

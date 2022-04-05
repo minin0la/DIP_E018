@@ -32,6 +32,8 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenwidth = MediaQuery.of(context).size.width;
+    final screenheight = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       extendBodyBehindAppBar: true,
@@ -45,7 +47,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
             children: [
               Container(
                 width: double.infinity,
-                height: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.width * 0.6,
                 color: aliceblue,
                 child: Column(
                   children: [
@@ -67,14 +69,14 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                       margin: EdgeInsets.only(right: 30),
                       child: Image.asset(
                         'images/admin.png',
-                        height: MediaQuery.of(context).size.height * 0.25,
+                        height: MediaQuery.of(context).size.height * 0.2,
                       ),
                     )
                   ],
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 40),
+                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 45),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -95,7 +97,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                                 FloatingLabelBehavior.always),
                       ),
                       SizedBox(
-                        height: 40,
+                        height: screenheight * 0.03,
                       ),
                       TextFormField(
                         controller: _passwordField,
@@ -113,7 +115,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                                 FloatingLabelBehavior.always),
                       ),
                       SizedBox(
-                        height: 100,
+                        height: screenheight * 0.15,
                       ),
                       SizedBox(
                         width: double.infinity,
