@@ -203,3 +203,13 @@ var bookingsData = [
     "displayPicture": 'images/Image_fifa22.jpeg'
   },
 ];
+
+final Map userQR = {
+  'username': 'user',
+  'key':
+      'UhYG2zeQjX4XQwoH/N3zm7JJVr2PNSx9CngexOBQIvduTSVL6FJmETCmUYb5oItUh6J3IKL3xYb/YoMOixkG44aU0+CH/BJIt14ysa9Mkt+l0wRYgw6fFMXgDIuqqKUZGO/86qK6F5/GyEieaZFCkoNyc96ax0IbwdeTG1nF7PvAn0xepH2m8/BusjrVsc8Iv5etRqzyvFQhh1hWLYC+up26L0xqjvQ14KeCzwBGeEKJ5G63jOlrYS2b0+8YaDv95vL23q0X5XUtqS2P14AlU6wMxPQgJgfevnPxMmsfphCgMW/jLYfZ8L5AUhb7s+ZwqdHdr1cxGdg56JxQYEpPOg==',
+  'status': '1',
+  'store': '0',
+  'box': '1',
+};
+

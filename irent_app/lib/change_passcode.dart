@@ -122,21 +122,6 @@ class _ChangePasscodePageState extends State<ChangePasscodePage> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        TextFormField(
-                          obscureText: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your current password';
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                              labelText: 'Current Password',
-                              hintText: '********',
-                              prefixIcon: Icon(AppIcons.password),
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always),
-                        ),
                         SizedBox(
                           height: 10,
                         ),
