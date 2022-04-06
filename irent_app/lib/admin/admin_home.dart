@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:irent_app/admin/admin_constants.dart';
 import 'package:irent_app/user_store_uroc.dart';
@@ -22,19 +23,24 @@ class _admin_homeState extends State<admin_home> {
   final Color marigold = const Color(0xFFECA400);
   final Color transparent = const Color(0x4DE3E3E3);
 
-  final List<StoreDataModel> storeData = List.generate(
-      stores.length,
-      (index) => StoreDataModel(
-            '${stores[index]['storeName']}',
-            '${stores[index]['storeAddress']}',
-            '${stores[index]['category']}',
-            '${stores[index]['storeBanner']}',
-            {stores[index]['itemCategories']}.toList(),
-            {stores[index]['items']}.toList(),
-          ));
+  var thedata = [];
+  List thestores = [];
+
+  // List storeData = [];
+  List stores = [];
 
   @override
   Widget build(BuildContext context) {
+    final List<StoreDataModel> storeData = List.generate(
+        stores.length,
+        (index) => StoreDataModel(
+              '${stores[index]['storeName']}',
+              '${stores[index]['storeAddress']}',
+              '${stores[index]['category']}',
+              '${stores[index]['storeBanner']}',
+              {stores[index]['itemCategories']}.toList(),
+              {stores[index]['items']}.toList(),
+            ));
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -119,6 +125,16 @@ class _admin_homeState extends State<admin_home> {
     required category,
     required storeBanner,
   }) {
+    final List<StoreDataModel> storeData = List.generate(
+        stores.length,
+        (index) => StoreDataModel(
+              '${stores[index]['storeName']}',
+              '${stores[index]['storeAddress']}',
+              '${stores[index]['category']}',
+              '${stores[index]['storeBanner']}',
+              {stores[index]['itemCategories']}.toList(),
+              {stores[index]['items']}.toList(),
+            ));
     const TextStyle titleStyle = TextStyle(
         color: Color(0xFFFBFBFF),
         fontFamily: 'SF Pro Rounded',
@@ -198,6 +214,55 @@ class _admin_homeState extends State<admin_home> {
         );
       },
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    print("START");
+    Stream documentStream =
+        FirebaseFirestore.instance.collection('stores').snapshots();
+    // .then((QuerySnapshot querySnapshot) {
+
+    List newstores = [];
+    print(documentStream.forEach((element) {
+      print(element['storeName']);
+    }));
+    //   documentStream.docs.forEach((documents) {
+    //     // print(documents['storeName']);
+    //     final myStore = {
+    //       'category': documents['category'],
+    //       'itemCategories': documents['itemCategories'],
+    //       'items': documents['items'],
+    //       'storeAddress': documents['storeAddress'],
+    //       'storeBanner': documents['storeBanner'],
+    //       'storeName': documents['storeName'],
+    //     };
+    //     // var myStore = querySnapshot.docs.map((document) {
+    //     //   print(document['category']);
+    //     //   var category = document['category'];
+    //     //   List itemCategories = document['itemCategories'];
+    //     //   List items = document['items'];
+    //     //   var storeAddress = document['storeAddress'];
+    //     //   var storeBanner = document['storeBanner'];
+    //     //   var storeName = document['storeName'];
+    //     // }).toList();
+    //     newstores.add(myStore);
+
+    //     // print(myStore);
+    //   });
+    //   setState(() {
+    //     // storeData = newstores;
+    //     stores = newstores;
+    //   });
+    //   print(thestores);
+    //   setState(() {
+    //     thedata = querySnapshot.docs.toList();
+    //   });
+    //   // print(thedata);
+    // });
+
+    super.initState();
   }
 }
 
