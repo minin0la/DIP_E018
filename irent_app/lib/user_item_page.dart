@@ -526,3 +526,10 @@ class _user_item_pageState extends State<user_item_page> {
             ])));
   }
 }
+
+class UserBookingDataModel {
+  final String bookingID, store;
+  final Map itemDetails;
+
+  UserBookingDataModel(this.bookingID, this.store, this.itemDetails);
+}

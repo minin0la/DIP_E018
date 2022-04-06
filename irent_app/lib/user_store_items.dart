@@ -37,12 +37,6 @@ class UserStoreItemsPage extends StatelessWidget {
     final List itemCat = storeDataModel.itemCategories[0];
     final List items = storeDataModel.items[0];
 
-    final List<CatDataModel> catListData = List.generate(
-        items.length,
-        (index) => CatDataModel(
-              storeDataModel.itemCategories,
-            ));
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -495,10 +489,4 @@ class ItemDataModel {
 
   ItemDataModel(this.itemCategories, this.id, this.name, this.productCategory,
       this.pricePerHour, this.quantity, this.displayPicture);
-}
-
-class CatDataModel {
-  final List itemCategories;
-
-  CatDataModel(this.itemCategories);
 }
