@@ -7,27 +7,12 @@ import 'package:irent_app/basket.dart';
 import 'package:irent_app/constants.dart';
 import 'user_store_uroc.dart';
 import 'package:irent_app/date.dart';
+import 'user_store_items.dart';
 
 class user_item_page extends StatefulWidget {
-  final product_displayPicture;
-  final product_name;
-  final product_category;
-  final product_price;
-  final product_count;
-  final product_starttime;
-  final product_endtime;
-  final product_startdate;
-  final product_enddate;
-  user_item_page(
-      {this.product_displayPicture,
-      this.product_name,
-      this.product_category,
-      this.product_price,
-      this.product_count,
-      this.product_enddate,
-      this.product_endtime,
-      this.product_startdate,
-      this.product_starttime});
+  final ItemDataModel itemDataModel;
+  const user_item_page({Key? key, required this.itemDataModel})
+      : super(key: key);
 
   @override
   _user_item_pageState createState() => _user_item_pageState();
@@ -99,7 +84,7 @@ class _user_item_pageState extends State<user_item_page> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
                 image: DecorationImage(
-                    image: AssetImage(widget.product_displayPicture),
+                    image: AssetImage(widget.itemDataModel.displayPicture),
                     colorFilter: new ColorFilter.mode(
                         Color.fromRGBO(129, 164, 205, 0.5), BlendMode.lighten),
                     fit: BoxFit.cover)),
@@ -120,7 +105,7 @@ class _user_item_pageState extends State<user_item_page> {
               Container(
                 padding: const EdgeInsets.only(top: 10, left: 20),
                 child: Text(
-                  "${widget.product_name}",
+                  "${widget.itemDataModel.name}",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     color: const Color(0xFF001D4A),
@@ -137,7 +122,7 @@ class _user_item_pageState extends State<user_item_page> {
               Container(
                 padding: const EdgeInsets.only(left: 20),
                 child: Text(
-                  "${widget.product_category}",
+                  "${widget.itemDataModel.productCategory}",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     color: const Color(0xFF001D4A),
@@ -155,7 +140,7 @@ class _user_item_pageState extends State<user_item_page> {
               Container(
                 padding: const EdgeInsets.only(left: 20),
                 child: Text(
-                  "\$${widget.product_price} / Hour",
+                  "\$${widget.itemDataModel.pricePerHour} / Hour",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     color: const Color(0xFF001D4A),
@@ -519,10 +504,12 @@ class _user_item_pageState extends State<user_item_page> {
                                 builder: (context) => basket(
                                     product_count: '$_count',
                                     product_displayPicture:
-                                        widget.product_displayPicture,
-                                    product_name: widget.product_name,
-                                    product_category: widget.product_category,
-                                    product_price: widget.product_price,
+                                        widget.itemDataModel.displayPicture,
+                                    product_name: widget.itemDataModel.name,
+                                    product_category:
+                                        widget.itemDataModel.productCategory,
+                                    product_price:
+                                        widget.itemDataModel.pricePerHour,
                                     product_startdate:
                                         '${dateTime1.day}/${dateTime1.month}/${dateTime1.year}',
                                     product_enddate:
@@ -538,4 +525,11 @@ class _user_item_pageState extends State<user_item_page> {
               )
             ])));
   }
+}
+
+class UserBookingDataModel {
+  final String bookingID, store;
+  final Map itemDetails;
+
+  UserBookingDataModel(this.bookingID, this.store, this.itemDetails);
 }
