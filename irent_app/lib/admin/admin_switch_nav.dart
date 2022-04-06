@@ -8,6 +8,7 @@ import 'admin_home.dart';
 import 'admin_bookings.dart';
 import 'admin_account.dart';
 import 'admin_constants.dart';
+import 'admin_home_back.dart';
 
 class AdminSwitchNavBar extends StatefulWidget {
   const AdminSwitchNavBar({Key? key}) : super(key: key);
@@ -52,7 +53,7 @@ class _AdminSwitchNavBarState extends State<AdminSwitchNavBar> {
     ),
   ];
   final List<Widget> _bodyContents = <Widget>[
-    admin_home(),
+    admin_home_back(),
     admin_bookings(),
     admin_transactions(),
     AdminAccountScreen(),
