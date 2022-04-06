@@ -1,11 +1,9 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:irent_app/admin/admin_constants.dart';
-import 'package:irent_app/user_store_uroc.dart';
 import 'package:irent_app/admin/admin_add_store.dart';
-import 'dart:ui';
-import '../app_icons.dart';
-import 'package:irent_app/admin/admin_add_store.dart';
+
 import 'admin_store_items.dart';
 
 class admin_home extends StatefulWidget {
@@ -218,8 +216,7 @@ class _admin_homeState extends State<admin_home> {
 
   Future getStore() async {
     var data = await FirebaseFirestore.instance.collection('stores').get();
-    print(
-        List.from(data.docs.map((doc) => StoreDataModel.fromSnapshot(doc)))[0]);
+
     setState(() {
       thestores =
           List.from(data.docs.map((doc) => StoreDataModel.fromSnapshot(doc)));
@@ -237,7 +234,11 @@ class _admin_homeState extends State<admin_home> {
 // }
 
 class StoreDataModel {
-  String storeName = "", storeAddress = "", category = "", storeBanner = "";
+  String storeId = "",
+      storeName = "",
+      storeAddress = "",
+      category = "",
+      storeBanner = "";
   List itemCategories = [], items = [];
 
   // final String storeName, storeAddress, category, storeBanner;
@@ -246,6 +247,7 @@ class StoreDataModel {
 
   StoreDataModel();
   Map<String, dynamic> toJson() => {
+        'storeId': storeId,
         'storeName': storeName,
         'storeAddress': storeAddress,
         'category': category,
@@ -254,39 +256,12 @@ class StoreDataModel {
         'items': items
       };
   StoreDataModel.fromSnapshot(snapshot)
-      : storeName = snapshot.data()['storeName'],
+      : storeId = snapshot.id,
+        storeName = snapshot.data()['storeName'],
         storeAddress = snapshot.data()['storeAddress'],
         category = snapshot.data()['category'],
         storeBanner = snapshot.data()['storeBanner'],
         itemCategories = [snapshot.data()['itemCategories']],
         items = [snapshot.data()['items']];
   // items = [List.from(data.docs.map((doc) => StoreDataModel.fromSnapshot(doc)))];
-}
-
-class ItemDataModel {
-  String displayPicture = "",
-      name = "",
-      pricePerhour = "",
-      product_category = "",
-      quantity = "",
-      item_id = "";
-
-  ItemDataModel();
-  Map<String, dynamic> toJson() => {
-        'displayPicture': displayPicture,
-        'name': name,
-        'pricePerhour': pricePerhour,
-        'product_category': product_category,
-        'quantity': quantity,
-        'item_id': item_id,
-      };
-  ItemDataModel.fromSnapshot(snapshot)
-      : displayPicture = snapshot.data()['displayPicture'],
-        name = snapshot.data()['name'],
-        pricePerhour = snapshot.data()['pricePerhour'],
-        product_category = snapshot.data()['product_category'],
-        quantity = snapshot.data()['quantity'],
-        item_id = snapshot.data()['item_id'];
-  // quantity = [snapshot.data()['itemCategories']];
-  // items = [snapshot.data()['items']];
 }

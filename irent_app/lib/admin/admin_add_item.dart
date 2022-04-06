@@ -1,17 +1,25 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:irent_app/admin/admin_constants.dart';
 import 'package:irent_app/switch_nav.dart';
 import 'admin_home.dart';
 import 'admin_constants.dart';
 import 'admin_store_items.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:uuid/uuid.dart';
 
 class AdminAddItemPage extends StatefulWidget {
-  final CatDataModel catDataModel;
-  const AdminAddItemPage({Key? key, required this.catDataModel})
+  final catDataModel;
+  final StoreDataModel storeDataModel;
+  const AdminAddItemPage(
+      {Key? key, required this.catDataModel, required this.storeDataModel})
       : super(key: key);
   @override
   _AdminAddItemPageState createState() => _AdminAddItemPageState();
@@ -36,6 +44,16 @@ class _AdminAddItemPageState extends State<AdminAddItemPage> {
       fontSize: 15,
       fontWeight: FontWeight.w400,
       color: Color(0xFF001D4A));
+  var dropdownValue;
+
+  final TextEditingController _productField = TextEditingController();
+  final TextEditingController _categoryField = TextEditingController();
+  final TextEditingController _priceField = TextEditingController();
+  final TextEditingController _qtyField = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  File? _myImage;
+  File? selectedImage;
 
   @override
   Widget build(BuildContext context) {
@@ -45,125 +63,130 @@ class _AdminAddItemPageState extends State<AdminAddItemPage> {
       backgroundColor: white,
       body: Stack(
         children: [
-          Column(children: [
-            Expanded(
-              flex: 1,
-              child: Container(
-                decoration: BoxDecoration(
-                    color: aliceblue,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(24),
-                      bottomRight: Radius.circular(24),
-                    )),
-                child: Stack(
-                  children: [
-                    Container(
-                      alignment: Alignment.bottomCenter,
-                      child: Image.asset(
-                        'images/cross-bg-cropped-2.png',
-                      ),
-                    ),
-                    Scaffold(
-                      backgroundColor: Colors.transparent,
-                      appBar: AppBar(
-                        backgroundColor: Colors.transparent,
-                        centerTitle: true,
-                        title: Text(
-                          'Add Item',
-                          style: TextStyle(
-                              color: oxford,
-                              fontFamily: 'SF_Pro_Rounded',
-                              fontSize: 25,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        elevation: 0,
-                        leading: SizedBox(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 6,
-              child: SingleChildScrollView(
+          Form(
+            key: _formKey,
+            child: Column(children: [
+              Expanded(
+                flex: 1,
                 child: Container(
-                  padding: const EdgeInsets.all(25),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  decoration: BoxDecoration(
+                      color: aliceblue,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(24),
+                        bottomRight: Radius.circular(24),
+                      )),
+                  child: Stack(
                     children: [
-                      _inputFields(field: 'Name'),
-                      _dropDown(
-                          context: context,
-                          items: widget.catDataModel.itemCategories[0],
-                          field: 'Category'),
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Text('Price', style: titleStyle),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 15.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
-                                  color: iceberg,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        flex: 1,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 15),
-                                          child: Text('\$'),
-                                        )),
-                                    Expanded(
-                                      flex: 7,
-                                      child: SingleChildScrollView(
-                                        child: Container(
-                                          height: 40,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10, bottom: 8),
-                                            child: TextFormField(
-                                              maxLines: 1,
-                                              decoration: InputDecoration(
-                                                  border: InputBorder.none),
-                                              style: fieldStyle,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                        flex: 2,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 5),
-                                          child: Text('/ hour'),
-                                        )),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                      Container(
+                        alignment: Alignment.bottomCenter,
+                        child: Image.asset(
+                          'images/cross-bg-cropped-2.png',
+                        ),
                       ),
-                      _inputFields(field: 'Available Quantity'),
-                      _addBanner(field: 'Display Picture')
+                      Scaffold(
+                        backgroundColor: Colors.transparent,
+                        appBar: AppBar(
+                          backgroundColor: Colors.transparent,
+                          centerTitle: true,
+                          title: Text(
+                            'Add Item',
+                            style: TextStyle(
+                                color: oxford,
+                                fontFamily: 'SF_Pro_Rounded',
+                                fontSize: 25,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          elevation: 0,
+                          leading: SizedBox(),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
-            ),
-          ]),
+              Expanded(
+                flex: 6,
+                child: SingleChildScrollView(
+                  child: Container(
+                    padding: const EdgeInsets.all(25),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _inputFields(field: 'Name', controller: _productField),
+                        _dropDown(
+                            context: context,
+                            items: widget.catDataModel.cast<String>(),
+                            field: 'Category'),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Text('Price', style: titleStyle),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 15.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5)),
+                                    color: iceberg,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          flex: 1,
+                                          child: Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 15),
+                                            child: Text('\$'),
+                                          )),
+                                      Expanded(
+                                        flex: 7,
+                                        child: SingleChildScrollView(
+                                          child: Container(
+                                            height: 40,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10, bottom: 8),
+                                              child: TextFormField(
+                                                controller: _priceField,
+                                                maxLines: 1,
+                                                decoration: InputDecoration(
+                                                    border: InputBorder.none),
+                                                style: fieldStyle,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                          flex: 2,
+                                          child: Padding(
+                                            padding:
+                                                const EdgeInsets.only(right: 5),
+                                            child: Text('/ hour'),
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        _inputFields(
+                            field: 'Available Quantity', controller: _qtyField),
+                        _addBanner(field: 'Display Picture')
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ]),
+          ),
           Expanded(
             child: Align(
               alignment: FractionalOffset.bottomCenter,
@@ -200,7 +223,12 @@ class _AdminAddItemPageState extends State<AdminAddItemPage> {
                       width: 160,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          AddItem(_myImage)
+                              .then((value) => Navigator.pop(context))
+                              .catchError(
+                                  (onError) => {print("There is an error")});
+                        },
                         child: Text(
                           'Save',
                           style: TextStyle(
@@ -225,7 +253,8 @@ class _AdminAddItemPageState extends State<AdminAddItemPage> {
     );
   }
 
-  Widget _inputFields({required String field}) {
+  Widget _inputFields(
+      {required String field, required TextEditingController controller}) {
     return Row(
       children: [
         Expanded(
@@ -247,6 +276,7 @@ class _AdminAddItemPageState extends State<AdminAddItemPage> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 15, bottom: 7),
                     child: TextFormField(
+                      controller: controller,
                       maxLines: 1,
                       decoration: InputDecoration(border: InputBorder.none),
                       style: fieldStyle,
@@ -265,7 +295,6 @@ class _AdminAddItemPageState extends State<AdminAddItemPage> {
       {required BuildContext context,
       required List<String> items,
       required String field}) {
-    var dropdownValue;
     return Row(
       children: [
         Expanded(
@@ -335,11 +364,24 @@ class _AdminAddItemPageState extends State<AdminAddItemPage> {
           child: Row(
             children: [
               InkWell(
-                onTap: () {},
+                onTap: () async {
+                  selectedImage = await selectImage();
+                  if (selectedImage != null) {
+                    setState(() {
+                      _myImage = selectedImage as File;
+                    });
+                  }
+                },
                 child: Container(
                   width: 135,
                   height: 135,
                   decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: _myImage == null
+                            ? AssetImage(
+                                'images/cross-bg-cropped-2.png',
+                              )
+                            : FileImage(_myImage as File) as ImageProvider),
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                     color: iceberg,
                   ),
@@ -360,5 +402,49 @@ class _AdminAddItemPageState extends State<AdminAddItemPage> {
         ),
       ]),
     );
+  }
+
+  Future AddItem(_myImage) async {
+    String fileID = Uuid().v4();
+
+    final firebase_storage.Reference firebaseStorageRef = firebase_storage
+        .FirebaseStorage.instance
+        .ref()
+        .child("images/$fileID"); //i is the name of the image
+    firebase_storage.UploadTask uploadTask =
+        firebaseStorageRef.putFile(_myImage);
+    try {
+      firebase_storage.TaskSnapshot storageSnapshot = await uploadTask;
+      var downloadUrl = await storageSnapshot.ref.getDownloadURL();
+      final String url = downloadUrl.toString();
+      FirebaseFirestore.instance
+          .collection('stores')
+          .doc(widget.storeDataModel.storeId)
+          .collection("items")
+          .doc(fileID)
+          .set({
+        'displayPicture': url,
+        'name': _productField.text,
+        'pricePerhour': _priceField.text,
+        'product_category': dropdownValue,
+        'quantity': _qtyField.text,
+      });
+      //You might want to set this as the _auth.currentUser().photourl
+
+    } on FirebaseException catch (e) {
+      print(uploadTask.snapshot);
+    }
+  }
+
+  Future selectImage() async {
+    final image = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxHeight: 1500,
+      maxWidth: 1500,
+    );
+    if (image != null) {
+      return File(image.path);
+    }
+    return null;
   }
 }

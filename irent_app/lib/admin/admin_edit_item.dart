@@ -1,18 +1,23 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
-import 'package:irent_app/admin/admin_constants.dart';
 import 'package:irent_app/admin/admin_qr_page.dart';
-import 'package:irent_app/switch_nav.dart';
+
+import 'admin_home.dart';
 import 'admin_store_items.dart';
 
 enum FeedbackType { report, suggestion }
 
 class AdminEditItemPage extends StatefulWidget {
   final ItemDataModel itemDataModel;
-  const AdminEditItemPage({Key? key, required this.itemDataModel})
+  final itemlist;
+  final StoreDataModel storeDataModel;
+  const AdminEditItemPage(
+      {Key? key,
+      required this.storeDataModel,
+      required this.itemDataModel,
+      required this.itemlist})
       : super(key: key);
 
   @override
@@ -100,10 +105,10 @@ class _AdminEditItemPageState extends State<AdminEditItemPage> {
                           initialValue: widget.itemDataModel.name),
                       _dropDown(
                           context: context,
-                          items: widget.itemDataModel.itemCategories[0]
-                              .cast<String>(),
+                          items: widget.itemlist.cast<String>(),
                           field: 'Category',
-                          itemCat: widget.itemDataModel.productCategory),
+                          itemCat: widget.storeDataModel.itemCategories[0]
+                              .cast<String>()),
                       Row(
                         children: [
                           Expanded(
@@ -145,7 +150,7 @@ class _AdminEditItemPageState extends State<AdminEditItemPage> {
                                               keyboardType:
                                                   TextInputType.number,
                                               initialValue: widget
-                                                  .itemDataModel.pricePerHour,
+                                                  .itemDataModel.pricePerhour,
                                             ),
                                           ),
                                         ),
@@ -310,7 +315,7 @@ class _AdminEditItemPageState extends State<AdminEditItemPage> {
       {required BuildContext context,
       required List<String> items,
       required String field,
-      required String itemCat}) {
+      required List<String> itemCat}) {
     var dropdownValue;
 
     return Row(
@@ -351,7 +356,7 @@ class _AdminEditItemPageState extends State<AdminEditItemPage> {
                       dropdownValue = newValue!;
                     });
                   },
-                  items: items.map((String value) {
+                  items: itemCat.map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -390,7 +395,7 @@ class _AdminEditItemPageState extends State<AdminEditItemPage> {
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                         color: iceberg,
                         image: DecorationImage(
-                            image: AssetImage(displayPicture),
+                            image: NetworkImage(displayPicture),
                             fit: BoxFit.cover))),
               ),
             ],

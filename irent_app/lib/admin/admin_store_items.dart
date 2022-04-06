@@ -1,32 +1,44 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:irent_app/admin/admin_constants.dart';
 import 'package:irent_app/admin/admin_edit_item.dart';
-import 'package:irent_app/topup.dart';
-import 'package:intl/intl.dart';
-import 'package:irent_app/database.dart';
-import 'package:irent_app/user_item_page.dart';
-import 'package:irent_app/app_icons.dart';
-import 'package:irent_app/CategoriesScroller.dart';
-import 'admin_home.dart';
+
 import 'admin_add_item.dart';
+import 'admin_home.dart';
 
-class AdminStoreItemsPage extends StatelessWidget {
-  final Color white = const Color(0xFFFBFBFF);
-  final Color oxford = const Color(0xFF001D4A);
-  final Color indigo = const Color(0xFF27476E);
-  final Color aliceblue = const Color(0xFF81A4CD);
-  final Color iceberg = const Color(0xFFDBE4EE);
-  final Color marigold = const Color(0xFFECA400);
-  final Color transparent = const Color(0x4DE3E3E3);
-
+class AdminStoreItemsPage extends StatefulWidget {
   final StoreDataModel storeDataModel;
   AdminStoreItemsPage({Key? key, required this.storeDataModel})
       : super(key: key);
 
   @override
+  State<AdminStoreItemsPage> createState() => _AdminStoreItemsPageState();
+}
+
+class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
+  final Color white = const Color(0xFFFBFBFF);
+
+  final Color oxford = const Color(0xFF001D4A);
+
+  final Color indigo = const Color(0xFF27476E);
+
+  final Color aliceblue = const Color(0xFF81A4CD);
+
+  final Color iceberg = const Color(0xFFDBE4EE);
+
+  final Color marigold = const Color(0xFFECA400);
+
+  final Color transparent = const Color(0x4DE3E3E3);
+
+  List theitems = [];
+
+  @override
   bool closeTopContainer = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getItems();
+  }
 
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -35,20 +47,20 @@ class AdminStoreItemsPage extends StatelessWidget {
     final double itemHeight = 100;
     final double itemWidth = 120;
 
-    final List itemCat = storeDataModel.itemCategories[0];
-    final List items = storeDataModel.items[0];
+    final List itemCat = widget.storeDataModel.itemCategories[0];
+    final List items = theitems;
 
-    final List<CatDataModel> catListData = List.generate(
-        items.length,
-        (index) => CatDataModel(
-              storeDataModel.itemCategories,
-            ));
+    // final List<CatDataModel> catListData = List.generate(
+    //     items.length,
+    //     (index) => CatDataModel(
+    //           widget.storeDataModel.itemCategories,
+    //         ));
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          storeDataModel.storeName,
+          widget.storeDataModel.storeName,
           textAlign: TextAlign.center,
           style: TextStyle(
               color: oxford,
@@ -74,10 +86,13 @@ class AdminStoreItemsPage extends StatelessWidget {
               heroTag: 'add_store',
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            AdminAddItemPage(catDataModel: catListData[0])));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AdminAddItemPage(
+                                storeDataModel: widget.storeDataModel,
+                                catDataModel:
+                                    widget.storeDataModel.itemCategories[0])))
+                    .then((value) => getItems());
               },
               child: Icon(
                 Icons.add,
@@ -204,6 +219,20 @@ class AdminStoreItemsPage extends StatelessWidget {
     );
   }
 
+  Future getItems() async {
+    var data = await FirebaseFirestore.instance
+        .collection('stores')
+        .doc(widget.storeDataModel.storeId)
+        .collection('items')
+        .get();
+
+    setState(() {
+      theitems =
+          List.from(data.docs.map((doc) => ItemDataModel.fromSnapshot(doc)));
+      // storeData = newstores;
+    });
+  }
+
   Widget _addCategories(
       {required BuildContext context, required List category}) {
     return ListView.builder(
@@ -298,17 +327,17 @@ class AdminStoreItemsPage extends StatelessWidget {
 
   Widget _productDetailsCard(
       {required BuildContext context, required List itemList}) {
-    final List<ItemDataModel> itemListData = List.generate(
-        itemList.length,
-        (index) => ItemDataModel(
-              storeDataModel.itemCategories,
-              '${itemList[index]['id']}',
-              '${itemList[index]['name']}',
-              '${itemList[index]['product_category']}',
-              '${itemList[index]['pricePerhour']}',
-              '${itemList[index]['quantity']}',
-              '${itemList[index]['displayPicture']}',
-            ));
+    // final List<ItemDataModel> itemListData = List.generate(
+    //     itemList.length,
+    //     (index) => ItemDataModel(
+    //           widget.storeDataModel.itemCategories,
+    //           '${itemList[index]['id']}',
+    //           '${itemList[index]['name']}',
+    //           '${itemList[index]['product_category']}',
+    //           '${itemList[index]['pricePerhour']}',
+    //           '${itemList[index]['quantity']}',
+    //           '${itemList[index]['displayPicture']}',
+    //         ));
     return Padding(
       padding: const EdgeInsets.all(15),
       child: GridView.builder(
@@ -318,65 +347,69 @@ class AdminStoreItemsPage extends StatelessWidget {
           gridDelegate:
               SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
           itemBuilder: (context, index) {
-            for (var item in itemListData) {
-              return Stack(children: [
-                Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 10),
-                    child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AdminEditItemPage(
-                                    itemDataModel: itemListData[index])),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image:
-                                  AssetImage(itemList[index]['displayPicture']),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ))),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: InkWell(
+            // for (var item in itemListData) {
+            return Stack(children: [
+              Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  child: GestureDetector(
                       onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return _removeDialog(
-                                context: context, type: 'item');
-                          },
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AdminEditItemPage(
+                                    storeDataModel: widget.storeDataModel,
+                                    itemDataModel: theitems[index],
+                                    itemlist: itemList,
+                                  )),
                         );
                       },
-                      child: SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: Container(
-                          child: Text(
-                            '-',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: white, fontSize: 20),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage(itemList[index].displayPicture),
+                            fit: BoxFit.cover,
                           ),
-                          decoration: BoxDecoration(
-                            color: indigo,
-                            shape: BoxShape.circle,
-                          ),
+                        ),
+                      ))),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return _removeDialog(
+                              context: context,
+                              type: 'item',
+                              item_id: theitems[index].item_id);
+                        },
+                      );
+                    },
+                    child: SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: Container(
+                        child: Text(
+                          '-',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: white, fontSize: 20),
+                        ),
+                        decoration: BoxDecoration(
+                          color: indigo,
+                          shape: BoxShape.circle,
                         ),
                       ),
                     ),
                   ),
-                )
-              ]);
-            }
-            throw 'No Data Found';
+                ),
+              )
+            ]);
+            // }
+            // throw 'No Data Found';
           }),
     );
   }
@@ -484,7 +517,10 @@ class AdminStoreItemsPage extends StatelessWidget {
     );
   }
 
-  Widget _removeDialog({required BuildContext context, required String type}) {
+  Widget _removeDialog(
+      {required BuildContext context,
+      required String type,
+      String item_id = ""}) {
     return Dialog(
       alignment: Alignment.center,
       backgroundColor: iceberg,
@@ -539,7 +575,14 @@ class AdminStoreItemsPage extends StatelessWidget {
                       width: 100,
                       height: 30,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          if (type == "item" && item_id != "") {
+                            deleteItem(item_id)
+                                .then((value) =>
+                                    {getItems(), Navigator.pop(context)})
+                                .catchError((onError) => {print(onError)});
+                          }
+                        },
                         child: Text(
                           'Yes',
                           style: TextStyle(
@@ -564,19 +607,58 @@ class AdminStoreItemsPage extends StatelessWidget {
       ),
     );
   }
+
+  Future<void> deleteItem(item_id) {
+    CollectionReference selectitem = FirebaseFirestore.instance
+        .collection('stores')
+        .doc(widget.storeDataModel.storeId)
+        .collection('items');
+    return selectitem.doc(item_id).delete();
+  }
 }
 
-class ItemDataModel {
-  final List itemCategories;
-  final String id,
-      name,
-      productCategory,
-      pricePerHour,
-      quantity,
-      displayPicture;
+// class ItemDataModel {
+//   final List itemCategories;
+//   final String id,
+//       name,
+//       productCategory,
+//       pricePerHour,
+//       quantity,
+//       displayPicture;
 
-  ItemDataModel(this.itemCategories, this.id, this.name, this.productCategory,
-      this.pricePerHour, this.quantity, this.displayPicture);
+//   ItemDataModel(this.itemCategories, this.id, this.name, this.productCategory,
+//       this.pricePerHour, this.quantity, this.displayPicture);
+// }
+
+class ItemDataModel {
+  String displayPicture = "",
+      name = "",
+      pricePerhour = "",
+      product_category = "",
+      quantity = "",
+      item_id = "";
+  // item_id = "";
+
+  ItemDataModel();
+  Map<String, dynamic> toJson() => {
+        'displayPicture': displayPicture,
+        'name': name,
+        'pricePerhour': pricePerhour,
+        'product_category': product_category,
+        'quantity': quantity,
+        'item_id': item_id,
+        // 'item_id': item_id,
+      };
+  ItemDataModel.fromSnapshot(snapshot)
+      : displayPicture = snapshot.data()['displayPicture'],
+        name = snapshot.data()['name'],
+        pricePerhour = snapshot.data()['pricePerhour'],
+        product_category = snapshot.data()['product_category'],
+        quantity = snapshot.data()['quantity'],
+        item_id = snapshot.id;
+  // item_id = snapshot.data()['item_id'];
+  // quantity = [snapshot.data()['itemCategories']];
+  // items = [snapshot.data()['items']];
 }
 
 class CatDataModel {
