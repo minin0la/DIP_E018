@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:irent_app/collect_barcode.dart';
 import 'extend.dart';
 import 'package:irent_app/constants.dart';
 import 'package:irent_app/user_notcollect.dart';
@@ -218,7 +219,7 @@ class _user_bookingsState extends State<user_bookings> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        const user_notcollect())); //time for collection => collect_barcode()
+                        const collect_barcode())); //time for collection => collect_barcode()
           },
         ),
       ],
