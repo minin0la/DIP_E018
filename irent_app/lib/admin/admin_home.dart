@@ -28,19 +28,24 @@ class _admin_homeState extends State<admin_home> {
 
   // List storeData = [];
   List stores = [];
+  // final List<StoreDataModel> storeData = List.generate(
+  //     thestores.length,
+  //     (index) => StoreDataModel(
+  //           '${thestores[index].storeName}',
+  //           '${thestores[index].storeAddress}',
+  //           '${thestores[index].category}',
+  //           '${thestores[index].storeBanner}',
+  //           {thestores[index].itemCategories}.toList(),
+  //           {thestores[index].items}.toList(),
+  //         ));
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getStore();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final List<StoreDataModel> storeData = List.generate(
-        stores.length,
-        (index) => StoreDataModel(
-              '${stores[index]['storeName']}',
-              '${stores[index]['storeAddress']}',
-              '${stores[index]['category']}',
-              '${stores[index]['storeBanner']}',
-              {stores[index]['itemCategories']}.toList(),
-              {stores[index]['items']}.toList(),
-            ));
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -98,17 +103,17 @@ class _admin_homeState extends State<admin_home> {
                 margin: EdgeInsets.only(left: 35, right: 35),
                 child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: stores.length,
+                    itemCount: thestores.length,
                     itemBuilder: (context, index) {
-                      for (var item in stores) {
-                        return _storeCard(
-                            index: index,
-                            storeName: storeData[index].storeName,
-                            storeAddress: storeData[index].storeAddress,
-                            category: storeData[index].category,
-                            storeBanner: storeData[index].storeBanner);
-                      }
-                      throw 'No Data Found';
+                      // for (var item in stores) {
+                      return _storeCard(
+                          index: index,
+                          storeName: thestores[index].storeName,
+                          storeAddress: thestores[index].storeAddress,
+                          category: thestores[index].category,
+                          storeBanner: thestores[index].storeBanner);
+                      // }
+                      // throw 'No Data Found';
                     }),
               ),
             ),
@@ -125,16 +130,6 @@ class _admin_homeState extends State<admin_home> {
     required category,
     required storeBanner,
   }) {
-    final List<StoreDataModel> storeData = List.generate(
-        stores.length,
-        (index) => StoreDataModel(
-              '${stores[index]['storeName']}',
-              '${stores[index]['storeAddress']}',
-              '${stores[index]['category']}',
-              '${stores[index]['storeBanner']}',
-              {stores[index]['itemCategories']}.toList(),
-              {stores[index]['items']}.toList(),
-            ));
     const TextStyle titleStyle = TextStyle(
         color: Color(0xFFFBFBFF),
         fontFamily: 'SF Pro Rounded',
@@ -210,7 +205,7 @@ class _admin_homeState extends State<admin_home> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  AdminStoreItemsPage(storeDataModel: storeData[index])),
+                  AdminStoreItemsPage(storeDataModel: thestores[index])),
         );
       },
     );
@@ -218,58 +213,80 @@ class _admin_homeState extends State<admin_home> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    print("START");
-    Stream documentStream =
-        FirebaseFirestore.instance.collection('stores').snapshots();
-    // .then((QuerySnapshot querySnapshot) {
-
-    List newstores = [];
-    print(documentStream.forEach((element) {
-      print(element['storeName']);
-    }));
-    //   documentStream.docs.forEach((documents) {
-    //     // print(documents['storeName']);
-    //     final myStore = {
-    //       'category': documents['category'],
-    //       'itemCategories': documents['itemCategories'],
-    //       'items': documents['items'],
-    //       'storeAddress': documents['storeAddress'],
-    //       'storeBanner': documents['storeBanner'],
-    //       'storeName': documents['storeName'],
-    //     };
-    //     // var myStore = querySnapshot.docs.map((document) {
-    //     //   print(document['category']);
-    //     //   var category = document['category'];
-    //     //   List itemCategories = document['itemCategories'];
-    //     //   List items = document['items'];
-    //     //   var storeAddress = document['storeAddress'];
-    //     //   var storeBanner = document['storeBanner'];
-    //     //   var storeName = document['storeName'];
-    //     // }).toList();
-    //     newstores.add(myStore);
-
-    //     // print(myStore);
-    //   });
-    //   setState(() {
-    //     // storeData = newstores;
-    //     stores = newstores;
-    //   });
-    //   print(thestores);
-    //   setState(() {
-    //     thedata = querySnapshot.docs.toList();
-    //   });
-    //   // print(thedata);
-    // });
-
     super.initState();
+  }
+
+  Future getStore() async {
+    var data = await FirebaseFirestore.instance.collection('stores').get();
+    print(
+        List.from(data.docs.map((doc) => StoreDataModel.fromSnapshot(doc)))[0]);
+    setState(() {
+      thestores =
+          List.from(data.docs.map((doc) => StoreDataModel.fromSnapshot(doc)));
+      // storeData = newstores;
+    });
   }
 }
 
-class StoreDataModel {
-  final String storeName, storeAddress, category, storeBanner;
-  final List itemCategories, items;
+// class StoreDataModel {
+//   final String storeName, storeAddress, category, storeBanner;
+//   final List itemCategories, items;
 
-  StoreDataModel(this.storeName, this.storeAddress, this.category,
-      this.storeBanner, this.itemCategories, this.items);
+//   StoreDataModel(this.storeName, this.storeAddress, this.category,
+//       this.storeBanner, this.itemCategories, this.items);
+// }
+
+class StoreDataModel {
+  String storeName = "", storeAddress = "", category = "", storeBanner = "";
+  List itemCategories = [], items = [];
+
+  // final String storeName, storeAddress, category, storeBanner;
+  // final List itemCategories, items;
+  // StoreDataModel();
+
+  StoreDataModel();
+  Map<String, dynamic> toJson() => {
+        'storeName': storeName,
+        'storeAddress': storeAddress,
+        'category': category,
+        'storeBanner': storeBanner,
+        'itemCategories': itemCategories,
+        'items': items
+      };
+  StoreDataModel.fromSnapshot(snapshot)
+      : storeName = snapshot.data()['storeName'],
+        storeAddress = snapshot.data()['storeAddress'],
+        category = snapshot.data()['category'],
+        storeBanner = snapshot.data()['storeBanner'],
+        itemCategories = [snapshot.data()['itemCategories']],
+        items = [snapshot.data()['items']];
+  // items = [List.from(data.docs.map((doc) => StoreDataModel.fromSnapshot(doc)))];
+}
+
+class ItemDataModel {
+  String displayPicture = "",
+      name = "",
+      pricePerhour = "",
+      product_category = "",
+      quantity = "",
+      item_id = "";
+
+  ItemDataModel();
+  Map<String, dynamic> toJson() => {
+        'displayPicture': displayPicture,
+        'name': name,
+        'pricePerhour': pricePerhour,
+        'product_category': product_category,
+        'quantity': quantity,
+        'item_id': item_id,
+      };
+  ItemDataModel.fromSnapshot(snapshot)
+      : displayPicture = snapshot.data()['displayPicture'],
+        name = snapshot.data()['name'],
+        pricePerhour = snapshot.data()['pricePerhour'],
+        product_category = snapshot.data()['product_category'],
+        quantity = snapshot.data()['quantity'],
+        item_id = snapshot.data()['item_id'];
+  // quantity = [snapshot.data()['itemCategories']];
+  // items = [snapshot.data()['items']];
 }

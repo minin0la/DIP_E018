@@ -100,7 +100,8 @@ class _AdminEditItemPageState extends State<AdminEditItemPage> {
                           initialValue: widget.itemDataModel.name),
                       _dropDown(
                           context: context,
-                          items: widget.itemDataModel.itemCategories[0],
+                          items: widget.itemDataModel.itemCategories[0]
+                              .cast<String>(),
                           field: 'Category',
                           itemCat: widget.itemDataModel.productCategory),
                       Row(

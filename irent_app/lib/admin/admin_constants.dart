@@ -279,26 +279,26 @@ var stores2 = FirebaseFirestore.instance
   List newstores = [];
   querySnapshot.docs.forEach((documents) {
     // print(documents['storeName']);
-    newstores.map((e) => {
-          e.category = documents['storeName'],
-          e.itemCategories = documents['itemCategories'],
-          e.items = documents['items'],
-          e.storeAddress = documents['storeAddress'],
-          e.storeBanner = documents['storeBanner'],
-          e.storeName = documents['storeName'],
-        });
-    // final myStore = {
-    //   'category': documents['category'],
-    //   'itemCategories': documents['itemCategories'],
-    //   'items': documents['items'],
-    //   'storeAddress': documents['storeAddress'],
-    //   'storeBanner': documents['storeBanner'],
-    //   'storeName': documents['storeName'],
-    // };
+    // newstores.map((e) => {
+    //       e.category = documents['storeName'],
+    //       e.itemCategories = documents['itemCategories'],
+    //       e.items = documents['items'],
+    //       e.storeAddress = documents['storeAddress'],
+    //       e.storeBanner = documents['storeBanner'],
+    //       e.storeName = documents['storeName'],
+    //     });
+    final myStore = {
+      'category': documents['category'],
+      'itemCategories': documents['itemCategories'],
+      'items': documents['items'],
+      'storeAddress': documents['storeAddress'],
+      'storeBanner': documents['storeBanner'],
+      'storeName': documents['storeName'],
+    };
 
-    // newstores.map(myStore);
+    newstores.add(myStore);
 
-    // print(myStore);
+    print(myStore);
   });
   return newstores.toList();
 });
