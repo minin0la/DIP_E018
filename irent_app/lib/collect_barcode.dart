@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:irent_app/constants.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'constants.dart';
+import 'dart:convert';
 
 enum Condition { yes, no }
 
@@ -198,7 +201,7 @@ class _collect_barcodeState extends State<collect_barcode> {
       body: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Text(
-            'Scan this QR code \nto collect your item',
+            'Scan this QR code \nto return your item',
             style: TextStyle(
                 color: Color(0xFF001D4A),
                 fontFamily: 'SF_Pro_Rounded',
@@ -208,7 +211,7 @@ class _collect_barcodeState extends State<collect_barcode> {
           Container(
               padding: EdgeInsets.only(top: 40),
               child: QrImage(
-                data: controller.text,
+                data: json.encode(userQR),
                 size: 200,
               )),
           Container(

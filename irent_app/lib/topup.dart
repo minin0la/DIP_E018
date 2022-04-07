@@ -54,6 +54,7 @@ class _TopUpPageState extends State<TopUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: white,
         centerTitle: true,
@@ -149,10 +150,7 @@ class _TopUpPageState extends State<TopUpPage> {
                     child: ElevatedButton(
                       onPressed: () {
                         topUpWallet();
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: ((context) => user_store_uroc())));
+                        Navigator.pop(context);
                       },
                       child: Text(
                         'Confirm',

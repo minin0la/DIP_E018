@@ -24,6 +24,8 @@ class AdminAlertDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenheight = MediaQuery.of(context).size.height;
+    final screenwidth = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: white,
@@ -61,8 +63,7 @@ class AdminAlertDetailsPage extends StatelessWidget {
                     elevation: 0,
                     leading: Row(
                       children: [
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.05),
+                        SizedBox(width: screenwidth * 0.05),
                         GestureDetector(
                           onTap: () {
                             Navigator.pop(context);
@@ -83,50 +84,56 @@ class AdminAlertDetailsPage extends StatelessWidget {
         ),
         Expanded(
           flex: 6,
-          child: Column(
-            children: [
-              Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.only(left: 30),
-                  child: _alertDetails(
-                      user: alertDataModel.user,
-                      itemName: alertDataModel.itemName,
-                      returnTime: alertDataModel.returnTime,
-                      ticketNumber: int.parse(alertDataModel.ticketNumber),
-                      displayPicture: alertDataModel.displayPicture,
-                      prevImage: alertDataModel.prevImage,
-                      currentImage: alertDataModel.currentImage)),
-              SizedBox(
-                height: 100,
-              ),
-              SizedBox(
-                height: 50,
-                width: 150,
-                child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(38.0),
-                  ),
-                  onPressed: () {
-                    //Deletes entry from Issues
-                  },
-                  padding: EdgeInsets.all(10.0),
-                  color: marigold,
-                  textColor: white,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Resolved",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontFamily: "SF_Pro_Rounded",
-                        color: white,
-                        fontWeight: FontWeight.w700,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.only(left: 30),
+                    child: _alertDetails(
+                        context: context,
+                        user: alertDataModel.user,
+                        itemName: alertDataModel.itemName,
+                        returnTime: alertDataModel.returnTime,
+                        ticketNumber: int.parse(alertDataModel.ticketNumber),
+                        displayPicture: alertDataModel.displayPicture,
+                        prevImage: alertDataModel.prevImage,
+                        currentImage: alertDataModel.currentImage)),
+                SizedBox(
+                  height: screenheight * 0.15,
+                ),
+                SizedBox(
+                  height: 50,
+                  width: 150,
+                  child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(38.0),
+                    ),
+                    onPressed: () {
+                      //Deletes entry from Issues
+                    },
+                    padding: EdgeInsets.all(10.0),
+                    color: marigold,
+                    textColor: white,
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Resolved",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontFamily: "SF_Pro_Rounded",
+                          color: white,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+                SizedBox(
+                  height: screenheight * 0.05,
+                ),
+              ],
+            ),
           ),
         ),
       ]),
@@ -174,7 +181,8 @@ Widget _fields({
 }
 
 Widget _alertDetails(
-    {required String user,
+    {required BuildContext context,
+    required String user,
     required String itemName,
     required String returnTime,
     required int ticketNumber,
@@ -189,10 +197,12 @@ Widget _alertDetails(
     wordSpacing: 1,
   );
   final Color dividerColor = Color(0x8081A4CD);
+  final screenheight = MediaQuery.of(context).size.height;
+  final screenwidth = MediaQuery.of(context).size.width;
   return Column(
     children: [
       SizedBox(
-        height: 20,
+        height: screenheight * 0.02,
       ),
       Row(
         children: [
