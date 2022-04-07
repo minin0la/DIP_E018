@@ -5,8 +5,7 @@ import 'package:irent_app/admin/admin_add_store.dart';
 import 'dart:ui';
 import '../app_icons.dart';
 import 'package:irent_app/admin/admin_add_store.dart';
-import 'user_store_items.dart';
-import 'user_store_items.dart';
+import 'package:irent_app/user_store_items.dart';
 
 class user_home extends StatefulWidget {
   const user_home({Key? key}) : super(key: key);
