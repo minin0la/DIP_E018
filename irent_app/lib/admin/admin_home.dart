@@ -59,52 +59,46 @@ class _admin_homeState extends State<admin_home> {
       ),
       body: Column(
         children: [
-          Expanded(
-            flex: 1,
-            child: Container(
-              alignment: Alignment.topLeft,
-              margin: EdgeInsetsDirectional.only(start: 35),
-              child: Column(children: [
-                Container(
-                  height: 35,
-                  width: 126,
-                  //color: Colors.blue,
-                  margin: EdgeInsets.only(left: 10.0),
-                  child: Text(
-                    'Stores',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      color: Color.fromRGBO(0, 29, 74, 1),
-                      fontFamily: 'SF Pro Rounded',
-                      fontSize: 25,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 0,
-                    ),
+          Container(
+            alignment: Alignment.topLeft,
+            margin: EdgeInsetsDirectional.only(start: 35),
+            child: Column(children: [
+              Container(
+                height: 35,
+                width: 126,
+                //color: Colors.blue,
+                margin: EdgeInsets.only(left: 10.0),
+                child: Text(
+                  'Stores',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    color: Color.fromRGBO(0, 29, 74, 1),
+                    fontFamily: 'SF Pro Rounded',
+                    fontSize: 25,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0,
                   ),
                 ),
-              ]),
-            ),
-          ),
-          Expanded(
-            flex: 18,
-            child: SingleChildScrollView(
-              child: Container(
-                margin: EdgeInsets.only(left: 35, right: 35),
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: stores.length,
-                    itemBuilder: (context, index) {
-                      for (var item in stores) {
-                        return _storeCard(
-                            index: index,
-                            storeName: storeData[index].storeName,
-                            storeAddress: storeData[index].storeAddress,
-                            category: storeData[index].category,
-                            storeBanner: storeData[index].storeBanner);
-                      }
-                      throw 'No Data Found';
-                    }),
               ),
+            ]),
+          ),
+          SingleChildScrollView(
+            child: Container(
+              margin: EdgeInsets.only(left: 35, right: 35),
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: stores.length,
+                  itemBuilder: (context, index) {
+                    for (var item in stores) {
+                      return _storeCard(
+                          index: index,
+                          storeName: storeData[index].storeName,
+                          storeAddress: storeData[index].storeAddress,
+                          category: storeData[index].category,
+                          storeBanner: storeData[index].storeBanner);
+                    }
+                    throw 'No Data Found';
+                  }),
             ),
           )
         ],
