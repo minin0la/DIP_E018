@@ -92,24 +92,20 @@ class _admin_homeState extends State<admin_home> {
             ]),
           ),
           SingleChildScrollView(
-            child: Container(
-              margin: EdgeInsets.only(left: 35, right: 35),
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: thestores.length,
-                  itemBuilder: (context, index) {
-                    for (var item in stores) {
-                      return _storeCard(
-                          index: index,
-                          storeName: thestores[index].storeName,
-                          storeAddress: thestores[index].storeAddress,
-                          category: thestores[index].category,
-                          storeBanner: thestores[index].storeBanner);
-                    }
-                    throw 'No Data Found';
-                  }),
-            ),
-          )
+              child: Container(
+            margin: EdgeInsets.only(left: 35, right: 35),
+            child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: thestores.length,
+                itemBuilder: (context, index) {
+                  return _storeCard(
+                      index: index,
+                      storeName: thestores[index].storeName,
+                      storeAddress: thestores[index].storeAddress,
+                      category: thestores[index].category,
+                      storeBanner: thestores[index].storeBanner);
+                }),
+          ))
         ],
       ),
     );

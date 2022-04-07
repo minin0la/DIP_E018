@@ -4,8 +4,6 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 enum Condition { yes, no }
 
-enum Condition { yes, no }
-
 class collect_barcode extends StatefulWidget {
   const collect_barcode({Key? key}) : super(key: key);
 
