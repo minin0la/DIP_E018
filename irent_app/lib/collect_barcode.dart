@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:irent_app/constants.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'constants.dart';
-import 'dart:convert';
+
+enum Condition { yes, no }
 
 enum Condition { yes, no }
 
@@ -28,8 +26,8 @@ class _collect_barcodeState extends State<collect_barcode> {
   void initState() {
     super.initState();
 
-    // simply use this
-    Timer.run(() {
+    Timer(Duration(seconds: 10), () {
+      //triggered action after countdown
       showModalBottomSheet(
         context: context,
         backgroundColor: Color(0xFF001D4A),
@@ -40,7 +38,7 @@ class _collect_barcodeState extends State<collect_barcode> {
         ),
         builder: (context) {
           return SizedBox(
-              height: 450,
+              height: 470,
               child: Column(
                 children: [
                   ListTile(
@@ -154,25 +152,30 @@ class _collect_barcodeState extends State<collect_barcode> {
                       ),
                     ],
                   ),
-                  Container(
-                      height: 43,
-                      width: 146,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Color.fromRGBO(236, 164, 0, 1),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Confirm',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Color.fromRGBO(255, 255, 255, 1),
-                            fontFamily: 'SF Pro Rounded',
-                            fontSize: 18,
-                            letterSpacing: 0,
-                            fontWeight: FontWeight.normal,
-                            height: 1),
-                      )),
+                  InkWell(
+                    onTap: (() {
+                      Navigator.pop(context);
+                    }),
+                    child: Container(
+                        height: 43,
+                        width: 146,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Color.fromRGBO(236, 164, 0, 1),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Confirm',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Color.fromRGBO(255, 255, 255, 1),
+                              fontFamily: 'SF Pro Rounded',
+                              fontSize: 18,
+                              letterSpacing: 0,
+                              fontWeight: FontWeight.normal,
+                              height: 1),
+                        )),
+                  ),
                 ],
               ));
         },
@@ -201,7 +204,7 @@ class _collect_barcodeState extends State<collect_barcode> {
       body: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Text(
-            'Scan this QR code \nto return your item',
+            'Scan this QR code \nto collect your item',
             style: TextStyle(
                 color: Color(0xFF001D4A),
                 fontFamily: 'SF_Pro_Rounded',
@@ -211,7 +214,7 @@ class _collect_barcodeState extends State<collect_barcode> {
           Container(
               padding: EdgeInsets.only(top: 40),
               child: QrImage(
-                data: json.encode(userQR),
+                data: controller.text,
                 size: 200,
               )),
           Container(

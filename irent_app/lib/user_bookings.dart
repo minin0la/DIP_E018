@@ -219,7 +219,7 @@ class _user_bookingsState extends State<user_bookings> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        const collect_barcode())); //time for collection => collect_barcode()
+                        collect_barcode())); //time for collection => collect_barcode()
           },
         ),
       ],
