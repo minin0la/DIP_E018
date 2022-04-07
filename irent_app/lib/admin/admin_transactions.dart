@@ -44,121 +44,119 @@ class _admin_transactionsState extends State<admin_transactions> {
 
   @override
   Widget build(BuildContext context) {
+    final screenheight = MediaQuery.of(context).size.height;
+    final screenwidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.only(top: 25, left: 25, right: 25),
+        padding: const EdgeInsets.only(left: 25, right: 25),
         child: Column(
           children: [
-            Expanded(
-              flex: 3,
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Total Earnings',
-                      style: subtitleStyle,
-                    ),
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Container(
-                          height: 50,
-                          width: 130,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: aliceblue),
-                          child: Center(
-                            child: Text(
-                              '\$20',
-                              style: moneyStyle,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'My Bank Account',
-                      style: subtitleStyle,
-                    ),
-                    Divider(
-                      color: iceberg,
-                      thickness: 2,
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        height: 40,
-                        width: 190,
-                        child: Row(
-                          children: [
-                            Expanded(
-                                flex: 1,
-                                child: Icon(
-                                  AppIcons.addbankaccount,
-                                  color: indigo,
-                                )),
-                            Expanded(
-                                flex: 3,
-                                child: Text('Add Bank Account',
-                                    style: TextStyle(
-                                        fontFamily: 'SF_Pro_Rounded',
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 16,
-                                        color: oxford)))
-                          ],
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      color: iceberg,
-                      thickness: 2,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 4,
-                          child: Text(
-                            'Recent Transactions',
-                            style: subtitleStyle,
-                          ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: _dropDown(
-                              context: context,
-                              items: ['Today', 'Past 7 Days', 'Past Month']),
-                        )
-                      ],
-                    ),
-                    Divider(color: iceberg, thickness: 2),
-                  ]),
-            ),
-            Expanded(
-              flex: 4,
-              child: Container(
-                child: ListView.builder(
-                    itemCount: transactionData.length,
-                    itemBuilder: (context, index) {
-                      for (var trans in transactionData) {
-                        return _transaction(
-                            context: context,
-                            ticketNumber: transactionData[index]['ticketNumber']
-                                .toString(),
-                            paymentDate: transactionData[index]['paymentDate']
-                                .toString(),
-                            totalAmount: transactionData[index]['totalAmount']
-                                .toString());
-                      }
-                      throw 'No Data Found';
-                    }),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(
+                'Total Earnings',
+                style: subtitleStyle,
               ),
-            )
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Container(
+                    height: 50,
+                    width: 130,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: aliceblue),
+                    child: Center(
+                      child: Text(
+                        '\$20',
+                        style: moneyStyle,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                'My Bank Account',
+                style: subtitleStyle,
+              ),
+              Divider(
+                color: iceberg,
+                thickness: 2,
+              ),
+              InkWell(
+                onTap: () {},
+                child: Container(
+                  height: 40,
+                  width: 190,
+                  child: Row(
+                    children: [
+                      Expanded(
+                          flex: 1,
+                          child: Icon(
+                            AppIcons.addbankaccount,
+                            color: indigo,
+                          )),
+                      Expanded(
+                          flex: 3,
+                          child: Text('Add Bank Account',
+                              style: TextStyle(
+                                  fontFamily: 'SF_Pro_Rounded',
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 16,
+                                  color: oxford)))
+                    ],
+                  ),
+                ),
+              ),
+              Divider(
+                color: iceberg,
+                thickness: 2,
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: Text(
+                      'Recent Transactions',
+                      style: subtitleStyle,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: _dropDown(
+                        context: context,
+                        items: ['Today', 'Past 7 Days', 'Past Month']),
+                  )
+                ],
+              ),
+              Divider(color: iceberg, thickness: 2),
+              Container(
+                height: screenheight * 0.42,
+                child: Container(
+                  child: ListView.builder(
+                      itemCount: transactionData.length,
+                      itemBuilder: (context, index) {
+                        for (var trans in transactionData) {
+                          return _transaction(
+                              context: context,
+                              ticketNumber: transactionData[index]
+                                      ['ticketNumber']
+                                  .toString(),
+                              paymentDate: transactionData[index]['paymentDate']
+                                  .toString(),
+                              totalAmount: transactionData[index]['totalAmount']
+                                  .toString());
+                        }
+                        throw 'No Data Found';
+                      }),
+                ),
+              )
+            ]),
           ],
         ),
       ),
