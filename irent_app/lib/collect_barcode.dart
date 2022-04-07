@@ -196,19 +196,6 @@ class _collect_barcodeState extends State<collect_barcode> {
         elevation: 0,
       ),
       body: Center(
-<<<<<<< Updated upstream
-        child: Column(children: [
-          Container(
-              padding: EdgeInsets.only(top: 60),
-              child: Text(
-                'Scan this QR code \nto return your item',
-                style: TextStyle(
-                    color: Color(0xFF001D4A),
-                    fontFamily: 'SF_Pro_Rounded',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500),
-              )),
-=======
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Text(
             'Scan this QR code \nto collect your item',
@@ -218,7 +205,6 @@ class _collect_barcodeState extends State<collect_barcode> {
                 fontSize: 20,
                 fontWeight: FontWeight.w500),
           ),
->>>>>>> Stashed changes
           Container(
               padding: EdgeInsets.only(top: 40),
               child: QrImage(
