@@ -56,7 +56,8 @@ class _admin_homeState extends State<admin_home> {
               heroTag: 'add_store',
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddStorePage()));
+                        MaterialPageRoute(builder: (context) => AddStorePage()))
+                    .then((value) => getStore());
               },
               child: Icon(
                 Icons.add,
@@ -180,7 +181,7 @@ class _admin_homeState extends State<admin_home> {
               ],
               borderRadius: BorderRadius.circular(10),
               image: new DecorationImage(
-                image: AssetImage(storeBanner),
+                image: NetworkImage(storeBanner),
                 colorFilter: new ColorFilter.mode(
                     Color.fromRGBO(0, 29, 74, 0.6000000238418579),
                     BlendMode.hardLight),
@@ -199,11 +200,6 @@ class _admin_homeState extends State<admin_home> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Future getStore() async {
     var data = await FirebaseFirestore.instance.collection('stores').get();
 
@@ -215,20 +211,14 @@ class _admin_homeState extends State<admin_home> {
   }
 }
 
-// class StoreDataModel {
-//   final String storeName, storeAddress, category, storeBanner;
-//   final List itemCategories, items;
-
-//   StoreDataModel(this.storeName, this.storeAddress, this.category,
-//       this.storeBanner, this.itemCategories, this.items);
-// }
-
 class StoreDataModel {
   String storeId = "",
       storeName = "",
       storeAddress = "",
       category = "",
       storeBanner = "";
+
+  int maxItems = 0;
   List itemCategories = [], items = [];
 
   // final String storeName, storeAddress, category, storeBanner;
@@ -243,7 +233,7 @@ class StoreDataModel {
         'category': category,
         'storeBanner': storeBanner,
         'itemCategories': itemCategories,
-        'items': items
+        'maxItems': maxItems
       };
   StoreDataModel.fromSnapshot(snapshot)
       : storeId = snapshot.id,
@@ -252,6 +242,5 @@ class StoreDataModel {
         category = snapshot.data()['category'],
         storeBanner = snapshot.data()['storeBanner'],
         itemCategories = [snapshot.data()['itemCategories']],
-        items = [snapshot.data()['items']];
-  // items = [List.from(data.docs.map((doc) => StoreDataModel.fromSnapshot(doc)))];
+        maxItems = snapshot.data()['maxItems'];
 }

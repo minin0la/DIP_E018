@@ -31,6 +31,9 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
   final Color transparent = const Color(0x4DE3E3E3);
 
   List theitems = [];
+  List thecatagories = [];
+
+  final TextEditingController _newcategoryfield = TextEditingController();
 
   @override
   bool closeTopContainer = false;
@@ -38,6 +41,7 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     getItems();
+    getCategory();
   }
 
   Widget build(BuildContext context) {
@@ -47,8 +51,8 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
     final double itemHeight = 100;
     final double itemWidth = 120;
 
-    final List itemCat = widget.storeDataModel.itemCategories[0];
     final List items = theitems;
+    final List itemCat = thecatagories;
 
     // final List<CatDataModel> catListData = List.generate(
     //     items.length,
@@ -85,14 +89,18 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
               backgroundColor: marigold,
               heroTag: 'add_store',
               onPressed: () {
-                Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AdminAddItemPage(
-                                storeDataModel: widget.storeDataModel,
-                                catDataModel:
-                                    widget.storeDataModel.itemCategories[0])))
-                    .then((value) => getItems());
+                if (theitems.length >= widget.storeDataModel.maxItems) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('All the boxes are occupied')));
+                } else {
+                  Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AdminAddItemPage(
+                                  storeDataModel: widget.storeDataModel,
+                                  catDataModel: itemCat)))
+                      .then((value) => getItems());
+                }
               },
               child: Icon(
                 Icons.add,
@@ -210,13 +218,23 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
               child: Container(
                   width: MediaQuery.of(context).size.width,
                   padding: const EdgeInsets.only(left: 5, right: 5),
-                  child:
-                      _productDetailsCard(context: context, itemList: items)),
+                  child: _productDetailsCard(
+                      context: context, itemList: items, itemCat: itemCat)),
             ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> getCategory() async {
+    var selectcategory = await FirebaseFirestore.instance
+        .collection('stores')
+        .doc(widget.storeDataModel.storeId)
+        .get();
+    setState(() {
+      thecatagories = selectcategory.data()!['itemCategories'];
+    });
   }
 
   Future getItems() async {
@@ -295,7 +313,9 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
                             context: context,
                             builder: (BuildContext context) {
                               return _removeDialog(
-                                  context: context, type: 'category');
+                                  context: context,
+                                  type: 'category',
+                                  category_name: category[index]);
                             },
                           );
                         },
@@ -326,7 +346,9 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
   }
 
   Widget _productDetailsCard(
-      {required BuildContext context, required List itemList}) {
+      {required BuildContext context,
+      required List itemList,
+      required List itemCat}) {
     // final List<ItemDataModel> itemListData = List.generate(
     //     itemList.length,
     //     (index) => ItemDataModel(
@@ -358,11 +380,11 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => AdminEditItemPage(
-                                    storeDataModel: widget.storeDataModel,
+                                    store_id: widget.storeDataModel.storeId,
                                     itemDataModel: theitems[index],
-                                    itemlist: itemList,
+                                    itemCat: itemCat,
                                   )),
-                        );
+                        ).then((value) => getItems());
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -385,7 +407,8 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
                           return _removeDialog(
                               context: context,
                               type: 'item',
-                              item_id: theitems[index].item_id);
+                              item_id: theitems[index].item_id,
+                              box_id: theitems[index].box_id);
                         },
                       );
                     },
@@ -447,6 +470,7 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 5),
                       child: TextField(
+                        controller: _newcategoryfield,
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                               borderRadius:
@@ -492,7 +516,14 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
                     width: 100,
                     height: 30,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if (_newcategoryfield.text != "") {
+                          addCategory(_newcategoryfield.text)
+                              .then((value) =>
+                                  {getCategory(), Navigator.pop(context)})
+                              .catchError((onError) => {print(onError)});
+                        }
+                      },
                       child: Text(
                         'Add',
                         style: TextStyle(
@@ -520,7 +551,9 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
   Widget _removeDialog(
       {required BuildContext context,
       required String type,
-      String item_id = ""}) {
+      String item_id = "",
+      String category_name = "",
+      String box_id = ""}) {
     return Dialog(
       alignment: Alignment.center,
       backgroundColor: iceberg,
@@ -577,9 +610,15 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
                       child: ElevatedButton(
                         onPressed: () {
                           if (type == "item" && item_id != "") {
-                            deleteItem(item_id)
+                            deleteItem(item_id, box_id)
                                 .then((value) =>
                                     {getItems(), Navigator.pop(context)})
+                                .catchError((onError) => {print(onError)});
+                          } else if (type == 'category' &&
+                              category_name != "") {
+                            deleteCategory(category_name)
+                                .then((value) =>
+                                    {getCategory(), Navigator.pop(context)})
                                 .catchError((onError) => {print(onError)});
                           }
                         },
@@ -608,12 +647,39 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
     );
   }
 
-  Future<void> deleteItem(item_id) {
+  Future<void> deleteItem(item_id, box_id) {
+    var emptybox = FirebaseFirestore.instance
+        .collection('stores')
+        .doc(widget.storeDataModel.storeId)
+        .collection("boxes")
+        .doc(box_id)
+        .update({
+      'empty': true,
+      'item_id': "",
+    });
     CollectionReference selectitem = FirebaseFirestore.instance
         .collection('stores')
         .doc(widget.storeDataModel.storeId)
         .collection('items');
     return selectitem.doc(item_id).delete();
+  }
+
+  Future<void> addCategory(category_name) {
+    DocumentReference selectcategory = FirebaseFirestore.instance
+        .collection('stores')
+        .doc(widget.storeDataModel.storeId);
+    return selectcategory.update({
+      "itemCategories": FieldValue.arrayUnion([category_name])
+    });
+  }
+
+  Future<void> deleteCategory(category_name) {
+    DocumentReference selectcategory = FirebaseFirestore.instance
+        .collection('stores')
+        .doc(widget.storeDataModel.storeId);
+    return selectcategory.update({
+      "itemCategories": FieldValue.arrayRemove([category_name])
+    });
   }
 }
 
@@ -636,7 +702,9 @@ class ItemDataModel {
       pricePerhour = "",
       product_category = "",
       quantity = "",
-      item_id = "";
+      item_id = "",
+      box_id = "";
+  int box_number = 0;
   // item_id = "";
 
   ItemDataModel();
@@ -647,6 +715,8 @@ class ItemDataModel {
         'product_category': product_category,
         'quantity': quantity,
         'item_id': item_id,
+        'box_id': box_id,
+        'box_number': box_number,
         // 'item_id': item_id,
       };
   ItemDataModel.fromSnapshot(snapshot)
@@ -655,7 +725,10 @@ class ItemDataModel {
         pricePerhour = snapshot.data()['pricePerhour'],
         product_category = snapshot.data()['product_category'],
         quantity = snapshot.data()['quantity'],
-        item_id = snapshot.id;
+        item_id = snapshot.id,
+        box_id = snapshot.data()['box_id'],
+        box_number = snapshot.data()['box_number'];
+
   // item_id = snapshot.data()['item_id'];
   // quantity = [snapshot.data()['itemCategories']];
   // items = [snapshot.data()['items']];

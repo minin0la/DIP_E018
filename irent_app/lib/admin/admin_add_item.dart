@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:irent_app/admin/admin_constants.dart';
@@ -47,7 +48,6 @@ class _AdminAddItemPageState extends State<AdminAddItemPage> {
   var dropdownValue;
 
   final TextEditingController _productField = TextEditingController();
-  final TextEditingController _categoryField = TextEditingController();
   final TextEditingController _priceField = TextEditingController();
   final TextEditingController _qtyField = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -177,8 +177,51 @@ class _AdminAddItemPageState extends State<AdminAddItemPage> {
                             ),
                           ],
                         ),
-                        _inputFields(
-                            field: 'Available Quantity', controller: _qtyField),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child:
+                                  Text('Available Quantity', style: titleStyle),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 15.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5)),
+                                    color: iceberg,
+                                  ),
+                                  child: SingleChildScrollView(
+                                    child: Container(
+                                      height: 40,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 15, bottom: 7),
+                                        child: TextFormField(
+                                            controller: _qtyField,
+                                            maxLines: 1,
+                                            decoration: InputDecoration(
+                                                border: InputBorder.none),
+                                            style: fieldStyle,
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: <
+                                                TextInputFormatter>[
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly
+                                            ]),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        // _inputFields(
+                        //     field: 'Available Quantity', controller: _qtyField),
                         _addBanner(field: 'Display Picture')
                       ],
                     ),
@@ -224,10 +267,19 @@ class _AdminAddItemPageState extends State<AdminAddItemPage> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
-                          AddItem(_myImage)
-                              .then((value) => Navigator.pop(context))
-                              .catchError(
-                                  (onError) => {print("There is an error")});
+                          if (_productField.text == "" ||
+                              dropdownValue == "" ||
+                              _priceField.text == "" ||
+                              _qtyField.text == "" ||
+                              _myImage == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('All field required!')));
+                          } else {
+                            AddItem(_myImage)
+                                .then((value) => Navigator.pop(context))
+                                .catchError(
+                                    (onError) => {print("There is an error")});
+                          }
                         },
                         child: Text(
                           'Save',
@@ -375,24 +427,28 @@ class _AdminAddItemPageState extends State<AdminAddItemPage> {
                 child: Container(
                   width: 135,
                   height: 135,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: _myImage == null
-                            ? AssetImage(
-                                'images/cross-bg-cropped-2.png',
-                              )
-                            : FileImage(_myImage as File) as ImageProvider),
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    color: iceberg,
-                  ),
+                  decoration: _myImage == null
+                      ? BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: iceberg,
+                        )
+                      : BoxDecoration(
+                          image: DecorationImage(
+                              image:
+                                  FileImage(_myImage as File) as ImageProvider),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: iceberg,
+                        ),
                   child: Padding(
                     padding: const EdgeInsets.all(15),
                     child: Align(
                       alignment: Alignment.center,
-                      child: Text(
-                        '+ Add Image',
-                        style: fieldStyle,
-                      ),
+                      child: _myImage == null
+                          ? Text(
+                              '+ Add Image',
+                              style: fieldStyle,
+                            )
+                          : Container(),
                     ),
                   ),
                 ),
@@ -406,33 +462,55 @@ class _AdminAddItemPageState extends State<AdminAddItemPage> {
 
   Future AddItem(_myImage) async {
     String fileID = Uuid().v4();
+    var emptybox = await FirebaseFirestore.instance
+        .collection('stores')
+        .doc(widget.storeDataModel.storeId)
+        .collection("boxes")
+        .where('empty', isEqualTo: true)
+        .limit(1)
+        .get();
 
-    final firebase_storage.Reference firebaseStorageRef = firebase_storage
-        .FirebaseStorage.instance
-        .ref()
-        .child("images/$fileID"); //i is the name of the image
-    firebase_storage.UploadTask uploadTask =
-        firebaseStorageRef.putFile(_myImage);
-    try {
-      firebase_storage.TaskSnapshot storageSnapshot = await uploadTask;
-      var downloadUrl = await storageSnapshot.ref.getDownloadURL();
-      final String url = downloadUrl.toString();
+    List theemptybox =
+        List.from(emptybox.docs.map((doc) => BoxesDataModel.fromSnapshot(doc)));
+    if (theemptybox.isNotEmpty) {
+      final firebase_storage.Reference firebaseStorageRef = firebase_storage
+          .FirebaseStorage.instance
+          .ref()
+          .child("items/$fileID"); //i is the name of the image
+      firebase_storage.UploadTask uploadTask =
+          firebaseStorageRef.putFile(_myImage);
+      try {
+        firebase_storage.TaskSnapshot storageSnapshot = await uploadTask;
+        var downloadUrl = await storageSnapshot.ref.getDownloadURL();
+        final String url = downloadUrl.toString();
+        FirebaseFirestore.instance
+            .collection('stores')
+            .doc(widget.storeDataModel.storeId)
+            .collection("items")
+            .doc(fileID)
+            .set({
+          'displayPicture': url,
+          'name': _productField.text,
+          'pricePerhour': _priceField.text,
+          'product_category': dropdownValue,
+          'quantity': _qtyField.text,
+          'box_number': theemptybox[0].box_number,
+          'box_id': theemptybox[0].box_id,
+        });
+        //You might want to set this as the _auth.currentUser().photourl
+
+      } on FirebaseException catch (e) {
+        print(uploadTask.snapshot);
+      }
       FirebaseFirestore.instance
           .collection('stores')
           .doc(widget.storeDataModel.storeId)
-          .collection("items")
-          .doc(fileID)
-          .set({
-        'displayPicture': url,
-        'name': _productField.text,
-        'pricePerhour': _priceField.text,
-        'product_category': dropdownValue,
-        'quantity': _qtyField.text,
+          .collection("boxes")
+          .doc(theemptybox[0].box_id)
+          .update({
+        'empty': false,
+        'item_id': fileID,
       });
-      //You might want to set this as the _auth.currentUser().photourl
-
-    } on FirebaseException catch (e) {
-      print(uploadTask.snapshot);
     }
   }
 
@@ -447,4 +525,23 @@ class _AdminAddItemPageState extends State<AdminAddItemPage> {
     }
     return null;
   }
+}
+
+class BoxesDataModel {
+  bool empty = false;
+  String item_id = "", box_id = "";
+  int box_number = 0;
+
+  BoxesDataModel();
+  Map<String, dynamic> toJson() => {
+        'box_id': box_id,
+        'empty': empty,
+        'item_id': item_id,
+        'box_number': box_number,
+      };
+  BoxesDataModel.fromSnapshot(snapshot)
+      : box_id = snapshot.id,
+        empty = snapshot.data()['empty'],
+        item_id = snapshot.data()['item_id'],
+        box_number = snapshot.data()['box_number'];
 }
