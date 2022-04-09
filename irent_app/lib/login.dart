@@ -32,6 +32,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenwidth = MediaQuery.of(context).size.width;
+    final screenheight = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       extendBodyBehindAppBar: true,
@@ -45,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               Container(
                 width: double.infinity,
-                height: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.width * 0.7,
                 color: aliceblue,
                 child: Column(
                   children: [
@@ -62,7 +64,6 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
                     Container(
                       alignment: Alignment.bottomRight,
                       margin: EdgeInsets.only(right: 30),
@@ -75,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 40),
+                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 45),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -96,9 +97,10 @@ class _LoginPageState extends State<LoginPage> {
                                 FloatingLabelBehavior.always),
                       ),
                       SizedBox(
-                        height: 40,
+                        height: screenheight * 0.03,
                       ),
                       TextFormField(
+                        obscureText: true,
                         controller: _passwordField,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -114,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                                 FloatingLabelBehavior.always),
                       ),
                       SizedBox(
-                        height: 100,
+                        height: screenheight * 0.15,
                       ),
                       SizedBox(
                         width: double.infinity,

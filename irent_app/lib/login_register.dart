@@ -18,21 +18,23 @@ class LoginRegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenwidth = MediaQuery.of(context).size.width;
+    final screenheight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: aliceblue,
       body: Stack(
         children: [
-          Image.asset(
-            'images/cross_bg.png',
-            width: MediaQuery.of(context).size.width,
-          ),
+          Container(
+              width: screenwidth,
+              height: screenheight,
+              foregroundDecoration: const BoxDecoration(
+                  image: DecorationImage(
+                image: AssetImage('images/cross_bg.png'),
+                fit: BoxFit.fill,
+              ))),
           Padding(
             padding: const EdgeInsets.all(50.0),
             child: Column(
               children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.03,
-                ),
                 Container(
                   decoration: BoxDecoration(
                       border: Border.all(
@@ -41,7 +43,7 @@ class LoginRegisterScreen extends StatelessWidget {
                       borderRadius: BorderRadius.all(Radius.circular(5))),
                   child: Image.asset(
                     'images/irent-logo.png',
-                    width: MediaQuery.of(context).size.width * 0.12,
+                    width: screenwidth * 0.12,
                   ),
                 ),
               ],
@@ -49,20 +51,20 @@ class LoginRegisterScreen extends StatelessWidget {
           ),
           Column(
             children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.35),
+              SizedBox(height: screenheight * 0.35),
               Image.asset(
                 'images/hand.png',
-                width: MediaQuery.of(context).size.width,
+                width: screenwidth,
               ),
             ],
           ),
           Column(
             children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.25),
+              SizedBox(height: screenheight * 0.25),
               Center(
                 child: Image.asset(
                   'images/board-game.png',
-                  width: MediaQuery.of(context).size.width * 0.65,
+                  width: screenwidth * 0.65,
                 ),
               ),
             ],
@@ -71,7 +73,7 @@ class LoginRegisterScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.only(left: 50),
+                  padding: EdgeInsets.only(left: screenwidth * 0.12),
                   width: screenwidth,
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -79,7 +81,7 @@ class LoginRegisterScreen extends StatelessWidget {
                       // ignore: prefer_const_literals_to_create_immutables
                       children: [
                         SizedBox(
-                          height: 125,
+                          height: screenheight * 0.15,
                         ),
                         const Text(
                           'iRent',
@@ -100,7 +102,7 @@ class LoginRegisterScreen extends StatelessWidget {
                               letterSpacing: 2),
                         ),
                         SizedBox(
-                          height: 375,
+                          height: screenheight * 0.45,
                         ),
                         ButtonTheme(
                           minWidth: 300,

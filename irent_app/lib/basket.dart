@@ -167,8 +167,7 @@ class _basketState extends State<basket> {
                                     color: Color.fromRGBO(255, 255, 255, 1),
                                     fontFamily: 'SF Pro Rounded',
                                     fontSize: 18,
-                                    letterSpacing:
-                                        0 /*percentages not used in flutter. defaulting to zero*/,
+                                    letterSpacing: 0,
                                     fontWeight: FontWeight.normal,
                                     height: 1),
                               )),
@@ -197,6 +196,16 @@ Widget _productDetails(
     required String product_category,
     required int pricePerhour,
     required String displayPicture}) {
+  final product_displayPicture;
+  final product_name;
+  final product_category;
+  final product_price;
+  var product_count;
+  var product_starttime;
+  var product_endtime;
+  var product_startdate;
+  var product_enddate;
+  ;
   final TextStyle subtitleStyles = TextStyle(
     fontFamily: 'SF_Pro_Rounded',
     fontSize: 15,

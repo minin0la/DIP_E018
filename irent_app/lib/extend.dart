@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'bookings_details.dart';
 import 'package:flutter/material.dart';
 import 'package:irent_app/extend_payment.dart';
 import 'user_bookings.dart';
@@ -61,6 +63,16 @@ class _extendState extends State<extend> {
   void _decreamentCount() {
     setState(() {
       _count--;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // simply use this
+    Timer.run(() {
+      showAlertDialog(context);
     });
   }
 
@@ -449,4 +461,66 @@ class _extendState extends State<extend> {
           ]),
         ));
   }
+}
+
+showAlertDialog(BuildContext context) {
+  // set up the buttons
+  shape:
+  RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0));
+  color:
+  Color(0xFFDBE4EE);
+  Widget okButton = ElevatedButton(
+    style: ElevatedButton.styleFrom(
+        primary: const Color(0xFF001D4A),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(38))),
+    child: Text(
+      "OK",
+      style: TextStyle(
+          color: Color(0xFFFBFBFF),
+          fontFamily: 'SF_Pro_Rounded',
+          fontSize: 18,
+          fontWeight: FontWeight.w700),
+    ),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+    backgroundColor: Color(0xFFDBE4EE),
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "Attention!",
+          style: TextStyle(
+            fontFamily: 'SF Pro Rounded',
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    ),
+    content: Text(
+        "1.Extension is subject to availability. \n2.Maximum period of extension is 2\n   hours."),
+    actions: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 30, width: 100, child: okButton),
+        ],
+      ),
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }
