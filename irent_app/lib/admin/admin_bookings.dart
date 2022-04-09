@@ -56,24 +56,22 @@ class _admin_bookingsState extends State<admin_bookings> {
 
   @override
   Widget build(BuildContext context) {
+    final screenwidth = MediaQuery.of(context).size.width;
     return Container(
       color: Color(0xFFFBFBFF),
       child: Column(
         children: [
-          Expanded(
-            flex: 1,
-            child: Container(
-              padding: const EdgeInsets.only(left: 15, right: 15),
-              child: Row(
-                children: [
-                  Text('Order Date', style: dateStyle),
-                  _beginDate(
-                      context: context, dateTimeNotifier: _dateTimeNotifier),
-                  Text('to', style: dateStyle),
-                  _endDate(
-                      context: context, dateTimeNotifier: _dateTimeNotifier)
-                ],
-              ),
+          Container(
+            width: screenwidth * 0.95,
+            height: 50,
+            child: Row(
+              children: [
+                Text('Order Date', style: dateStyle),
+                _beginDate(
+                    context: context, dateTimeNotifier: _dateTimeNotifier),
+                Text('to', style: dateStyle),
+                _endDate(context: context, dateTimeNotifier: _dateTimeNotifier)
+              ],
             ),
           ),
           Expanded(

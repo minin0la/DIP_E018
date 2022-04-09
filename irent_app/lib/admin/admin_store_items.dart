@@ -79,36 +79,33 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            FloatingActionButton(
-              backgroundColor: marigold,
-              heroTag: 'add_store',
-              onPressed: () {
-                if (theitems.length >= widget.storeDataModel.maxItems) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('All the boxes are occupied')));
-                } else {
-                  Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AdminAddItemPage(
-                                  storeDataModel: widget.storeDataModel,
-                                  catDataModel: itemCat)))
-                      .then((value) => getItems());
-                }
-              },
-              child: Icon(
-                Icons.add,
-                size: 30,
-              ),
+      floatingActionButton: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FloatingActionButton(
+            backgroundColor: marigold,
+            heroTag: 'add_store',
+            onPressed: () {
+              if (theitems.length >= widget.storeDataModel.maxItems) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('All the boxes are occupied')));
+              } else {
+                Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AdminAddItemPage(
+                                storeDataModel: widget.storeDataModel,
+                                catDataModel: itemCat)))
+                    .then((value) => getItems());
+              }
+            },
+            child: Icon(
+              Icons.add,
+              size: 30,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       body: Container(
         color: white,
@@ -159,60 +156,54 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
                 ),
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 4,
-                    child: Container(
-                      width: 126,
-                      height: 35,
-                      margin:
-                          EdgeInsets.only(left: 30.0, top: 10.0, bottom: 20),
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Text(
-                          'Categories',
-                          style: TextStyle(
-                              color: oxford,
-                              fontFamily: 'SF Pro Rounded',
-                              fontSize: 25,
-                              fontWeight: FontWeight.normal,
-                              height: 1),
-                        ),
+            Row(
+              children: [
+                Expanded(
+                  flex: 4,
+                  child: Container(
+                    width: 126,
+                    height: 30,
+                    margin: EdgeInsets.only(left: 30.0, top: 10.0, bottom: 20),
+                    child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Text(
+                        'Categories',
+                        style: TextStyle(
+                            color: oxford,
+                            fontFamily: 'SF Pro Rounded',
+                            fontSize: 25,
+                            fontWeight: FontWeight.normal,
+                            height: 1),
                       ),
                     ),
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: TextButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return _addCategoryDialog(context: context);
-                              },
-                            );
-                          },
-                          child: Icon(
-                            Icons.add,
-                            size: 30,
-                            color: oxford,
-                          )),
-                    ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: TextButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return _addCategoryDialog(context: context);
+                            },
+                          );
+                        },
+                        child: Icon(
+                          Icons.add,
+                          size: 30,
+                          color: oxford,
+                        )),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            Expanded(
-                flex: 2,
-                child: Container(
-                    padding: EdgeInsets.only(left: 30, right: 30),
-                    child:
-                        _addCategories(context: context, category: itemCat))),
+            Container(
+                height: 90,
+                padding: EdgeInsets.only(left: 30, right: 30),
+                child: _addCategories(context: context, category: itemCat)),
             Expanded(
               flex: 9,
               child: Container(
