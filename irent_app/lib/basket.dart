@@ -32,6 +32,7 @@ class _basketState extends State<basket> {
   final Color transparent = const Color(0x4DE3E3E3);
 
   List thebasket = [];
+  int totalCost = 0;
 
   @override
   void didChangeDependencies() {
@@ -121,7 +122,7 @@ class _basketState extends State<basket> {
                               height: 25,
                               width: 126,
                               child: Text(
-                                '\$2',
+                                '\$$totalCost',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                     color: Color(0xFF001D4A),
@@ -190,6 +191,10 @@ class _basketState extends State<basket> {
     setState(() {
       thebasket =
           List.from(data.docs.map((doc) => BasketDataModel.fromSnapshot(doc)));
+      for (var i = 0; i < thebasket.length; i++) {
+        totalCost += int.parse(thebasket[i].product_price.toString());
+      }
+
       // storeData = newstores;
     });
   }
