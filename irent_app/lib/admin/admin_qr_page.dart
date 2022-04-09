@@ -11,7 +11,16 @@ import 'admin_constants.dart';
 import 'dart:convert';
 
 class AdminQRPage extends StatefulWidget {
-  const AdminQRPage({Key? key}) : super(key: key);
+  final item_id;
+  final store_id;
+  final box_number;
+
+  const AdminQRPage(
+      {Key? key,
+      required this.item_id,
+      required this.store_id,
+      required this.box_number})
+      : super(key: key);
   @override
   _AdminQRPageState createState() => _AdminQRPageState();
 }
@@ -22,8 +31,16 @@ class _AdminQRPageState extends State<AdminQRPage> {
   final Color aliceblue = const Color(0xFF81A4CD);
   final Color marigold = const Color(0xFFECA400);
 
+  String thekey = "";
   @override
   Widget build(BuildContext context) {
+    final Map adminQR = {
+      'username': 'admin',
+      'key': thekey,
+      'status': '0',
+      'store': '0',
+      'box': widget.box_number,
+    };
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -91,5 +108,29 @@ class _AdminQRPageState extends State<AdminQRPage> {
         ]),
       ),
     );
+  }
+//     Future getQRData() async {
+//     var keyvalue = await FirebaseFirestore.instance
+//         .collection('Key')
+//         .doc('admin')
+//         .get();
+
+//     List thekeyvalue =
+//         List.from(keyvalue.docs.map((doc) => KeyModel.fromSnapshot(doc)));
+// }
+  @override
+  void initState() {
+    CollectionReference keyCollection =
+        FirebaseFirestore.instance.collection('Key');
+    keyCollection.doc('admin').get().then((DocumentSnapshot datas) {
+      try {
+        setState(() {
+          thekey = datas.get(FieldPath(['value']));
+        });
+      } on StateError catch (e) {
+        print('No nested field exists!');
+      }
+    });
+    super.initState();
   }
 }

@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:irent_app/admin/admin_constants.dart';
-import 'package:irent_app/user_store_uroc.dart';
-import 'package:irent_app/admin/admin_add_store.dart';
 import 'dart:ui';
-import '../app_icons.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:irent_app/admin/admin_add_store.dart';
+
 import 'admin_store_items.dart';
 
 class admin_home extends StatefulWidget {
@@ -22,16 +21,26 @@ class _admin_homeState extends State<admin_home> {
   final Color marigold = const Color(0xFFECA400);
   final Color transparent = const Color(0x4DE3E3E3);
 
-  final List<StoreDataModel> storeData = List.generate(
-      stores.length,
-      (index) => StoreDataModel(
-            '${stores[index]['storeName']}',
-            '${stores[index]['storeAddress']}',
-            '${stores[index]['category']}',
-            '${stores[index]['storeBanner']}',
-            {stores[index]['itemCategories']}.toList(),
-            {stores[index]['items']}.toList(),
-          ));
+  var thedata = [];
+  List thestores = [];
+
+  // List storeData = [];
+  List stores = [];
+  // final List<StoreDataModel> storeData = List.generate(
+  //     thestores.length,
+  //     (index) => StoreDataModel(
+  //           '${thestores[index].storeName}',
+  //           '${thestores[index].storeAddress}',
+  //           '${thestores[index].category}',
+  //           '${thestores[index].storeBanner}',
+  //           {thestores[index].itemCategories}.toList(),
+  //           {thestores[index].items}.toList(),
+  //         ));
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getStore();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +56,8 @@ class _admin_homeState extends State<admin_home> {
               heroTag: 'add_store',
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddStorePage()));
+                        MaterialPageRoute(builder: (context) => AddStorePage()))
+                    .then((value) => getStore());
               },
               child: Icon(
                 Icons.add,
@@ -82,24 +92,22 @@ class _admin_homeState extends State<admin_home> {
               ),
             ]),
           ),
-          SingleChildScrollView(
-            child: Container(
+          Expanded(
+            child: SingleChildScrollView(
+                child: Container(
               margin: EdgeInsets.only(left: 35, right: 35),
               child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: stores.length,
+                  itemCount: thestores.length,
                   itemBuilder: (context, index) {
-                    for (var item in stores) {
-                      return _storeCard(
-                          index: index,
-                          storeName: storeData[index].storeName,
-                          storeAddress: storeData[index].storeAddress,
-                          category: storeData[index].category,
-                          storeBanner: storeData[index].storeBanner);
-                    }
-                    throw 'No Data Found';
+                    return _storeCard(
+                        index: index,
+                        storeName: thestores[index].storeName,
+                        storeAddress: thestores[index].storeAddress,
+                        category: thestores[index].category,
+                        storeBanner: thestores[index].storeBanner);
                   }),
-            ),
+            )),
           )
         ],
       ),
@@ -175,7 +183,7 @@ class _admin_homeState extends State<admin_home> {
               ],
               borderRadius: BorderRadius.circular(10),
               image: new DecorationImage(
-                image: AssetImage(storeBanner),
+                image: NetworkImage(storeBanner),
                 colorFilter: new ColorFilter.mode(
                     Color.fromRGBO(0, 29, 74, 0.6000000238418579),
                     BlendMode.hardLight),
@@ -188,17 +196,53 @@ class _admin_homeState extends State<admin_home> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  AdminStoreItemsPage(storeDataModel: storeData[index])),
+                  AdminStoreItemsPage(storeDataModel: thestores[index])),
         );
       },
     );
   }
+
+  Future getStore() async {
+    var data = await FirebaseFirestore.instance.collection('stores').get();
+
+    setState(() {
+      thestores =
+          List.from(data.docs.map((doc) => StoreDataModel.fromSnapshot(doc)));
+      // storeData = newstores;
+    });
+  }
 }
 
 class StoreDataModel {
-  final String storeName, storeAddress, category, storeBanner;
-  final List itemCategories, items;
+  String storeId = "",
+      storeName = "",
+      storeAddress = "",
+      category = "",
+      storeBanner = "";
 
-  StoreDataModel(this.storeName, this.storeAddress, this.category,
-      this.storeBanner, this.itemCategories, this.items);
+  int maxItems = 0;
+  List itemCategories = [], items = [];
+
+  // final String storeName, storeAddress, category, storeBanner;
+  // final List itemCategories, items;
+  // StoreDataModel();
+
+  StoreDataModel();
+  Map<String, dynamic> toJson() => {
+        'storeId': storeId,
+        'storeName': storeName,
+        'storeAddress': storeAddress,
+        'category': category,
+        'storeBanner': storeBanner,
+        'itemCategories': itemCategories,
+        'maxItems': maxItems
+      };
+  StoreDataModel.fromSnapshot(snapshot)
+      : storeId = snapshot.id,
+        storeName = snapshot.data()['storeName'],
+        storeAddress = snapshot.data()['storeAddress'],
+        category = snapshot.data()['category'],
+        storeBanner = snapshot.data()['storeBanner'],
+        itemCategories = [snapshot.data()['itemCategories']],
+        maxItems = snapshot.data()['maxItems'];
 }
