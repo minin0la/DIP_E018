@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
@@ -16,25 +17,7 @@ import 'package:irent_app/switch_nav.dart';
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class basket extends StatefulWidget {
-  final product_displayPicture;
-  final product_name;
-  final product_category;
-  final product_price;
-  var product_count;
-  var product_starttime;
-  var product_endtime;
-  var product_startdate;
-  var product_enddate;
-  basket(
-      {this.product_displayPicture,
-      this.product_name,
-      this.product_category,
-      this.product_price,
-      this.product_count,
-      this.product_enddate,
-      this.product_endtime,
-      this.product_startdate,
-      this.product_starttime});
+  const basket({Key? key}) : super(key: key);
 
   @override
   State<basket> createState() => _basketState();
@@ -47,6 +30,14 @@ class _basketState extends State<basket> {
   final Color iceberg = const Color(0xFFDBE4EE);
   final Color marigold = const Color(0xFFECA400);
   final Color transparent = const Color(0x4DE3E3E3);
+
+  List thebasket = [];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getBasket();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,21 +65,21 @@ class _basketState extends State<basket> {
             width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.only(left: 25, right: 25),
             child: ListView.builder(
-                itemCount: productDetails.length,
+                itemCount: thebasket.length,
                 itemBuilder: (context, index) {
-                  for (var product in productDetails) {
-                    return _productDetails(
-                        context: context,
-                        name: productDetails[index]['name'].toString(),
-                        product_category: productDetails[index]
-                                ['product_category']
-                            .toString(),
-                        pricePerhour: int.parse(
-                            productDetails[index]['pricePerhour'].toString()),
-                        displayPicture:
-                            productDetails[index]['displayPicture'].toString());
-                  }
-                  throw 'No Data Found';
+                  // for (var product in thebasket) {
+                  return _productDetails(
+                      context: context,
+                      name: thebasket[index].product_name.toString(),
+                      product_category:
+                          thebasket[index].product_category.toString(),
+                      pricePerhour:
+                          int.parse(thebasket[index].product_price.toString()),
+                      product_id: thebasket[index].product_id.toString(),
+                      displayPicture:
+                          thebasket[index].product_displayPicture.toString());
+                  // }
+                  // throw 'No Data Found';
                 }),
           ),
         ),
@@ -188,194 +179,254 @@ class _basketState extends State<basket> {
       ]),
     );
   }
-}
 
-Widget _productDetails(
-    {required BuildContext context,
-    required String name,
-    required String product_category,
-    required int pricePerhour,
-    required String displayPicture}) {
-  final product_displayPicture;
-  final product_name;
-  final product_category;
-  final product_price;
-  var product_count;
-  var product_starttime;
-  var product_endtime;
-  var product_startdate;
-  var product_enddate;
-  ;
-  final TextStyle subtitleStyles = TextStyle(
-    fontFamily: 'SF_Pro_Rounded',
-    fontSize: 15,
-    fontWeight: FontWeight.w300,
-    color: Color(0xFF001D4A),
-    wordSpacing: 1,
-  );
+  Future getBasket() async {
+    var data = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .collection('basket')
+        .get();
 
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 8.0),
-    child: Card(
-      color: Color(0xFF81A4CD),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      elevation: 1,
-      child: Padding(
-        padding:
-            const EdgeInsets.only(left: 10.0, right: 10, top: 15, bottom: 15),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: (Column(
-                children: [checkbox()],
-              )),
-            ),
-            Expanded(
-                flex: 2,
-                child: Column(
-                  children: [
-                    Container(
-                      height: 48,
-                      width: 48,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        image: new DecorationImage(
-                          image: AssetImage(displayPicture),
-                          fit: BoxFit.cover,
+    setState(() {
+      thebasket =
+          List.from(data.docs.map((doc) => BasketDataModel.fromSnapshot(doc)));
+      // storeData = newstores;
+    });
+  }
+
+  Widget _productDetails(
+      {required BuildContext context,
+      required String name,
+      required String product_category,
+      required int pricePerhour,
+      required String displayPicture,
+      required String product_id}) {
+    final TextStyle subtitleStyles = TextStyle(
+      fontFamily: 'SF_Pro_Rounded',
+      fontSize: 15,
+      fontWeight: FontWeight.w300,
+      color: Color(0xFF001D4A),
+      wordSpacing: 1,
+    );
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Card(
+        color: Color(0xFF81A4CD),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        elevation: 1,
+        child: Padding(
+          padding:
+              const EdgeInsets.only(left: 10.0, right: 10, top: 15, bottom: 15),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: (Column(
+                  children: [checkbox()],
+                )),
+              ),
+              Expanded(
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 48,
+                        width: 48,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          image: new DecorationImage(
+                            image: NetworkImage(displayPicture),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                )),
-            Expanded(
-              flex: 11,
-              child: ListTile(
-                title: Row(
-                  children: [
-                    Container(
-                      width: 180,
-                      child: Text(
-                        name,
+                    ],
+                  )),
+              Expanded(
+                flex: 11,
+                child: ListTile(
+                  title: Row(
+                    children: [
+                      Container(
+                        width: 180,
+                        child: Text(
+                          name,
+                          style: TextStyle(
+                            fontFamily: 'SF_Pro_Rounded',
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF001D4A),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: InkWell(
+                            onTap: () {
+                              showAlertDialog(
+                                  context: context, product_id: product_id);
+                            },
+                            child: Container(
+                              child: Icon(Icons.close),
+                            )),
+                      ),
+                    ],
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '\$$pricePerhour /hour',
                         style: TextStyle(
                           fontFamily: 'SF_Pro_Rounded',
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
                           color: Color(0xFF001D4A),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: InkWell(
-                          onTap: () {
-                            showAlertDialog(context);
-                          },
-                          child: Container(
-                            child: Icon(Icons.close),
-                          )),
-                    ),
-                  ],
-                ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '\$$pricePerhour /hour',
-                      style: TextStyle(
-                        fontFamily: 'SF_Pro_Rounded',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Color(0xFF001D4A),
+                      Text('Start Date           End Date',
+                          style: subtitleStyles),
+                      Row(
+                        children: [date()],
                       ),
-                    ),
-                    Text('Start Date           End Date',
-                        style: subtitleStyles),
-                    Row(
-                      children: [date()],
-                    ),
-                    Text('Start Time           End Time',
-                        style: subtitleStyles),
-                    Row(
-                      children: [time()],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Row(
-                        children: [increment_decrement()],
+                      Text('Start Time           End Time',
+                          style: subtitleStyles),
+                      Row(
+                        children: [time()],
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          children: [increment_decrement()],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
+
+  showAlertDialog({required BuildContext context, required String product_id}) {
+    // set up the buttons
+
+    Widget noButton = TextButton(
+      style: ElevatedButton.styleFrom(
+          primary: const Color(0xFFFBFBFF),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(38))),
+      child: Text(
+        "No",
+        style: TextStyle(
+            color: Color(0xFF001D4A),
+            fontFamily: 'SF_Pro_Rounded',
+            fontSize: 18,
+            fontWeight: FontWeight.w700),
+      ),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    Widget yesButton = TextButton(
+      style: ElevatedButton.styleFrom(
+          primary: const Color(0xFF001D4A),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(38))),
+      child: Text(
+        "Yes",
+        style: TextStyle(
+            color: Color(0xFFFBFBFF),
+            fontFamily: 'SF_Pro_Rounded',
+            fontSize: 18,
+            fontWeight: FontWeight.w700),
+      ),
+      onPressed: () {
+        deleteItem(product_id);
+        getBasket();
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      backgroundColor: Color(0xFFDBE4EE),
+      //title: Text("Notice"),
+      content: Text("Do you want to remove this item?"),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 35, width: 100, child: noButton),
+            SizedBox(height: 35, width: 100, child: yesButton),
+          ],
+        ),
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 }
 
-showAlertDialog(BuildContext context) {
-  // set up the buttons
+Future<void> deleteItem(product_id) {
+  DocumentReference selectitem = FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser?.uid)
+      .collection('basket')
+      .doc(product_id);
+  return selectitem.delete();
+}
 
-  Widget noButton = TextButton(
-    style: ElevatedButton.styleFrom(
-        primary: const Color(0xFFFBFBFF),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(38))),
-    child: Text(
-      "No",
-      style: TextStyle(
-          color: Color(0xFF001D4A),
-          fontFamily: 'SF_Pro_Rounded',
-          fontSize: 18,
-          fontWeight: FontWeight.w700),
-    ),
-    onPressed: () {
-      Navigator.pop(context);
-    },
-  );
+class BasketDataModel {
+  String product_id = "",
+      product_count = "",
+      product_displayPicture = "",
+      product_name = "",
+      product_category = "",
+      product_price = "",
+      product_startdate = "",
+      product_enddate = "",
+      product_starttime = "",
+      product_endtime = "";
 
-  Widget yesButton = TextButton(
-    style: ElevatedButton.styleFrom(
-        primary: const Color(0xFF001D4A),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(38))),
-    child: Text(
-      "Yes",
-      style: TextStyle(
-          color: Color(0xFFFBFBFF),
-          fontFamily: 'SF_Pro_Rounded',
-          fontSize: 18,
-          fontWeight: FontWeight.w700),
-    ),
-    onPressed: () {},
-  );
-
-  // set up the AlertDialog
-  AlertDialog alert = AlertDialog(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-    backgroundColor: Color(0xFFDBE4EE),
-    //title: Text("Notice"),
-    content: Text("Do you want to remove this item?"),
-    actions: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(height: 35, width: 100, child: noButton),
-          SizedBox(height: 35, width: 100, child: yesButton),
-        ],
-      ),
-    ],
-  );
-
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
+  BasketDataModel();
+  Map<String, dynamic> toJson() => {
+        'product_id': product_id,
+        'product_count': product_count,
+        'product_displayPicture': product_displayPicture,
+        'product_name': product_name,
+        'product_category': product_category,
+        'product_price': product_price,
+        'product_startdate': product_startdate,
+        'product_enddate': product_enddate,
+        'product_starttime': product_starttime,
+        'product_endtime': product_endtime,
+        // 'item_id': item_id,
+      };
+  BasketDataModel.fromSnapshot(snapshot)
+      : product_id = snapshot.id,
+        product_count = snapshot.data()['product_count'],
+        product_displayPicture = snapshot.data()['product_displayPicture'],
+        product_name = snapshot.data()['product_name'],
+        product_category = snapshot.data()['product_category'],
+        product_price = snapshot.data()['product_price'],
+        product_startdate = snapshot.data()['product_startdate'],
+        product_enddate = snapshot.data()['product_enddate'],
+        product_starttime = snapshot.data()['product_starttime'],
+        product_endtime = snapshot.data()['product_endtime'];
 }
