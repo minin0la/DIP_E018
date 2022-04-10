@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
@@ -19,8 +20,8 @@ class FeedbackPage extends StatefulWidget {
 }
 
 class _FeedbackPageState extends State<FeedbackPage> {
-  final TextEditingController _emailField = TextEditingController();
-  final TextEditingController _passwordField = TextEditingController();
+  final TextEditingController _typeField = TextEditingController();
+  final TextEditingController _messageField = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final Color white = const Color(0xFFFBFBFF);
@@ -34,6 +35,16 @@ class _FeedbackPageState extends State<FeedbackPage> {
 
   bool? _success;
   String? _userEmail;
+
+  List thestores = [];
+  List theitems = [];
+  var dropdownValueStore;
+  var dropdownValueItem;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getStore();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +152,11 @@ class _FeedbackPageState extends State<FeedbackPage> {
                                       fontWeight: FontWeight.w500,
                                       color: oxford),
                                 ),
-                                _dropDown(context: context, items: shops),
+                                _dropDownStores(
+                                    context: context,
+                                    items: thestores
+                                        .map((item) => item.storeName)
+                                        .toList()),
                               ],
                             ),
                           ),
@@ -161,7 +176,11 @@ class _FeedbackPageState extends State<FeedbackPage> {
                                       fontWeight: FontWeight.w500,
                                       color: oxford),
                                 ),
-                                _dropDown(context: context, items: items_UROC),
+                                _dropDownItems(
+                                    context: context,
+                                    items: theitems
+                                        .map((item) => item.name)
+                                        .toList()),
                               ],
                             ),
                           )
@@ -254,9 +273,8 @@ class _FeedbackPageState extends State<FeedbackPage> {
     );
   }
 
-  Widget _dropDown(
-      {required BuildContext context, required List<String> items}) {
-    String dropdownValue = items[0];
+  Widget _dropDownStores({required BuildContext context, required List items}) {
+    // String dropdownValueStore = items[0];
     return Padding(
       padding: const EdgeInsets.only(top: 10),
       child: Container(
@@ -267,7 +285,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
         ),
         child: DropdownButton<String>(
           isExpanded: true,
-          value: dropdownValue,
+          value: dropdownValueStore,
           icon: Padding(
             padding: const EdgeInsets.only(right: 15.0),
             child: const Icon(Icons.keyboard_arrow_down_sharp),
@@ -280,12 +298,17 @@ class _FeedbackPageState extends State<FeedbackPage> {
             height: 2,
             color: Color(0xFFDBE4EE),
           ),
+          hint: Padding(
+            padding: const EdgeInsets.only(left: 15.0),
+            child: Text('Select'),
+          ),
           onChanged: (String? newValue) {
             setState(() {
-              dropdownValue = newValue!;
+              dropdownValueStore = newValue!;
             });
+            getItems();
           },
-          items: items.map<DropdownMenuItem<String>>((String value) {
+          items: items.map<DropdownMenuItem<String>>((value) {
             return DropdownMenuItem<String>(
               value: value,
               child: Padding(
@@ -298,4 +321,143 @@ class _FeedbackPageState extends State<FeedbackPage> {
       ),
     );
   }
+
+  Widget _dropDownItems({required BuildContext context, required List items}) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.5,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: iceberg,
+        ),
+        child: DropdownButton<String>(
+          isExpanded: true,
+          value: dropdownValueItem,
+          icon: Padding(
+            padding: const EdgeInsets.only(right: 15.0),
+            child: const Icon(Icons.keyboard_arrow_down_sharp),
+          ),
+          iconSize: 28,
+          iconEnabledColor: Color(0xFF001D4A),
+          elevation: 16,
+          style: const TextStyle(color: Color(0xFF001D4A)),
+          underline: Container(
+            height: 2,
+            color: Color(0xFFDBE4EE),
+          ),
+          hint: Padding(
+            padding: const EdgeInsets.only(left: 15.0),
+            child: Text('Select'),
+          ),
+          onChanged: (String? newValue) {
+            setState(() {
+              dropdownValueItem = newValue!;
+            });
+          },
+          items: items.map<DropdownMenuItem<String>>((value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Text(value),
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Future getStore() async {
+    var data = await FirebaseFirestore.instance.collection('stores').get();
+
+    setState(() {
+      thestores =
+          List.from(data.docs.map((doc) => StoreDataModel.fromSnapshot(doc)));
+      // storeData = newstores;
+    });
+  }
+
+  Future getItems() async {
+    var data = await FirebaseFirestore.instance
+        .collection('stores')
+        .doc(thestores
+            .where((element) => element.storeName == dropdownValueStore)
+            .toList()[0]
+            .storeId
+            .toString())
+        .collection('items')
+        .get();
+
+    setState(() {
+      theitems =
+          List.from(data.docs.map((doc) => ItemDataModel.fromSnapshot(doc)));
+      // storeData = newstores;
+    });
+  }
+}
+
+class StoreDataModel {
+  String storeId = "",
+      storeName = "",
+      storeAddress = "",
+      category = "",
+      storeBanner = "";
+
+  int maxItems = 0;
+  List itemCategories = [], items = [];
+
+  StoreDataModel();
+  Map<String, dynamic> toJson() => {
+        'storeId': storeId,
+        'storeName': storeName,
+        'storeAddress': storeAddress,
+        'category': category,
+        'storeBanner': storeBanner,
+        'itemCategories': itemCategories,
+        'maxItems': maxItems
+      };
+  StoreDataModel.fromSnapshot(snapshot)
+      : storeId = snapshot.id,
+        storeName = snapshot.data()['storeName'],
+        storeAddress = snapshot.data()['storeAddress'],
+        category = snapshot.data()['category'],
+        storeBanner = snapshot.data()['storeBanner'],
+        itemCategories = [snapshot.data()['itemCategories']],
+        maxItems = snapshot.data()['maxItems'];
+}
+
+class ItemDataModel {
+  String displayPicture = "",
+      name = "",
+      pricePerhour = "",
+      product_category = "",
+      quantity = "",
+      item_id = "",
+      box_id = "";
+  int box_number = 0;
+  // item_id = "";
+
+  ItemDataModel();
+  Map<String, dynamic> toJson() => {
+        'displayPicture': displayPicture,
+        'name': name,
+        'pricePerhour': pricePerhour,
+        'product_category': product_category,
+        'quantity': quantity,
+        'item_id': item_id,
+        'box_id': box_id,
+        'box_number': box_number,
+        // 'item_id': item_id,
+      };
+  ItemDataModel.fromSnapshot(snapshot)
+      : displayPicture = snapshot.data()['displayPicture'],
+        name = snapshot.data()['name'],
+        pricePerhour = snapshot.data()['pricePerhour'],
+        product_category = snapshot.data()['product_category'],
+        quantity = snapshot.data()['quantity'],
+        item_id = snapshot.id,
+        box_id = snapshot.data()['box_id'],
+        box_number = snapshot.data()['box_number'];
 }
