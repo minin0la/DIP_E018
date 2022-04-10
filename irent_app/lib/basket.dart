@@ -43,141 +43,143 @@ class _basketState extends State<basket> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: white,
-      body: Column(children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.fromLTRB(25, 5, 25, 5),
-          child: Text(
-            'Basket',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                color: oxford,
-                fontFamily: 'SF_Pro_Rounded',
-                fontSize: 25,
-                fontWeight: FontWeight.w500),
-          ),
-        ),
-        Expanded(
-          flex: 6,
-          child: Container(
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: white,
+        body: Column(children: [
+          Container(
             width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.only(left: 25, right: 25),
-            child: ListView.builder(
-                itemCount: thebasket.length,
-                itemBuilder: (context, index) {
-                  // for (var product in thebasket) {
-                  return _productDetails(
-                      context: context,
-                      name: thebasket[index].product_name.toString(),
-                      product_category:
-                          thebasket[index].product_category.toString(),
-                      pricePerhour:
-                          int.parse(thebasket[index].product_price.toString()),
-                      product_id: thebasket[index].product_id.toString(),
-                      displayPicture:
-                          thebasket[index].product_displayPicture.toString());
-                  // }
-                  // throw 'No Data Found';
-                }),
+            padding: EdgeInsets.fromLTRB(25, 5, 25, 5),
+            child: Text(
+              'Basket',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                  color: oxford,
+                  fontFamily: 'SF_Pro_Rounded',
+                  fontSize: 25,
+                  fontWeight: FontWeight.w500),
+            ),
           ),
-        ),
-        Column(
-          children: [
-            Container(
-                margin: EdgeInsets.only(left: 20, top: 12.5),
-                alignment: Alignment.bottomCenter,
-                height: 100,
-                width: 412,
-                color: Color(0xFFFBFBFF),
-                child: Row(
-                  children: [
-                    checkbox(),
-                    Container(
-                      child: Text('All'),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 100),
-                      height: 58,
-                      width: 67,
-                      child: Column(
+          Expanded(
+            flex: 6,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.only(left: 25, right: 25),
+              child: ListView.builder(
+                  itemCount: thebasket.length,
+                  itemBuilder: (context, index) {
+                    // for (var product in thebasket) {
+                    return _productDetails(
+                        context: context,
+                        name: thebasket[index].product_name.toString(),
+                        product_category:
+                            thebasket[index].product_category.toString(),
+                        pricePerhour: int.parse(
+                            thebasket[index].product_price.toString()),
+                        product_id: thebasket[index].product_id.toString(),
+                        displayPicture:
+                            thebasket[index].product_displayPicture.toString());
+                    // }
+                    // throw 'No Data Found';
+                  }),
+            ),
+          ),
+          Column(
+            children: [
+              Container(
+                  margin: EdgeInsets.only(left: 20, top: 12.5),
+                  alignment: Alignment.bottomCenter,
+                  height: 100,
+                  width: 412,
+                  color: Color(0xFFFBFBFF),
+                  child: Row(
+                    children: [
+                      checkbox(),
+                      Container(
+                        child: Text('All'),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 100),
+                        height: 58,
+                        width: 67,
+                        child: Column(
+                          children: [
+                            Container(
+                                height: 21,
+                                width: 126,
+                                child: Text(
+                                  'Total',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      color: Color(0xFF001D4A),
+                                      fontFamily: 'SF Pro Rounded',
+                                      fontSize: 16,
+                                      letterSpacing: 0,
+                                      fontWeight: FontWeight.w500,
+                                      height: 1),
+                                )),
+                            Container(
+                                height: 25,
+                                width: 126,
+                                child: Text(
+                                  '\$$totalCost',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      color: Color(0xFF001D4A),
+                                      fontFamily: 'SF Pro Rounded',
+                                      fontSize: 30,
+                                      letterSpacing: 0,
+                                      fontWeight: FontWeight.w500,
+                                      height: 1),
+                                )),
+                          ],
+                        ),
+                      ),
+                      Column(
                         children: [
-                          Container(
-                              height: 21,
-                              width: 126,
-                              child: Text(
-                                'Total',
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    color: Color(0xFF001D4A),
-                                    fontFamily: 'SF Pro Rounded',
-                                    fontSize: 16,
-                                    letterSpacing: 0,
-                                    fontWeight: FontWeight.w500,
-                                    height: 1),
-                              )),
-                          Container(
-                              height: 25,
-                              width: 126,
-                              child: Text(
-                                '\$$totalCost',
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    color: Color(0xFF001D4A),
-                                    fontFamily: 'SF Pro Rounded',
-                                    fontSize: 30,
-                                    letterSpacing: 0,
-                                    fontWeight: FontWeight.w500,
-                                    height: 1),
-                              )),
+                          InkWell(
+                            child: Container(
+                                margin: EdgeInsets.only(top: 22),
+                                height: 53,
+                                width: 140,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(32),
+                                    topRight: Radius.circular(32),
+                                    bottomLeft: Radius.circular(32),
+                                    bottomRight: Radius.circular(32),
+                                  ),
+                                  color: Color.fromRGBO(236, 164, 0, 1),
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'Book',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(255, 255, 255, 1),
+                                      fontFamily: 'SF Pro Rounded',
+                                      fontSize: 18,
+                                      letterSpacing: 0,
+                                      fontWeight: FontWeight.normal,
+                                      height: 1),
+                                )),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => user_payment()),
+                              );
+                            },
+                          ),
                         ],
                       ),
-                    ),
-                    Column(
-                      children: [
-                        InkWell(
-                          child: Container(
-                              margin: EdgeInsets.only(top: 22),
-                              height: 53,
-                              width: 140,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(32),
-                                  topRight: Radius.circular(32),
-                                  bottomLeft: Radius.circular(32),
-                                  bottomRight: Radius.circular(32),
-                                ),
-                                color: Color.fromRGBO(236, 164, 0, 1),
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Book',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Color.fromRGBO(255, 255, 255, 1),
-                                    fontFamily: 'SF Pro Rounded',
-                                    fontSize: 18,
-                                    letterSpacing: 0,
-                                    fontWeight: FontWeight.normal,
-                                    height: 1),
-                              )),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => user_payment()),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                )),
-          ],
-        ),
-      ]),
+                    ],
+                  )),
+            ],
+          ),
+        ]),
+      ),
     );
   }
 
