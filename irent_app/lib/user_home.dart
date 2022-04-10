@@ -215,10 +215,6 @@ class StoreDataModel {
   int maxItems = 0;
   List itemCategories = [], items = [];
 
-  // final String storeName, storeAddress, category, storeBanner;
-  // final List itemCategories, items;
-  // StoreDataModel();
-
   StoreDataModel();
   Map<String, dynamic> toJson() => {
         'storeId': storeId,
