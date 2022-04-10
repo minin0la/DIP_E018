@@ -28,7 +28,6 @@ class _user_item_pageState extends State<user_item_page> {
   final Color marigold = const Color(0xFFECA400);
   final Color transparent = const Color(0x4DE3E3E3);
 
-  DateTime? startDateTime;
   DateTime? endDateTime;
   DateTime? startdate;
   DateTime? enddate;
@@ -578,79 +577,85 @@ class _user_item_pageState extends State<user_item_page> {
             ])));
   }
 
-  Future pickEndDateTime(BuildContext context) async {
-    final enddate = await pickEndDateTime(context);
-    if (enddate == null) return;
+  // Future pickEndDateTime(BuildContext context) async {
+  //   final endingDate = await pickEndDateTime(context);
+  //   if (endingDate == null) return;
 
-    final endtime = await pickEndTime(context);
-    if (endtime == null) return;
+  //   final endingTime = await pickEndTime(context);
+  //   if (endingTime == null) return;
 
-    setState(() {
-      endDateTime = DateTime(
-        enddate.year,
-        enddate.month,
-        enddate.day,
-        endtime.hour,
-        endtime.minute,
-      );
-    });
-  }
+  //   setState(() {
+  //     endDateTime = DateTime(
+  //       endingDate.year,
+  //       endingDate.month,
+  //       endingDate.day,
+  //       endingTime.hour,
+  //       endingTime.minute,
+  //     );
+  //   });
+  //   return endDateTime;
+  // }
 
-  Future pickStartDateTime(BuildContext context) async {
-    final startdate = await pickStartDate(context);
-    if (startdate == null) return;
+  // pickStartDateTime(BuildContext context) async {
+  //   // final startingDate = await pickStartDate(context);
+  //   // if (startingDate == null) return;
 
-    final starttime = await pickStartTime(context);
-    if (starttime == null) return;
+  //   // final startingTime = await pickStartTime(context);
+  //   // if (startingTime == null) return;
 
-    setState(() {
-      startDateTime = DateTime(startdate.year, startdate.month, startdate.day,
-          starttime.hour, starttime.minute);
-    });
-  }
+  //   setState(() {
+  //     startDateTime = DateTime(startDate.year, startingDate.month,
+  //         startingDate.day, startingTime.hour, startingTime.minute);
+  //   });
+  //   return startDateTime;
+  // }
 
-  Future pickStartDate(BuildContext context) async {
+  pickStartDate(BuildContext context) async {
     final initialDate = DateTime.now();
-    final newDate = await showDatePicker(
+    final startDate = await showDatePicker(
         context: context,
         initialDate: initialDate,
         firstDate: DateTime(DateTime.now().year - 5),
         lastDate: DateTime(DateTime.now().year + 5));
 
-    if (newDate == null) return;
+    if (startDate == null) return;
 
-    setState(() => startdate = newDate);
+    setState(() => startdate = startDate);
+    return startDate;
   }
 
   Future pickEndDate(BuildContext context) async {
     final initialDate = DateTime.now();
-    final newDate = await showDatePicker(
+    final endDate = await showDatePicker(
         context: context,
         initialDate: initialDate,
         firstDate: DateTime(DateTime.now().year - 5),
         lastDate: DateTime(DateTime.now().year + 5));
 
-    if (newDate == null) return;
+    if (endDate == null) return;
 
-    setState(() => enddate = newDate);
+    setState(() => enddate = endDate);
+    return endDate;
   }
 
   Future pickStartTime(BuildContext context) async {
     final initialTime = TimeOfDay(hour: 12, minute: 0);
-    final newTime = await showTimePicker(
+    final startTime = await showTimePicker(
         context: context, initialTime: starttime ?? initialTime);
 
-    if (newTime == null) return;
-    setState(() => starttime = newTime);
+    if (startTime == null) return;
+    setState(() => starttime = startTime);
+    return startTime;
   }
 
   Future pickEndTime(BuildContext context) async {
     final initialTime = TimeOfDay(hour: 12, minute: 0);
-    final newTime = await showTimePicker(
+    final endTime = await showTimePicker(
         context: context, initialTime: endtime ?? initialTime);
 
-    if (newTime == null) return;
-    setState(() => endtime = newTime);
+    if (endTime == null) return;
+    setState(() => endtime = endTime);
+    return endTime;
   }
 
   Future<void> addToBasket() async {
@@ -669,8 +674,14 @@ class _user_item_pageState extends State<user_item_page> {
       'product_enddate': Timestamp.fromDate(dateTime2),
       'product_starttime': '$initialValue1',
       'product_endtime': '$initialValue2',
-      'startDateTime': Timestamp.fromDate(startDateTime!),
-      'endDateTime': Timestamp.fromDate(endDateTime!)
+      'startDateTime': Timestamp.fromDate(DateTime(
+          startdate!.year,
+          startdate!.month,
+          startdate!.day,
+          starttime!.hour,
+          starttime!.minute)),
+      'endDateTime': Timestamp.fromDate(DateTime(enddate!.year, enddate!.month,
+          enddate!.day, endtime!.hour, endtime!.minute)),
     });
   }
 }
