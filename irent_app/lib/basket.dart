@@ -409,7 +409,9 @@ class BasketDataModel {
       product_startdate = "",
       product_enddate = "",
       product_starttime = "",
-      product_endtime = "";
+      product_endtime = "",
+      product_startDateTime = "",
+      product_endDateTime = "";
 
   BasketDataModel();
   Map<String, dynamic> toJson() => {
@@ -423,6 +425,8 @@ class BasketDataModel {
         'product_enddate': product_enddate,
         'product_starttime': product_starttime,
         'product_endtime': product_endtime,
+        'product_startDateTime': product_startDateTime,
+        'product_endDateTime': product_endDateTime,
         // 'item_id': item_id,
       };
   BasketDataModel.fromSnapshot(snapshot)
@@ -435,5 +439,7 @@ class BasketDataModel {
         product_startdate = snapshot.data()['product_startdate'],
         product_enddate = snapshot.data()['product_enddate'],
         product_starttime = snapshot.data()['product_starttime'],
-        product_endtime = snapshot.data()['product_endtime'];
+        product_endtime = snapshot.data()['product_endtime'],
+        product_startDateTime = snapshot.data()['startDateTime'],
+        product_endDateTime = snapshot.data()['endDateTime'];
 }
