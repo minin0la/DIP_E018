@@ -225,8 +225,10 @@ class _AdminUserFeedbackPageState extends State<AdminUserFeedbackPage> {
     var data = await FirebaseFirestore.instance.collection('feedback').get();
 
     setState(() {
-      userFeedbacks = List.from(
-          data.docs.map((doc) => FeedbackDataModel.fromSnapshot(doc)));
+      userFeedbacks =
+          List.from(data.docs.map((doc) => FeedbackDataModel.fromSnapshot(doc)))
+              .reversed
+              .toList();
       // storeData = newstores;
     });
   }
