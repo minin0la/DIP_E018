@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'app_icons.dart';
-import 'constants.dart';
-import 'user_bookings.dart';
-import 'return_barcode.dart';
-import 'extend.dart';
-
-import 'dart:ffi';
 import 'package:flutter/widgets.dart';
+
+import 'constants.dart';
+import 'extend.dart';
+import 'return_barcode.dart';
+import 'user_bookings.dart';
 
 class bookings_details extends StatelessWidget {
   final Color white = const Color(0xFFFBFBFF);
