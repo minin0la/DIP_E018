@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -84,7 +86,7 @@ class _user_item_pageState extends State<user_item_page> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
                 image: DecorationImage(
-                    image: AssetImage(widget.itemDataModel.displayPicture),
+                    image: NetworkImage(widget.itemDataModel.displayPicture),
                     colorFilter: new ColorFilter.mode(
                         Color.fromRGBO(129, 164, 205, 0.5), BlendMode.lighten),
                     fit: BoxFit.cover)),
@@ -122,7 +124,7 @@ class _user_item_pageState extends State<user_item_page> {
               Container(
                 padding: const EdgeInsets.only(left: 20),
                 child: Text(
-                  "${widget.itemDataModel.productCategory}",
+                  "${widget.itemDataModel.product_category}",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     color: const Color(0xFF001D4A),
@@ -140,7 +142,7 @@ class _user_item_pageState extends State<user_item_page> {
               Container(
                 padding: const EdgeInsets.only(left: 20),
                 child: Text(
-                  "\$${widget.itemDataModel.pricePerHour} / Hour",
+                  "\$${widget.itemDataModel.pricePerhour} / Hour",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     color: const Color(0xFF001D4A),
@@ -498,25 +500,33 @@ class _user_item_pageState extends State<user_item_page> {
                               ),
                             )),
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => basket(
-                                    product_count: '$_count',
-                                    product_displayPicture:
-                                        widget.itemDataModel.displayPicture,
-                                    product_name: widget.itemDataModel.name,
-                                    product_category:
-                                        widget.itemDataModel.productCategory,
-                                    product_price:
-                                        widget.itemDataModel.pricePerHour,
-                                    product_startdate:
-                                        '${dateTime1.day}/${dateTime1.month}/${dateTime1.year}',
-                                    product_enddate:
-                                        '${dateTime2.day}/${dateTime2.month}/${dateTime2.year}',
-                                    product_starttime: '$initialValue1',
-                                    product_endtime: '$initialValue2')),
-                          );
+                          addToBasket().then((value) => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => basket())));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => basket()));
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //       builder: (context) => basket(
+                          //           product_count: '$_count',
+                          //           product_displayPicture:
+                          //               widget.itemDataModel.displayPicture,
+                          //           product_name: widget.itemDataModel.name,
+                          //           product_category:
+                          //               widget.itemDataModel.product_category,
+                          //           product_price:
+                          //               widget.itemDataModel.pricePerhour,
+                          //           product_startdate:
+                          //               '${dateTime1.day}/${dateTime1.month}/${dateTime1.year}',
+                          //           product_enddate:
+                          //               '${dateTime2.day}/${dateTime2.month}/${dateTime2.year}',
+                          //           product_starttime: '$initialValue1',
+                          //           product_endtime: '$initialValue2')),
+                          // );
                         },
                       ),
                     ],
@@ -524,6 +534,27 @@ class _user_item_pageState extends State<user_item_page> {
                 ]),
               )
             ])));
+  }
+
+  Future<void> addToBasket() async {
+    var userBasket = FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .collection("basket")
+        .doc(widget.itemDataModel.item_id);
+    return userBasket.set({
+      'product_count': '$_count',
+      'product_displayPicture': widget.itemDataModel.displayPicture,
+      'product_name': widget.itemDataModel.name,
+      'product_category': widget.itemDataModel.product_category,
+      'product_price': widget.itemDataModel.pricePerhour,
+      'product_startdate':
+          '${dateTime1.day}/${dateTime1.month}/${dateTime1.year}',
+      'product_enddate':
+          '${dateTime2.day}/${dateTime2.month}/${dateTime2.year}',
+      'product_starttime': '$initialValue1',
+      'product_endtime': '$initialValue2'
+    });
   }
 }
 

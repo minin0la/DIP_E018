@@ -1,48 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:irent_app/admin/admin_add_item_back.dart';
+import 'package:irent_app/admin/admin_constants.dart';
 import 'package:irent_app/admin/admin_edit_item.dart';
-
-import 'admin_add_item.dart';
+import 'package:irent_app/topup.dart';
+import 'package:intl/intl.dart';
+import 'package:irent_app/database.dart';
+import 'package:irent_app/user_item_page.dart';
+import 'package:irent_app/app_icons.dart';
+import 'package:irent_app/CategoriesScroller.dart';
 import 'admin_home.dart';
+import 'admin_add_item.dart';
 
-class AdminStoreItemsPage extends StatefulWidget {
-  final StoreDataModel storeDataModel;
-  AdminStoreItemsPage({Key? key, required this.storeDataModel})
-      : super(key: key);
-
-  @override
-  State<AdminStoreItemsPage> createState() => _AdminStoreItemsPageState();
-}
-
-class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
+class AdminStoreItemsPageBack extends StatelessWidget {
   final Color white = const Color(0xFFFBFBFF);
-
   final Color oxford = const Color(0xFF001D4A);
-
   final Color indigo = const Color(0xFF27476E);
-
   final Color aliceblue = const Color(0xFF81A4CD);
-
   final Color iceberg = const Color(0xFFDBE4EE);
-
   final Color marigold = const Color(0xFFECA400);
-
   final Color transparent = const Color(0x4DE3E3E3);
 
-  List theitems = [];
-  List thecatagories = [];
-
-  final TextEditingController _newcategoryfield = TextEditingController();
+  final String theIndex;
+  AdminStoreItemsPageBack({Key? key, required this.theIndex}) : super(key: key);
 
   @override
   bool closeTopContainer = false;
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    getItems();
-    getCategory();
-  }
 
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -51,27 +35,44 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
     final double itemHeight = 100;
     final double itemWidth = 120;
 
-    final List items = theitems;
-    final List itemCat = thecatagories;
+    // final List itemCat = storeDataModel.itemCategories[0];
+    // final List items = storeDataModel.items[0];
 
     // final List<CatDataModel> catListData = List.generate(
     //     items.length,
     //     (index) => CatDataModel(
-    //           widget.storeDataModel.itemCategories,
+    //           storeDataModel.itemCategories,
     //         ));
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
-          widget.storeDataModel.storeName,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              color: oxford,
-              fontFamily: 'SF_Pro_Rounded',
-              fontSize: 25,
-              fontWeight: FontWeight.w500),
-        ),
+        title: StreamBuilder<DocumentSnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('stores')
+                .doc(theIndex)
+                .snapshots(),
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Something went wrong');
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text("Loading");
+              }
+              // DocumentSnapshot thedata = snapshot.data();
+              // String storename = snapshot.data(FieldPath(['storeName']));
+              return Text(
+                snapshot.data!['storeName'],
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: oxford,
+                    fontFamily: 'SF_Pro_Rounded',
+                    fontSize: 25,
+                    fontWeight: FontWeight.w500),
+              );
+            }),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
@@ -79,33 +80,30 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      floatingActionButton: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          FloatingActionButton(
-            backgroundColor: marigold,
-            heroTag: 'add_store',
-            onPressed: () {
-              if (theitems.length >= widget.storeDataModel.maxItems) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('All the boxes are occupied')));
-              } else {
+      //ENABLE BACK
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            FloatingActionButton(
+              backgroundColor: marigold,
+              heroTag: 'add_store',
+              onPressed: () {
                 Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AdminAddItemPage(
-                                storeDataModel: widget.storeDataModel,
-                                catDataModel: itemCat)))
-                    .then((value) => getItems());
-              }
-            },
-            child: Icon(
-              Icons.add,
-              size: 30,
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            AdminAddItemPageBack(theIndex: theIndex)));
+              },
+              child: Icon(
+                Icons.add,
+                size: 30,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       body: Container(
         color: white,
@@ -156,90 +154,73 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
                 ),
               ),
             ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 4,
-                  child: Container(
-                    width: 126,
-                    height: 30,
-                    margin: EdgeInsets.only(left: 30.0, top: 10.0, bottom: 20),
-                    child: Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Text(
-                        'Categories',
-                        style: TextStyle(
-                            color: oxford,
-                            fontFamily: 'SF Pro Rounded',
-                            fontSize: 25,
-                            fontWeight: FontWeight.normal,
-                            height: 1),
+            Expanded(
+              flex: 1,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: Container(
+                      width: 126,
+                      height: 35,
+                      margin:
+                          EdgeInsets.only(left: 30.0, top: 10.0, bottom: 20),
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Text(
+                          'Categories',
+                          style: TextStyle(
+                              color: oxford,
+                              fontFamily: 'SF Pro Rounded',
+                              fontSize: 25,
+                              fontWeight: FontWeight.normal,
+                              height: 1),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: TextButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return _addCategoryDialog(context: context);
-                            },
-                          );
-                        },
-                        child: Icon(
-                          Icons.add,
-                          size: 30,
-                          color: oxford,
-                        )),
+                  Expanded(
+                    flex: 1,
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: TextButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return _addCategoryDialog(context: context);
+                              },
+                            );
+                          },
+                          child: Icon(
+                            Icons.add,
+                            size: 30,
+                            color: oxford,
+                          )),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            Container(
-                height: 90,
-                padding: EdgeInsets.only(left: 30, right: 30),
-                child: _addCategories(context: context, category: itemCat)),
+            //ENABLE BACK
+            // Expanded(
+            //     flex: 2,
+            //     child: Container(
+            //         padding: EdgeInsets.only(left: 30, right: 30),
+            //         child:
+            //
+            ////ENABLE BACK       _addCategories(context: context, category: itemCat))),
             Expanded(
               flex: 9,
               child: Container(
                   width: MediaQuery.of(context).size.width,
                   padding: const EdgeInsets.only(left: 5, right: 5),
-                  child: _productDetailsCard(
-                      context: context, itemList: items, itemCat: itemCat)),
+                  child: _productDetailsCard(context: context)),
             ),
           ],
         ),
       ),
     );
-  }
-
-  Future<void> getCategory() async {
-    var selectcategory = await FirebaseFirestore.instance
-        .collection('stores')
-        .doc(widget.storeDataModel.storeId)
-        .get();
-    setState(() {
-      thecatagories = selectcategory.data()!['itemCategories'];
-    });
-  }
-
-  Future getItems() async {
-    var data = await FirebaseFirestore.instance
-        .collection('stores')
-        .doc(widget.storeDataModel.storeId)
-        .collection('items')
-        .get();
-
-    setState(() {
-      theitems =
-          List.from(data.docs.map((doc) => ItemDataModel.fromSnapshot(doc)));
-      // storeData = newstores;
-    });
   }
 
   Widget _addCategories(
@@ -304,9 +285,7 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
                             context: context,
                             builder: (BuildContext context) {
                               return _removeDialog(
-                                  context: context,
-                                  type: 'category',
-                                  category_name: category[index]);
+                                  context: context, type: 'category');
                             },
                           );
                         },
@@ -336,14 +315,11 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
         });
   }
 
-  Widget _productDetailsCard(
-      {required BuildContext context,
-      required List itemList,
-      required List itemCat}) {
+  Widget _productDetailsCard({required BuildContext context}) {
     // final List<ItemDataModel> itemListData = List.generate(
     //     itemList.length,
     //     (index) => ItemDataModel(
-    //           widget.storeDataModel.itemCategories,
+    //           storeDataModel.itemCategories,
     //           '${itemList[index]['id']}',
     //           '${itemList[index]['name']}',
     //           '${itemList[index]['product_category']}',
@@ -353,77 +329,90 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
     //         ));
     return Padding(
       padding: const EdgeInsets.all(15),
-      child: GridView.builder(
-          shrinkWrap: true,
-          physics: ScrollPhysics(),
-          itemCount: itemList.length,
-          gridDelegate:
-              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-          itemBuilder: (context, index) {
-            // for (var item in itemListData) {
-            return Stack(children: [
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AdminEditItemPage(
-                                    store_id: widget.storeDataModel.storeId,
-                                    itemDataModel: theitems[index],
-                                    itemCat: itemCat,
-                                  )),
-                        ).then((value) => getItems());
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: NetworkImage(itemList[index].displayPicture),
-                            fit: BoxFit.cover,
+      child: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('stores')
+              .doc(theIndex)
+              .collection('items')
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return Text('Something went wrong');
+            }
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Text("Loading");
+            }
+            return GridView.builder(
+                shrinkWrap: true,
+                physics: ScrollPhysics(),
+                itemCount: snapshot.data!.docs.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2),
+                itemBuilder: (context, index) {
+                  DocumentSnapshot thedata = snapshot.data!.docs[index];
+                  // List thedata = user;
+                  // for (var item in thedata) {
+                  return Stack(children: [
+                    Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 10),
+                        child: GestureDetector(
+                            //ENABLE THIS
+                            // onTap: () {
+                            //   Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => AdminEditItemPage(
+                            //             itemDataModel: itemListData[index])),
+                            //   );
+                            // },
+                            child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: DecorationImage(
+                              image: NetworkImage(thedata['displayPicture']),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ))),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: InkWell(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return _removeDialog(
+                                    context: context, type: 'item');
+                              },
+                            );
+                          },
+                          child: SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: Container(
+                              child: Text(
+                                '-',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: white, fontSize: 20),
+                              ),
+                              decoration: BoxDecoration(
+                                color: indigo,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
                           ),
                         ),
-                      ))),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: InkWell(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return _removeDialog(
-                              context: context,
-                              type: 'item',
-                              item_id: theitems[index].item_id,
-                              box_id: theitems[index].box_id);
-                        },
-                      );
-                    },
-                    child: SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: Container(
-                        child: Text(
-                          '-',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: white, fontSize: 20),
-                        ),
-                        decoration: BoxDecoration(
-                          color: indigo,
-                          shape: BoxShape.circle,
-                        ),
                       ),
-                    ),
-                  ),
-                ),
-              )
-            ]);
-            // }
-            // throw 'No Data Found';
+                    )
+                  ]);
+                  // }
+                  // throw 'No Data Found';
+                });
           }),
     );
   }
@@ -461,7 +450,6 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 5),
                       child: TextField(
-                        controller: _newcategoryfield,
                         decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                               borderRadius:
@@ -507,14 +495,7 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
                     width: 100,
                     height: 30,
                     child: ElevatedButton(
-                      onPressed: () {
-                        if (_newcategoryfield.text != "") {
-                          addCategory(_newcategoryfield.text)
-                              .then((value) =>
-                                  {getCategory(), Navigator.pop(context)})
-                              .catchError((onError) => {print(onError)});
-                        }
-                      },
+                      onPressed: () {},
                       child: Text(
                         'Add',
                         style: TextStyle(
@@ -539,12 +520,7 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
     );
   }
 
-  Widget _removeDialog(
-      {required BuildContext context,
-      required String type,
-      String item_id = "",
-      String category_name = "",
-      String box_id = ""}) {
+  Widget _removeDialog({required BuildContext context, required String type}) {
     return Dialog(
       alignment: Alignment.center,
       backgroundColor: iceberg,
@@ -599,20 +575,7 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
                       width: 100,
                       height: 30,
                       child: ElevatedButton(
-                        onPressed: () {
-                          if (type == "item" && item_id != "") {
-                            deleteItem(item_id, box_id)
-                                .then((value) =>
-                                    {getItems(), Navigator.pop(context)})
-                                .catchError((onError) => {print(onError)});
-                          } else if (type == 'category' &&
-                              category_name != "") {
-                            deleteCategory(category_name)
-                                .then((value) =>
-                                    {getCategory(), Navigator.pop(context)})
-                                .catchError((onError) => {print(onError)});
-                          }
-                        },
+                        onPressed: () {},
                         child: Text(
                           'Yes',
                           style: TextStyle(
@@ -637,92 +600,19 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
       ),
     );
   }
-
-  Future<void> deleteItem(item_id, box_id) {
-    var emptybox = FirebaseFirestore.instance
-        .collection('stores')
-        .doc(widget.storeDataModel.storeId)
-        .collection("boxes")
-        .doc(box_id)
-        .update({
-      'empty': true,
-      'item_id': "",
-    });
-    CollectionReference selectitem = FirebaseFirestore.instance
-        .collection('stores')
-        .doc(widget.storeDataModel.storeId)
-        .collection('items');
-    return selectitem.doc(item_id).delete();
-  }
-
-  Future<void> addCategory(category_name) {
-    DocumentReference selectcategory = FirebaseFirestore.instance
-        .collection('stores')
-        .doc(widget.storeDataModel.storeId);
-    return selectcategory.update({
-      "itemCategories": FieldValue.arrayUnion([category_name])
-    });
-  }
-
-  Future<void> deleteCategory(category_name) {
-    DocumentReference selectcategory = FirebaseFirestore.instance
-        .collection('stores')
-        .doc(widget.storeDataModel.storeId);
-    return selectcategory.update({
-      "itemCategories": FieldValue.arrayRemove([category_name])
-    });
-  }
 }
 
-// class ItemDataModel {
-//   final List itemCategories;
-//   final String id,
-//       name,
-//       productCategory,
-//       pricePerHour,
-//       quantity,
-//       displayPicture;
-
-//   ItemDataModel(this.itemCategories, this.id, this.name, this.productCategory,
-//       this.pricePerHour, this.quantity, this.displayPicture);
-// }
-
 class ItemDataModel {
-  String displayPicture = "",
-      name = "",
-      pricePerhour = "",
-      product_category = "",
-      quantity = "",
-      item_id = "",
-      box_id = "";
-  int box_number = 0;
-  // item_id = "";
+  final List itemCategories;
+  final String id,
+      name,
+      productCategory,
+      pricePerHour,
+      quantity,
+      displayPicture;
 
-  ItemDataModel();
-  Map<String, dynamic> toJson() => {
-        'displayPicture': displayPicture,
-        'name': name,
-        'pricePerhour': pricePerhour,
-        'product_category': product_category,
-        'quantity': quantity,
-        'item_id': item_id,
-        'box_id': box_id,
-        'box_number': box_number,
-        // 'item_id': item_id,
-      };
-  ItemDataModel.fromSnapshot(snapshot)
-      : displayPicture = snapshot.data()['displayPicture'],
-        name = snapshot.data()['name'],
-        pricePerhour = snapshot.data()['pricePerhour'],
-        product_category = snapshot.data()['product_category'],
-        quantity = snapshot.data()['quantity'],
-        item_id = snapshot.id,
-        box_id = snapshot.data()['box_id'],
-        box_number = snapshot.data()['box_number'];
-
-  // item_id = snapshot.data()['item_id'];
-  // quantity = [snapshot.data()['itemCategories']];
-  // items = [snapshot.data()['items']];
+  ItemDataModel(this.itemCategories, this.id, this.name, this.productCategory,
+      this.pricePerHour, this.quantity, this.displayPicture);
 }
 
 class CatDataModel {

@@ -1,21 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:irent_app/admin/admin_constants.dart';
+import 'package:irent_app/admin/admin_store_items_back.dart';
 import 'package:irent_app/user_store_uroc.dart';
 import 'package:irent_app/admin/admin_add_store.dart';
 import 'dart:ui';
 import '../app_icons.dart';
 import 'package:irent_app/admin/admin_add_store.dart';
-import 'package:irent_app/user_store_items.dart';
+import 'admin_store_items.dart';
 
-class user_home extends StatefulWidget {
-  const user_home({Key? key}) : super(key: key);
+class admin_home_back extends StatefulWidget {
+  const admin_home_back({Key? key}) : super(key: key);
 
   @override
-  _user_homeState createState() => _user_homeState();
+  _admin_home_backState createState() => _admin_home_backState();
 }
 
-class _user_homeState extends State<user_home> {
+class _admin_home_backState extends State<admin_home_back> {
   final Color white = const Color(0xFFFBFBFF);
   final Color oxford = const Color(0xFF001D4A);
   final Color aliceblue = const Color(0xFF81A4CD);
@@ -23,27 +24,42 @@ class _user_homeState extends State<user_home> {
   final Color marigold = const Color(0xFFECA400);
   final Color transparent = const Color(0x4DE3E3E3);
 
-  List thestores = [];
-
-  // final List<StoreDataModel> storeData = List.generate(
-  //     stores.length,
-  //     (index) => StoreDataModel(
-  //           '${stores[index]['storeName']}',
-  //           '${stores[index]['storeAddress']}',
-  //           '${stores[index]['category']}',
-  //           '${stores[index]['storeBanner']}',
-  //           {stores[index]['itemCategories']}.toList(),
-  //           {stores[index]['items']}.toList(),
-  //         ));
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    getStore();
-  }
+  final List<StoreDataModel> storeData = List.generate(
+      stores.length,
+      (index) => StoreDataModel(
+            '${stores[index]['storeName']}',
+            '${stores[index]['storeAddress']}',
+            '${stores[index]['category']}',
+            '${stores[index]['storeBanner']}',
+            {stores[index]['itemCategories']}.toList(),
+            {stores[index]['items']}.toList(),
+          ));
+  var storelists = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              backgroundColor: marigold,
+              heroTag: 'add_store',
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AddStorePage()));
+              },
+              child: Icon(
+                Icons.add,
+                size: 30,
+              ),
+            ),
+          ],
+        ),
+      ),
       body: Column(
         children: [
           Expanded(
@@ -77,19 +93,58 @@ class _user_homeState extends State<user_home> {
             child: SingleChildScrollView(
               child: Container(
                 margin: EdgeInsets.only(left: 35, right: 35),
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: thestores.length,
-                    itemBuilder: (context, index) {
-                      for (var item in stores) {
-                        return _storeCard(
-                            index: index,
-                            storeName: thestores[index].storeName,
-                            storeAddress: thestores[index].storeAddress,
-                            category: thestores[index].category,
-                            storeBanner: thestores[index].storeBanner);
+                child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('stores')
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Something went wrong');
                       }
-                      throw 'No Data Found';
+
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text("Loading");
+                      }
+                      // snapshot.data!.docs.map((DocumentSnapshot document) {
+                      //   Map<String, dynamic> data =
+                      //       document.data()! as Map<String, dynamic>;
+                      //   data.forEach((key, value) {
+                      //     storelists.add(data);
+                      //   });
+                      // });
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            DocumentSnapshot thedata =
+                                snapshot.data!.docs[index];
+                            // print(thedata);
+                            return _storeCard(
+                                index: thedata.id,
+                                storeName: thedata['storeName'],
+                                storeAddress: thedata['storeAddress'],
+                                category: thedata['category'],
+                                storeBanner: thedata['storeBanner']);
+
+                            // throw 'No Data Found';
+                          });
+                      // return ListView.builder(
+                      //     shrinkWrap: true,
+                      //     itemCount: storelists.length,
+                      //     itemBuilder: (context, index) {
+                      //       for (var item in storelists) {
+                      //         return _storeCard(
+                      //             index: index,
+                      //             storeName: storelists[index]['storeName'],
+                      //             storeAddress: storelists[index]
+                      //                 ['storeAddress'],
+                      //             category: storelists[index]['category'],
+                      //             storeBanner: storelists[index]
+                      //                 ['storeBanner']);
+                      //       }
+                      //       throw 'No Data Found';
+                      //     });
                     }),
               ),
             ),
@@ -168,7 +223,7 @@ class _user_homeState extends State<user_home> {
               ],
               borderRadius: BorderRadius.circular(10),
               image: new DecorationImage(
-                image: NetworkImage(storeBanner),
+                image: AssetImage(storeBanner),
                 colorFilter: new ColorFilter.mode(
                     Color.fromRGBO(0, 29, 74, 0.6000000238418579),
                     BlendMode.hardLight),
@@ -180,57 +235,17 @@ class _user_homeState extends State<user_home> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  UserStoreItemsPage(storeDataModel: thestores[index])),
+              builder: (context) => AdminStoreItemsPageBack(theIndex: index)),
         );
       },
     );
   }
-
-  Future getStore() async {
-    var data = await FirebaseFirestore.instance.collection('stores').get();
-
-    setState(() {
-      thestores =
-          List.from(data.docs.map((doc) => StoreDataModel.fromSnapshot(doc)));
-      // storeData = newstores;
-    });
-  }
 }
 
-// class StoreDataModel {
-//   final String storeName, storeAddress, category, storeBanner;
-//   final List itemCategories, items;
-
-//   StoreDataModel(this.storeName, this.storeAddress, this.category,
-//       this.storeBanner, this.itemCategories, this.items);
-// }
 class StoreDataModel {
-  String storeId = "",
-      storeName = "",
-      storeAddress = "",
-      category = "",
-      storeBanner = "";
+  final String storeName, storeAddress, category, storeBanner;
+  final List itemCategories, items;
 
-  int maxItems = 0;
-  List itemCategories = [], items = [];
-
-  StoreDataModel();
-  Map<String, dynamic> toJson() => {
-        'storeId': storeId,
-        'storeName': storeName,
-        'storeAddress': storeAddress,
-        'category': category,
-        'storeBanner': storeBanner,
-        'itemCategories': itemCategories,
-        'maxItems': maxItems
-      };
-  StoreDataModel.fromSnapshot(snapshot)
-      : storeId = snapshot.id,
-        storeName = snapshot.data()['storeName'],
-        storeAddress = snapshot.data()['storeAddress'],
-        category = snapshot.data()['category'],
-        storeBanner = snapshot.data()['storeBanner'],
-        itemCategories = [snapshot.data()['itemCategories']],
-        maxItems = snapshot.data()['maxItems'];
+  StoreDataModel(this.storeName, this.storeAddress, this.category,
+      this.storeBanner, this.itemCategories, this.items);
 }

@@ -11,18 +11,38 @@ import 'package:irent_app/app_icons.dart';
 import 'package:irent_app/CategoriesScroller.dart';
 import 'user_home.dart';
 
-class UserStoreItemsPage extends StatelessWidget {
-  final Color white = const Color(0xFFFBFBFF);
-  final Color oxford = const Color(0xFF001D4A);
-  final Color indigo = const Color(0xFF27476E);
-  final Color aliceblue = const Color(0xFF81A4CD);
-  final Color iceberg = const Color(0xFFDBE4EE);
-  final Color marigold = const Color(0xFFECA400);
-  final Color transparent = const Color(0x4DE3E3E3);
-
+class UserStoreItemsPage extends StatefulWidget {
   final StoreDataModel storeDataModel;
   UserStoreItemsPage({Key? key, required this.storeDataModel})
       : super(key: key);
+
+  @override
+  State<UserStoreItemsPage> createState() => _UserStoreItemsPageState();
+}
+
+class _UserStoreItemsPageState extends State<UserStoreItemsPage> {
+  final Color white = const Color(0xFFFBFBFF);
+
+  final Color oxford = const Color(0xFF001D4A);
+
+  final Color indigo = const Color(0xFF27476E);
+
+  final Color aliceblue = const Color(0xFF81A4CD);
+
+  final Color iceberg = const Color(0xFFDBE4EE);
+
+  final Color marigold = const Color(0xFFECA400);
+
+  final Color transparent = const Color(0x4DE3E3E3);
+
+  List theitems = [];
+  List thecatagories = [];
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getItems();
+    getCategory();
+  }
 
   @override
   bool closeTopContainer = false;
@@ -34,14 +54,14 @@ class UserStoreItemsPage extends StatelessWidget {
     final double itemHeight = 100;
     final double itemWidth = 120;
 
-    final List itemCat = storeDataModel.itemCategories[0];
-    final List items = storeDataModel.items[0];
+    final List items = theitems;
+    final List itemCat = thecatagories;
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          storeDataModel.storeName,
+          widget.storeDataModel.storeName,
           textAlign: TextAlign.center,
           style: TextStyle(
               color: oxford,
@@ -216,17 +236,17 @@ class UserStoreItemsPage extends StatelessWidget {
 
   Widget _productDetailsCard(
       {required BuildContext context, required List itemList}) {
-    final List<ItemDataModel> itemListData = List.generate(
-        itemList.length,
-        (index) => ItemDataModel(
-              storeDataModel.itemCategories,
-              '${itemList[index]['id']}',
-              '${itemList[index]['name']}',
-              '${itemList[index]['product_category']}',
-              '${itemList[index]['pricePerhour']}',
-              '${itemList[index]['quantity']}',
-              '${itemList[index]['displayPicture']}',
-            ));
+    // final List<ItemDataModel> itemListData = List.generate(
+    //     itemList.length,
+    //     (index) => ItemDataModel(
+    //           widget.storeDataModel.itemCategories,
+    //           '${itemList[index]['id']}',
+    //           '${itemList[index]['name']}',
+    //           '${itemList[index]['product_category']}',
+    //           '${itemList[index]['pricePerhour']}',
+    //           '${itemList[index]['quantity']}',
+    //           '${itemList[index]['displayPicture']}',
+    //         ));
     return Padding(
       padding: const EdgeInsets.all(15),
       child: GridView.builder(
@@ -236,32 +256,31 @@ class UserStoreItemsPage extends StatelessWidget {
           gridDelegate:
               SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
           itemBuilder: (context, index) {
-            for (var item in itemListData) {
-              return Stack(children: [
-                Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 10),
-                    child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => user_item_page(
-                                      itemDataModel: itemListData[index])));
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image:
-                                  AssetImage(itemList[index]['displayPicture']),
-                              fit: BoxFit.cover,
-                            ),
+            // for (var item in itemListData) {
+            return Stack(children: [
+              Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => user_item_page(
+                                    itemDataModel: theitems[index])));
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage(itemList[index].displayPicture),
+                            fit: BoxFit.cover,
                           ),
-                        ))),
-              ]);
-            }
-            throw 'No Data Found';
+                        ),
+                      ))),
+            ]);
+            // }
+            // throw 'No Data Found';
           }),
     );
   }
@@ -476,17 +495,68 @@ class UserStoreItemsPage extends StatelessWidget {
           )),
     ]);
   }
+
+  Future<void> getCategory() async {
+    var selectcategory = await FirebaseFirestore.instance
+        .collection('stores')
+        .doc(widget.storeDataModel.storeId)
+        .get();
+    setState(() {
+      thecatagories = selectcategory.data()!['itemCategories'];
+    });
+  }
+
+  Future getItems() async {
+    var data = await FirebaseFirestore.instance
+        .collection('stores')
+        .doc(widget.storeDataModel.storeId)
+        .collection('items')
+        .get();
+
+    setState(() {
+      theitems =
+          List.from(data.docs.map((doc) => ItemDataModel.fromSnapshot(doc)));
+      // storeData = newstores;
+    });
+  }
 }
 
 class ItemDataModel {
-  final List itemCategories;
-  final String id,
-      name,
-      productCategory,
-      pricePerHour,
-      quantity,
-      displayPicture;
+  String displayPicture = "",
+      name = "",
+      pricePerhour = "",
+      product_category = "",
+      quantity = "",
+      item_id = "",
+      box_id = "";
+  int box_number = 0;
+  // item_id = "";
 
-  ItemDataModel(this.itemCategories, this.id, this.name, this.productCategory,
-      this.pricePerHour, this.quantity, this.displayPicture);
+  ItemDataModel();
+  Map<String, dynamic> toJson() => {
+        'displayPicture': displayPicture,
+        'name': name,
+        'pricePerhour': pricePerhour,
+        'product_category': product_category,
+        'quantity': quantity,
+        'item_id': item_id,
+        'box_id': box_id,
+        'box_number': box_number,
+        // 'item_id': item_id,
+      };
+  ItemDataModel.fromSnapshot(snapshot)
+      : displayPicture = snapshot.data()['displayPicture'],
+        name = snapshot.data()['name'],
+        pricePerhour = snapshot.data()['pricePerhour'],
+        product_category = snapshot.data()['product_category'],
+        quantity = snapshot.data()['quantity'],
+        item_id = snapshot.id,
+        box_id = snapshot.data()['box_id'],
+        box_number = snapshot.data()['box_number'];
+}
+
+class CatDataModel {
+  final List itemCategories;
+
+  CatDataModel(this.itemCategories);
 }

@@ -135,28 +135,27 @@ class _admin_transactionsState extends State<admin_transactions> {
                 ],
               ),
               Divider(color: iceberg, thickness: 2),
-              Container(
-                height: screenheight * 0.42,
-                child: Container(
-                  child: ListView.builder(
-                      itemCount: transactionData.length,
-                      itemBuilder: (context, index) {
-                        for (var trans in transactionData) {
-                          return _transaction(
-                              context: context,
-                              ticketNumber: transactionData[index]
-                                      ['ticketNumber']
-                                  .toString(),
-                              paymentDate: transactionData[index]['paymentDate']
-                                  .toString(),
-                              totalAmount: transactionData[index]['totalAmount']
-                                  .toString());
-                        }
-                        throw 'No Data Found';
-                      }),
-                ),
-              )
             ]),
+            Expanded(
+              //height: screenheight * 0.42,
+              child: Container(
+                child: ListView.builder(
+                    itemCount: transactionData.length,
+                    itemBuilder: (context, index) {
+                      for (var trans in transactionData) {
+                        return _transaction(
+                            context: context,
+                            ticketNumber: transactionData[index]['ticketNumber']
+                                .toString(),
+                            paymentDate: transactionData[index]['paymentDate']
+                                .toString(),
+                            totalAmount: transactionData[index]['totalAmount']
+                                .toString());
+                      }
+                      throw 'No Data Found';
+                    }),
+              ),
+            )
           ],
         ),
       ),

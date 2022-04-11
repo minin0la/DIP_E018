@@ -35,9 +35,6 @@ class LoginRegisterScreen extends StatelessWidget {
             padding: const EdgeInsets.all(50.0),
             child: Column(
               children: [
-                SizedBox(
-                  height: screenheight * 0.01,
-                ),
                 Container(
                   decoration: BoxDecoration(
                       border: Border.all(
@@ -105,7 +102,7 @@ class LoginRegisterScreen extends StatelessWidget {
                               letterSpacing: 2),
                         ),
                         SizedBox(
-                          height: screenheight * 0.5,
+                          height: screenheight * 0.45,
                         ),
                         ButtonTheme(
                           minWidth: 300,
