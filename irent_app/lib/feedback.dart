@@ -40,6 +40,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
   List theitems = [];
   var dropdownValueStore;
   var dropdownValueItem;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -207,6 +208,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                           padding: const EdgeInsets.all(15),
                           child: SingleChildScrollView(
                             child: TextField(
+                                controller: _messageField,
                                 keyboardType: TextInputType.multiline,
                                 minLines: 10,
                                 maxLines: 10,
@@ -225,7 +227,24 @@ class _FeedbackPageState extends State<FeedbackPage> {
                         width: 160,
                         height: 50,
                         child: ElevatedButton(
-                          onPressed: () async {},
+                          onPressed: () async {
+                            if (_messageField.text.isNotEmpty &&
+                                dropdownValueStore != null &&
+                                dropdownValueItem != null) {
+                              sendFeedback().then((value) => {
+                                    Navigator.pop(context),
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Thank you for your feedback.')))
+                                  });
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text('All field are required')));
+                            }
+                            ;
+                          },
                           child: Text(
                             'Save',
                             style: TextStyle(
@@ -307,6 +326,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
               dropdownValueStore = newValue!;
             });
             getItems();
+            dropdownValueItem = null;
           },
           items: items.map<DropdownMenuItem<String>>((value) {
             return DropdownMenuItem<String>(
@@ -394,6 +414,34 @@ class _FeedbackPageState extends State<FeedbackPage> {
       theitems =
           List.from(data.docs.map((doc) => ItemDataModel.fromSnapshot(doc)));
       // storeData = newstores;
+    });
+  }
+
+  Future sendFeedback() async {
+    var transactions =
+        await FirebaseFirestore.instance.collection('feedback').get();
+    var count = transactions.docs.length + 1;
+    var data = FirebaseFirestore.instance.collection('feedback');
+    var item = theitems
+        .where((element) => element.name == dropdownValueItem)
+        .toList()[0];
+    var type;
+    if (_feedbackType!.index == 0) {
+      type = "fault";
+    } else if (_feedbackType!.index == 1) {
+      type = "suggestion";
+    }
+    return data.doc(count.toString()).set({
+      "ticketNumber": count,
+      "submissionTime": DateTime.now(),
+      "feedbackType": type,
+      "shop": dropdownValueStore,
+      "itemName": dropdownValueItem,
+      "item_id": item.item_id,
+      "comment": _messageField.text,
+      "user": FirebaseAuth.instance.currentUser!.email,
+      "displayPicture": item.displayPicture,
+      "resolved": false
     });
   }
 }

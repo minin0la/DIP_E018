@@ -1,16 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
-import 'package:irent_app/app_icons.dart';
-import 'package:irent_app/switch_nav.dart';
-import '../homepage.dart';
-import '../constants.dart';
-import 'admin_constants.dart';
+
 import 'admin_bookings.dart';
 
 class BookingDetailsPage extends StatelessWidget {
