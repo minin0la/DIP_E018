@@ -529,7 +529,9 @@ class ItemDataModel {
       product_category = "",
       quantity = "",
       item_id = "",
-      box_id = "";
+      box_id = "",
+      store_name = "",
+      store_id = "";
   int box_number = 0;
   // item_id = "";
 
@@ -543,6 +545,8 @@ class ItemDataModel {
         'item_id': item_id,
         'box_id': box_id,
         'box_number': box_number,
+        'store_name': store_name,
+        'store_id': store_id,
         // 'item_id': item_id,
       };
   ItemDataModel.fromSnapshot(snapshot)
@@ -553,7 +557,9 @@ class ItemDataModel {
         quantity = snapshot.data()['quantity'],
         item_id = snapshot.id,
         box_id = snapshot.data()['box_id'],
-        box_number = snapshot.data()['box_number'];
+        box_number = snapshot.data()['box_number'],
+        store_name = snapshot.data()['store_name'],
+        store_id = snapshot.data()['store_id'];
 }
 
 class CatDataModel {

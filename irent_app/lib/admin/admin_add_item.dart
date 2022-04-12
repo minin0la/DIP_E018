@@ -496,6 +496,8 @@ class _AdminAddItemPageState extends State<AdminAddItemPage> {
           'quantity': _qtyField.text,
           'box_number': theemptybox[0].box_number,
           'box_id': theemptybox[0].box_id,
+          'store_name': widget.storeDataModel.storeName,
+          'store_id': widget.storeDataModel.storeId,
         });
         //You might want to set this as the _auth.currentUser().photourl
 

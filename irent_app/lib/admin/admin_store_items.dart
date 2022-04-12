@@ -222,9 +222,11 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
     var selectcategory = await FirebaseFirestore.instance
         .collection('stores')
         .doc(widget.storeDataModel.storeId)
-        .get();
-    setState(() {
-      thecatagories = selectcategory.data()!['itemCategories'];
+        .snapshots()
+        .listen((data) {
+      setState(() {
+        thecatagories = data.data()!['itemCategories'];
+      });
     });
   }
 
@@ -512,8 +514,10 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
                       onPressed: () {
                         if (_newcategoryfield.text != "") {
                           addCategory(_newcategoryfield.text)
-                              .then((value) =>
-                                  {getCategory(), Navigator.pop(context)})
+                              .then((value) => {
+                                    // getCategory(),
+                                    Navigator.pop(context)
+                                  })
                               .catchError((onError) => {print(onError)});
                         }
                       },
@@ -612,8 +616,10 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
                           } else if (type == 'category' &&
                               category_name != "") {
                             deleteCategory(category_name)
-                                .then((value) =>
-                                    {getCategory(), Navigator.pop(context)})
+                                .then((value) => {
+                                      // getCategory(),
+                                      Navigator.pop(context)
+                                    })
                                 .catchError((onError) => {print(onError)});
                           }
                         },
@@ -698,7 +704,9 @@ class ItemDataModel {
       product_category = "",
       quantity = "",
       item_id = "",
-      box_id = "";
+      box_id = "",
+      store_name = "",
+      store_id = "";
   int box_number = 0;
   // item_id = "";
 
@@ -712,6 +720,8 @@ class ItemDataModel {
         'item_id': item_id,
         'box_id': box_id,
         'box_number': box_number,
+        'store_name': store_name,
+        'store_id': store_id,
         // 'item_id': item_id,
       };
   ItemDataModel.fromSnapshot(snapshot)
@@ -722,11 +732,9 @@ class ItemDataModel {
         quantity = snapshot.data()['quantity'],
         item_id = snapshot.id,
         box_id = snapshot.data()['box_id'],
-        box_number = snapshot.data()['box_number'];
-
-  // item_id = snapshot.data()['item_id'];
-  // quantity = [snapshot.data()['itemCategories']];
-  // items = [snapshot.data()['items']];
+        box_number = snapshot.data()['box_number'],
+        store_name = snapshot.data()['store_name'],
+        store_id = snapshot.data()['store_id'];
 }
 
 class CatDataModel {
