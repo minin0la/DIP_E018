@@ -95,7 +95,7 @@ class _user_payment_successfulState extends State<user_payment_successful> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
+                          Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: ((context) => user_bookings())));

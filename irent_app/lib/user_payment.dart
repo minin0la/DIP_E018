@@ -254,7 +254,8 @@ class _user_paymentState extends State<user_payment> {
         'displayPicture': eachDoc.product_displayPicture,
         'imgCapture': 'yes',
         'itemLoc': eachDoc.storeName,
-        'itemId': eachDoc.storeId,
+        'itemId': eachDoc.product_id,
+        'storeId': eachDoc.storeId,
         'name': eachDoc.product_name,
         'price': int.parse(eachDoc.product_price),
         'qty': int.parse(eachDoc.product_count),
@@ -263,6 +264,9 @@ class _user_paymentState extends State<user_payment> {
         'returned': 'yes',
         'user': FirebaseAuth.instance.currentUser!.email.toString(),
         'ticketNumber': count,
+        'status': "confirmed",
+        'box_id': eachDoc.product_box_id,
+        'box_number': eachDoc.product_box_number,
       });
       count++;
     }
@@ -587,6 +591,62 @@ showAlertDialog(BuildContext context) {
   );
 }
 
+// class BasketDataModel {
+//   String product_id = "",
+//       product_count = "",
+//       product_displayPicture = "",
+//       product_name = "",
+//       product_category = "",
+//       product_price = "",
+//       product_startdate = "",
+//       product_enddate = "",
+//       product_starttime = "",
+//       product_endtime = "",
+//       storeId = "",
+//       storeName = "";
+
+//   Timestamp product_startDateTime = Timestamp.now(),
+//       product_endDateTime = Timestamp.now();
+//   // ticket_number = "";
+
+//   BasketDataModel();
+//   Map<String, dynamic> toJson() => {
+//         'product_id': product_id,
+//         'product_count': product_count,
+//         'product_displayPicture': product_displayPicture,
+//         'product_name': product_name,
+//         'product_category': product_category,
+//         'product_price': product_price,
+//         'product_startdate': product_startdate,
+//         'product_enddate': product_enddate,
+//         'product_starttime': product_starttime,
+//         'product_endtime': product_endtime,
+//         'product_startDateTime': product_startDateTime.toString(),
+//         'product_endDateTime': product_endDateTime.toString(),
+//         'storeId': storeId,
+//         'storeName': storeName
+//         // 'ticket_number': ticket_number,
+//         // 'item_id': item_id,
+//       };
+//   BasketDataModel.fromSnapshot(snapshot)
+//       : product_id = snapshot.id,
+//         product_count = snapshot.data()['product_count'],
+//         product_displayPicture = snapshot.data()['product_displayPicture'],
+//         product_name = snapshot.data()['product_name'],
+//         product_category = snapshot.data()['product_category'],
+//         product_price = snapshot.data()['product_price'],
+//         product_startdate = snapshot.data()['product_startdate'].toString(),
+//         product_enddate = snapshot.data()['product_enddate'].toString(),
+//         product_starttime = snapshot.data()['product_starttime'],
+//         product_endtime = snapshot.data()['product_endtime'],
+//         product_startDateTime = snapshot.data()['startDateTime'],
+//         product_endDateTime = snapshot.data()['endDateTime'],
+//         storeName = snapshot.data()['storeName'],
+//         storeId = snapshot.data()['storeId'];
+
+//   // ticket_number = snapshot.data()['ticket_number'].toString();
+
+// }
 class BasketDataModel {
   String product_id = "",
       product_count = "",
@@ -599,7 +659,10 @@ class BasketDataModel {
       product_starttime = "",
       product_endtime = "",
       storeId = "",
-      storeName = "";
+      storeName = "",
+      product_box_id = "";
+
+  int product_box_number = 0;
 
   Timestamp product_startDateTime = Timestamp.now(),
       product_endDateTime = Timestamp.now();
@@ -620,7 +683,9 @@ class BasketDataModel {
         'product_startDateTime': product_startDateTime.toString(),
         'product_endDateTime': product_endDateTime.toString(),
         'storeId': storeId,
-        'storeName': storeName
+        'storeName': storeName,
+        'product_box_number': product_box_number,
+        'product_box_id': product_box_id,
         // 'ticket_number': ticket_number,
         // 'item_id': item_id,
       };
@@ -638,7 +703,9 @@ class BasketDataModel {
         product_startDateTime = snapshot.data()['startDateTime'],
         product_endDateTime = snapshot.data()['endDateTime'],
         storeName = snapshot.data()['storeName'],
-        storeId = snapshot.data()['storeId'];
+        storeId = snapshot.data()['storeId'],
+        product_box_number = snapshot.data()['box_number'],
+        product_box_id = snapshot.data()['box_id'];
 
   // ticket_number = snapshot.data()['ticket_number'].toString();
 

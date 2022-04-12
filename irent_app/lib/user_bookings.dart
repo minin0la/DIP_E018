@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:irent_app/collect_barcode.dart';
-import 'package:irent_app/constants.dart';
+// import 'package:irent_app/constants.dart';
 
 import 'app_icons.dart';
 import 'bookings_details.dart';
@@ -24,115 +24,108 @@ class _user_bookingsState extends State<user_bookings> {
   final Color iceberg = const Color(0xFFDBE4EE);
   final Color marigold = const Color(0xFFECA400);
   final Color transparent = const Color(0x4DE3E3E3);
-  List bookings = [];
+  // List bookings = [];
+  List ongoingBookings = [];
+  List confirmedBookings = [];
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    getBooking();
+    getBookingConfirmed();
+    getBookingOnGoing();
   }
-
-  // final List<BookingsDataModel> bookings = List.generate(
-  //     bookingsData.length,
-  //     (index) => BookingsDataModel(
-  //           '${bookingsData[index]['name']}',
-  //           '${bookingsData[index]['qty']}',
-  //           '${bookingsData[index]['price']}',
-  //           '${bookingsData[index]['collectDate']}',
-  //           '${bookingsData[index]['returnDate']}',
-  //           '${bookingsData[index]['collectTime']}',
-  //           '${bookingsData[index]['returnTime']}',
-  //           '${bookingsData[index]['ticketNumber']}',
-  //           '${bookingsData[index]['displayPicture']}',
-  //         ));
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: white,
-      body: Column(children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.fromLTRB(25, 5, 25, 5),
-          child: Text(
-            'Confirmed Bookings',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                color: oxford,
-                fontFamily: 'SF_Pro_Rounded',
-                fontSize: 25,
-                fontWeight: FontWeight.w500),
-          ),
-        ),
-        Expanded(
-          flex: 6,
-          child: Container(
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: white,
+        body: Column(children: [
+          Container(
             width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.only(left: 25, right: 25),
-            child: ListView.builder(
-                itemCount: bookings.length,
-                itemBuilder: (context, index) {
-                  // for (var product in bookingsData) {
-                  return _bookingsCard(
-                      context: context,
-                      index: index,
-                      name: bookings[index].name,
-                      qty: bookings[index].qty,
-                      price: bookings[index].price,
-                      collectDate: bookings[index].collectDate,
-                      returnDate: bookings[index].returnDate,
-                      collectTime: bookings[index].collectTime,
-                      returnTime: bookings[index].returnTime,
-                      ticketNumber: bookings[index].ticketNumber,
-                      displayPicture: bookings[index].displayPicture);
-                  // }
-                  // throw 'No Data Found';
-                }),
+            padding: EdgeInsets.fromLTRB(25, 5, 25, 5),
+            child: Text(
+              'Confirmed Bookings',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                  color: oxford,
+                  fontFamily: 'SF_Pro_Rounded',
+                  fontSize: 25,
+                  fontWeight: FontWeight.w500),
+            ),
           ),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.fromLTRB(25, 5, 25, 5),
-          child: Text(
-            'Ongoing Bookings',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                color: oxford,
-                fontFamily: 'SF_Pro_Rounded',
-                fontSize: 25,
-                fontWeight: FontWeight.w500),
+          Expanded(
+            flex: 6,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.only(left: 25, right: 25),
+              child: ListView.builder(
+                  itemCount: confirmedBookings.length,
+                  itemBuilder: (context, index) {
+                    // for (var product in bookingsData) {
+                    return _bookingsCard(
+                        context: context,
+                        index: index,
+                        name: confirmedBookings[index].name,
+                        qty: confirmedBookings[index].qty,
+                        price: confirmedBookings[index].price,
+                        collectDate: confirmedBookings[index].collectDate,
+                        returnDate: confirmedBookings[index].returnDate,
+                        collectTime: confirmedBookings[index].collectTime,
+                        returnTime: confirmedBookings[index].returnTime,
+                        ticketNumber: confirmedBookings[index].ticketNumber,
+                        displayPicture: confirmedBookings[index].displayPicture,
+                        store_id: confirmedBookings[index].storeId,
+                        box_id: confirmedBookings[index].box_id);
+                    // }
+                    // throw 'No Data Found';
+                  }),
+            ),
           ),
-        ),
-        Expanded(
-          flex: 6,
-          child: Container(
+          Container(
             width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.only(left: 25, right: 25),
-            child: ListView.builder(
-                itemCount: bookings.length,
-                itemBuilder: (context, index) {
-                  // for (var product in bookingsData) {
-                  return _bookingsOngoingCard(
-                      context: context,
-                      index: index,
-                      name: bookings[index].name,
-                      qty: bookings[index].qty,
-                      price: bookings[index].price,
-                      collectDate: bookings[index].collectDate,
-                      returnDate: bookings[index].returnDate,
-                      collectTime: bookings[index].collectTime,
-                      returnTime: bookings[index].returnTime,
-                      ticketNumber: bookings[index].ticketNumber,
-                      displayPicture: bookings[index].displayPicture);
-                  // }
-                  // throw 'No Data Found';
-                }),
+            padding: EdgeInsets.fromLTRB(25, 5, 25, 5),
+            child: Text(
+              'Ongoing Bookings',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                  color: oxford,
+                  fontFamily: 'SF_Pro_Rounded',
+                  fontSize: 25,
+                  fontWeight: FontWeight.w500),
+            ),
           ),
-        ),
-      ]),
+          Expanded(
+            flex: 6,
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.only(left: 25, right: 25),
+              child: ListView.builder(
+                  itemCount: ongoingBookings.length,
+                  itemBuilder: (context, index) {
+                    // for (var product in bookingsData) {
+                    return _bookingsOngoingCard(
+                        context: context,
+                        index: index,
+                        name: ongoingBookings[index].name,
+                        qty: ongoingBookings[index].qty,
+                        price: ongoingBookings[index].price,
+                        collectDate: ongoingBookings[index].collectDate,
+                        returnDate: ongoingBookings[index].returnDate,
+                        collectTime: ongoingBookings[index].collectTime,
+                        returnTime: ongoingBookings[index].returnTime,
+                        ticketNumber: ongoingBookings[index].ticketNumber,
+                        displayPicture: ongoingBookings[index].displayPicture);
+                    // }
+                    // throw 'No Data Found';
+                  }),
+            ),
+          ),
+        ]),
+      ),
     );
   }
 
@@ -147,7 +140,9 @@ class _user_bookingsState extends State<user_bookings> {
       required Timestamp collectTime,
       required Timestamp returnTime,
       required int ticketNumber,
-      required String displayPicture}) {
+      required String displayPicture,
+      required String store_id,
+      required String box_id}) {
     final TextStyle subtitleStyles = TextStyle(
       fontFamily: 'SF_Pro_Rounded',
       fontSize: 15,
@@ -226,8 +221,10 @@ class _user_bookingsState extends State<user_bookings> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        collect_barcode())); //time for collection => collect_barcode()
+                    builder: (context) => collect_barcode(
+                        store_id: store_id,
+                        box_id:
+                            box_id))); //time for collection => collect_barcode()
           },
         ),
       ],
@@ -324,8 +321,8 @@ class _user_bookingsState extends State<user_bookings> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      bookings_details(bookingsDataModel: bookings[index]),
+                  builder: (context) => bookings_details(
+                      bookingsDataModel: ongoingBookings[index]),
                 ));
           },
         ),
@@ -333,14 +330,30 @@ class _user_bookingsState extends State<user_bookings> {
     );
   }
 
-  getBooking() {
+  getBookingConfirmed() {
     FirebaseFirestore.instance
         .collection('transactions')
         .where("user", isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .where("status", isEqualTo: "confirmed")
         .snapshots()
         .listen((data) {
       setState(() {
-        bookings = List.from(
+        confirmedBookings = List.from(
+            data.docs.map((doc) => BookingsDataModel.fromSnapshot(doc)));
+        // storeData = newstores;
+      });
+    });
+  }
+
+  getBookingOnGoing() {
+    FirebaseFirestore.instance
+        .collection('transactions')
+        .where("user", isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .where("status", isEqualTo: "ongoing")
+        .snapshots()
+        .listen((data) {
+      setState(() {
+        ongoingBookings = List.from(
             data.docs.map((doc) => BookingsDataModel.fromSnapshot(doc)));
         // storeData = newstores;
       });
@@ -349,7 +362,7 @@ class _user_bookingsState extends State<user_bookings> {
 }
 
 class BookingsDataModel {
-  String name = "", displayPicture = "";
+  String name = "", displayPicture = "", box_id = "", storeId = "";
   int qty = 0, price = 0, ticketNumber = 0;
   Timestamp collectDate = Timestamp.now(),
       returnDate = Timestamp.now(),
@@ -366,6 +379,8 @@ class BookingsDataModel {
         "returnTime": returnTime,
         "ticketNumber": ticketNumber,
         "displayPicture": displayPicture,
+        "box_id": box_id,
+        "storeId": storeId,
       };
   BookingsDataModel.fromSnapshot(snapshot)
       : name = snapshot.data()['name'],
@@ -376,5 +391,7 @@ class BookingsDataModel {
         collectTime = snapshot.data()['collectTime'],
         returnTime = snapshot.data()['returnTime'],
         ticketNumber = snapshot.data()['ticketNumber'],
-        displayPicture = snapshot.data()['displayPicture'];
+        displayPicture = snapshot.data()['displayPicture'],
+        box_id = snapshot.data()['box_id'],
+        storeId = snapshot.data()['storeId'];
 }

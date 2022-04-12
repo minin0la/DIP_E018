@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:getwidget/getwidget.dart';
@@ -7,7 +10,13 @@ enum Condition { yes, no }
 enum qns2 { yes, no }
 
 class collect_barcode extends StatefulWidget {
-  const collect_barcode({Key? key}) : super(key: key);
+  final String box_id;
+  final String store_id;
+  const collect_barcode({
+    Key? key,
+    required this.store_id,
+    required this.box_id,
+  }) : super(key: key);
 
   @override
   State<collect_barcode> createState() => _collect_barcodeState();
@@ -23,8 +32,20 @@ class _collect_barcodeState extends State<collect_barcode> {
   final Color transparent = const Color(0x4DE3E3E3);
   Condition? _condition;
   qns2? _qns2;
+  String thekey = "";
 
   void initState() {
+    CollectionReference keyCollection =
+        FirebaseFirestore.instance.collection('Key');
+    keyCollection.doc('user').get().then((DocumentSnapshot datas) {
+      try {
+        setState(() {
+          thekey = datas.get(FieldPath(['value']));
+        });
+      } on StateError catch (e) {
+        print('No nested field exists!');
+      }
+    });
     super.initState();
 
     Timer(Duration(seconds: 1), () {
@@ -198,6 +219,13 @@ class _collect_barcodeState extends State<collect_barcode> {
 
   @override
   Widget build(BuildContext context) {
+    Map userQR = {
+      'username': FirebaseAuth.instance.currentUser!.email,
+      'key': thekey,
+      'status': '2',
+      'store': widget.store_id.toString(),
+      'box': widget.box_id.toString(),
+    };
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -227,7 +255,7 @@ class _collect_barcodeState extends State<collect_barcode> {
           Container(
               padding: EdgeInsets.only(top: 40),
               child: QrImage(
-                data: controller.text,
+                data: json.encode(userQR),
                 size: 200,
               )),
           Container(
@@ -240,7 +268,7 @@ class _collect_barcodeState extends State<collect_barcode> {
                       fontWeight: FontWeight.w700))),
           Container(
               child: Text(
-            'Box #1',
+            'Box #${widget.box_id}',
             style: TextStyle(
                 color: Color(0xFF001D4A),
                 fontFamily: 'SF_Pro_Rounded',

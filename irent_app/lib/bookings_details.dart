@@ -15,19 +15,6 @@ class bookings_details extends StatelessWidget {
   final Color iceberg = const Color(0xFFDBE4EE);
   final Color marigold = const Color(0xFFECA400);
   final Color transparent = const Color(0x4DE3E3E3);
-  // final List<BookingsDataModel> bookings = List.generate(
-  //     bookingsData.length,
-  //     (index) => BookingsDataModel(
-  //           '${bookingsData[index]['name']}',
-  //           '${bookingsData[index]['qty']}',
-  //           '${bookingsData[index]['price']}',
-  //           '${bookingsData[index]['collectDate']}',
-  //           '${bookingsData[index]['returnDate']}',
-  //           '${bookingsData[index]['collectTime']}',
-  //           '${bookingsData[index]['returnTime']}',
-  //           '${bookingsData[index]['ticketNumber']}',
-  //           '${bookingsData[index]['displayPicture']}',
-  //         ));
 
   final BookingsDataModel bookingsDataModel;
   bookings_details({Key? key, required this.bookingsDataModel})
@@ -112,8 +99,10 @@ class bookings_details extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  return_barcode())); //if return succeess --> return_success()
+                              builder: (context) => return_barcode(
+                                  store_id: bookingsDataModel.storeId,
+                                  box_id: bookingsDataModel
+                                      .box_id))); //if return succeess --> return_success()
                     },
                     child: Text(
                       'Return',
