@@ -275,7 +275,7 @@ class _user_paymentState extends State<user_payment> {
         'returnedTime': "",
       });
       wallet.update({
-        'wallet': FieldValue.increment(int.parse(eachDoc.product_price)),
+        'wallet': FieldValue.increment(-int.parse(eachDoc.product_price)),
       });
       count++;
     }
