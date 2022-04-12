@@ -250,18 +250,18 @@ class _user_paymentState extends State<user_payment> {
     for (var eachDoc in thebooking) {
       transactions.doc(count.toString()).set({
         'collectDate': eachDoc.product_startDateTime,
-        'collectTime': 'yes',
-        'displayPicture': 'yes',
+        'collectTime': eachDoc.product_startDateTime,
+        'displayPicture': eachDoc.product_displayPicture,
         'imgCapture': 'yes',
-        'itemLoc': 'yes',
-        'itemId': 'yes',
-        'name': 'yes',
-        'price': 0,
-        'qty': 0,
-        'returnDate': 'yes',
-        'returnTime': 'yes',
+        'itemLoc': eachDoc.storeName,
+        'itemId': eachDoc.storeId,
+        'name': eachDoc.product_name,
+        'price': int.parse(eachDoc.product_price),
+        'qty': int.parse(eachDoc.product_count),
+        'returnDate': eachDoc.product_endDateTime,
+        'returnTime': eachDoc.product_endDateTime,
         'returned': 'yes',
-        'user': 'yes',
+        'user': FirebaseAuth.instance.currentUser!.email.toString(),
         'ticketNumber': count,
       });
       count++;
@@ -597,7 +597,9 @@ class BasketDataModel {
       product_startdate = "",
       product_enddate = "",
       product_starttime = "",
-      product_endtime = "";
+      product_endtime = "",
+      storeId = "",
+      storeName = "";
 
   Timestamp product_startDateTime = Timestamp.now(),
       product_endDateTime = Timestamp.now();
@@ -617,6 +619,8 @@ class BasketDataModel {
         'product_endtime': product_endtime,
         'product_startDateTime': product_startDateTime.toString(),
         'product_endDateTime': product_endDateTime.toString(),
+        'storeId': storeId,
+        'storeName': storeName
         // 'ticket_number': ticket_number,
         // 'item_id': item_id,
       };
@@ -632,7 +636,10 @@ class BasketDataModel {
         product_starttime = snapshot.data()['product_starttime'],
         product_endtime = snapshot.data()['product_endtime'],
         product_startDateTime = snapshot.data()['startDateTime'],
-        product_endDateTime = snapshot.data()['endDateTime'];
+        product_endDateTime = snapshot.data()['endDateTime'],
+        storeName = snapshot.data()['storeName'],
+        storeId = snapshot.data()['storeId'];
+
   // ticket_number = snapshot.data()['ticket_number'].toString();
 
 }
