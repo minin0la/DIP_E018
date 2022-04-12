@@ -40,6 +40,12 @@ class _user_paymentState extends State<user_payment> {
   final Color transparent = const Color(0x4DE3E3E3);
   TextEditingController total = TextEditingController();
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getBasket();
+  }
+
   List thebooking = [];
   int totalCost = 0;
 
@@ -250,7 +256,7 @@ Widget _historyCard(
               Expanded(
                 flex: 6,
                 child: ListTile(
-                  leading: Image.asset(
+                  leading: Image.network(
                     displayPicture,
                     height: 48,
                     width: 48,
