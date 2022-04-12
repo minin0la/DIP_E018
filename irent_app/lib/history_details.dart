@@ -6,13 +6,16 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:irent_app/app_icons.dart';
 import 'package:irent_app/switch_nav.dart';
+import 'history.dart';
 import 'homepage.dart';
-import 'constants.dart';
+// import 'constants.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class HistoryDetailsPage extends StatefulWidget {
-  const HistoryDetailsPage({Key? key}) : super(key: key);
+  final BookingsDataModel historyData;
+  const HistoryDetailsPage({Key? key, required this.historyData})
+      : super(key: key);
 
   @override
   State<HistoryDetailsPage> createState() => _HistoryDetailsPageState();
@@ -100,15 +103,13 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
                 width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.only(left: 30, top: 30),
                 child: _historyDetails(
-                    itemName: historyDetailsTest[0]['name'].toString(),
-                    qty: int.parse(historyDetailsTest[0]['qty'].toString()),
-                    price: int.parse(historyDetailsTest[0]['price'].toString()),
-                    collected: historyDetailsTest[0]['collected'].toString(),
-                    returned: historyDetailsTest[0]['returned'].toString(),
-                    ticketNumber: int.parse(
-                        historyDetailsTest[0]['ticketNumber'].toString()),
-                    displayPicture:
-                        historyDetailsTest[0]['displayPicture'].toString())),
+                    itemName: widget.historyData.name,
+                    qty: widget.historyData.qty,
+                    price: widget.historyData.price,
+                    status: widget.historyData.status,
+                    returned: widget.historyData.status,
+                    ticketNumber: widget.historyData.ticketNumber,
+                    displayPicture: widget.historyData.displayPicture)),
             _fees(),
           ]),
         )
@@ -160,7 +161,7 @@ Widget _historyDetails(
     {required String itemName,
     required int qty,
     required int price,
-    required String collected,
+    required String status,
     required String returned,
     required int ticketNumber,
     required String displayPicture}) {
@@ -168,7 +169,7 @@ Widget _historyDetails(
     children: [
       Row(
         children: [
-          Expanded(flex: 1, child: Image.asset(displayPicture)),
+          Expanded(flex: 1, child: Image.network(displayPicture)),
           Expanded(
             flex: 3,
             child: Text(
@@ -195,7 +196,7 @@ Widget _historyDetails(
             flex: 1,
             child: _fields(
                 title: 'Collected at',
-                subtitle: collected,
+                subtitle: status,
                 width: double.infinity),
           ),
           Expanded(
