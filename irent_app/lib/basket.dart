@@ -347,7 +347,7 @@ class _basketState extends State<basket> {
                                 wordSpacing: 1,
                               )),
                           Text(
-                              '                     ${DateFormat('kk:mm').format(DateTime.parse(endDateTime.toDate().toString()))}',
+                              '                 ${DateFormat('kk:mm').format(DateTime.parse(endDateTime.toDate().toString()))}',
                               style: TextStyle(
                                 fontFamily: 'SF_Pro_Rounded',
                                 fontSize: 15,

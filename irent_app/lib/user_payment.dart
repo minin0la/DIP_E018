@@ -224,6 +224,14 @@ class _user_paymentState extends State<user_payment> {
   //   return selectitem.();
   // }
 
+  Future decrementWallet() async {
+    var wallet = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .get();
+    var newvalue = wallet['wallet'];
+  }
+
   Future getBasket() async {
     var data = await FirebaseFirestore.instance
         .collection('users')
@@ -243,6 +251,9 @@ class _user_paymentState extends State<user_payment> {
   }
 
   Future<void> addToTransaction() async {
+    var wallet = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid);
     var userTransaction =
         await FirebaseFirestore.instance.collection('transactions').get();
     var count = userTransaction.docs.length + 1;
@@ -263,6 +274,9 @@ class _user_paymentState extends State<user_payment> {
         'returned': 'yes',
         'user': FirebaseAuth.instance.currentUser!.email.toString(),
         'ticketNumber': count,
+      });
+      wallet.update({
+        'wallet': FieldValue.increment(int.parse(eachDoc.product_price)),
       });
       count++;
     }
