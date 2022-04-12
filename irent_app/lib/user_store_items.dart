@@ -496,13 +496,15 @@ class _UserStoreItemsPageState extends State<UserStoreItemsPage> {
     ]);
   }
 
-  Future<void> getCategory() async {
-    var selectcategory = await FirebaseFirestore.instance
+  getCategory() {
+    FirebaseFirestore.instance
         .collection('stores')
         .doc(widget.storeDataModel.storeId)
-        .get();
-    setState(() {
-      thecatagories = selectcategory.data()!['itemCategories'];
+        .snapshots()
+        .listen((data) {
+      setState(() {
+        thecatagories = data.data()!['itemCategories'];
+      });
     });
   }
 

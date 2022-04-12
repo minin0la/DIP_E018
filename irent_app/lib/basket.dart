@@ -355,7 +355,7 @@ class _basketState extends State<basket> {
       ),
       onPressed: () {
         deleteItem(product_id);
-        getBasket();
+        // getBasket();
         Navigator.pop(context);
       },
     );

@@ -56,8 +56,8 @@ class _admin_homeState extends State<admin_home> {
               heroTag: 'add_store',
               onPressed: () {
                 Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => AddStorePage()))
-                    .then((value) => getStore());
+                    MaterialPageRoute(builder: (context) => AddStorePage()));
+                // .then((value) => getStore());
               },
               child: Icon(
                 Icons.add,

@@ -325,7 +325,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
             setState(() {
               dropdownValueStore = newValue!;
             });
-            getItems();
+            // getItems();
             dropdownValueItem = null;
           },
           items: items.map<DropdownMenuItem<String>>((value) {
