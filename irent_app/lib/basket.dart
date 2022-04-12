@@ -13,6 +13,7 @@ import 'homepage.dart';
 import 'constants.dart';
 import 'user_payment.dart';
 import 'package:irent_app/switch_nav.dart';
+import 'dart:math';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -24,6 +25,14 @@ class basket extends StatefulWidget {
 }
 
 class _basketState extends State<basket> {
+  DateTime? _endDateTime;
+  DateTime? _startdate;
+  DateTime? _enddate;
+  TimeOfDay? _starttime;
+  TimeOfDay? _endtime;
+  DateTime _dateTime1 = DateTime(2022);
+  DateTime _dateTime2 = DateTime(2022);
+  TimeOfDay _time = TimeOfDay.now();
   final Color white = const Color(0xFFFBFBFF);
   final Color oxford = const Color(0xFF001D4A);
   final Color aliceblue = const Color(0xFF81A4CD);
@@ -425,8 +434,8 @@ class BasketDataModel {
         'product_enddate': product_enddate,
         'product_starttime': product_starttime,
         'product_endtime': product_endtime,
-        'product_startDateTime': product_startDateTime,
-        'product_endDateTime': product_endDateTime,
+        'product_startDateTime': product_startDateTime.toString(),
+        'product_endDateTime': product_endDateTime.toString(),
         // 'item_id': item_id,
       };
   BasketDataModel.fromSnapshot(snapshot)
@@ -436,10 +445,10 @@ class BasketDataModel {
         product_name = snapshot.data()['product_name'],
         product_category = snapshot.data()['product_category'],
         product_price = snapshot.data()['product_price'],
-        product_startdate = snapshot.data()['product_startdate'],
-        product_enddate = snapshot.data()['product_enddate'],
+        product_startdate = snapshot.data()['product_startdate'].toString(),
+        product_enddate = snapshot.data()['product_enddate'].toString(),
         product_starttime = snapshot.data()['product_starttime'],
         product_endtime = snapshot.data()['product_endtime'],
-        product_startDateTime = snapshot.data()['startDateTime'],
-        product_endDateTime = snapshot.data()['endDateTime'];
+        product_startDateTime = snapshot.data()['startDateTime'].toString(),
+        product_endDateTime = snapshot.data()['endDateTime'].toString();
 }

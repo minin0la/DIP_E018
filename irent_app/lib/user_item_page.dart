@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,49 +30,49 @@ class _user_item_pageState extends State<user_item_page> {
   final Color marigold = const Color(0xFFECA400);
   final Color transparent = const Color(0x4DE3E3E3);
 
-  DateTime? endDateTime;
-  DateTime? startdate;
-  DateTime? enddate;
-  TimeOfDay? starttime;
-  TimeOfDay? endtime;
-  DateTime dateTime1 = DateTime(2022);
-  DateTime dateTime2 = DateTime(2022);
+  DateTime? _endDateTime;
+  DateTime? _startdate;
+  DateTime? _enddate;
+  TimeOfDay? _starttime;
+  TimeOfDay? _endtime;
+  DateTime _dateTime1 = DateTime(2022);
+  DateTime _dateTime2 = DateTime(2022);
   TimeOfDay _time = TimeOfDay.now();
   String initialValue1 = '12 AM';
   String initialValue2 = '12 AM';
 
   String getStartDateText() {
-    if (startdate == null) {
+    if (_startdate == null) {
       return 'Select Date';
     } else {
-      return '${startdate?.day}/${startdate?.month}/${startdate?.year}';
+      return '${_startdate?.day}/${_startdate?.month}/${_startdate?.year}';
     }
   }
 
   String getEndDateText() {
-    if (enddate == null) {
+    if (_enddate == null) {
       return 'Select Date';
     } else {
-      return '${enddate?.day}/${enddate?.month}/${enddate?.year}';
+      return '${_enddate?.day}/${_enddate?.month}/${_enddate?.year}';
     }
   }
 
   String getStartTimeText() {
-    if (starttime == null) {
+    if (_starttime == null) {
       return 'Select Time';
     } else {
-      final hours = starttime?.hour.toString().padLeft(2, '0');
-      final minutes = starttime?.minute.toString().padLeft(2, '0');
+      final hours = _starttime?.hour.toString().padLeft(2, '0');
+      final minutes = _starttime?.minute.toString().padLeft(2, '0');
       return '$hours:$minutes';
     }
   }
 
   String getEndTimeText() {
-    if (endtime == null) {
+    if (_endtime == null) {
       return 'Select Time';
     } else {
-      final hours = endtime?.hour.toString().padLeft(2, '0');
-      final minutes = endtime?.minute.toString().padLeft(2, '0');
+      final hours = _endtime?.hour.toString().padLeft(2, '0');
+      final minutes = _endtime?.minute.toString().padLeft(2, '0');
       return '$hours:$minutes';
     }
   }
@@ -221,7 +223,7 @@ class _user_item_pageState extends State<user_item_page> {
                     child: Directionality(
                         textDirection: TextDirection.rtl,
                         child: ElevatedButton.icon(
-                          onPressed: () => pickStartDate(context),
+                          onPressed: () => _pickStartDate(context),
                           icon: Icon(
                             Icons.keyboard_arrow_down,
                             color: Color.fromRGBO(0, 29, 74, 1),
@@ -269,7 +271,7 @@ class _user_item_pageState extends State<user_item_page> {
                     child: Directionality(
                         textDirection: TextDirection.rtl,
                         child: ElevatedButton.icon(
-                          onPressed: () => pickEndDate(context),
+                          onPressed: () => _pickEndDate(context),
                           icon: Icon(
                             Icons.keyboard_arrow_down,
                             color: Color.fromRGBO(0, 29, 74, 1),
@@ -326,7 +328,7 @@ class _user_item_pageState extends State<user_item_page> {
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                         ),
-                        onPressed: () => pickStartTime(context),
+                        onPressed: () => _pickStartTime(context),
                         child: Text(getStartTimeText(),
                             style: TextStyle(
                                 color: Color.fromRGBO(0, 29, 74, 1),
@@ -399,7 +401,7 @@ class _user_item_pageState extends State<user_item_page> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      onPressed: () => pickEndTime(context),
+                      onPressed: () => _pickEndTime(context),
                       child: Container(
                           child: Text(getEndTimeText(),
                               style: TextStyle(
@@ -610,7 +612,7 @@ class _user_item_pageState extends State<user_item_page> {
   //   return startDateTime;
   // }
 
-  pickStartDate(BuildContext context) async {
+  _pickStartDate(BuildContext context) async {
     final initialDate = DateTime.now();
     final startDate = await showDatePicker(
         context: context,
@@ -620,11 +622,11 @@ class _user_item_pageState extends State<user_item_page> {
 
     if (startDate == null) return;
 
-    setState(() => startdate = startDate);
+    setState(() => _startdate = startDate);
     return startDate;
   }
 
-  Future pickEndDate(BuildContext context) async {
+  Future _pickEndDate(BuildContext context) async {
     final initialDate = DateTime.now();
     final endDate = await showDatePicker(
         context: context,
@@ -634,27 +636,27 @@ class _user_item_pageState extends State<user_item_page> {
 
     if (endDate == null) return;
 
-    setState(() => enddate = endDate);
+    setState(() => _enddate = endDate);
     return endDate;
   }
 
-  Future pickStartTime(BuildContext context) async {
+  Future _pickStartTime(BuildContext context) async {
     final initialTime = TimeOfDay(hour: 12, minute: 0);
     final startTime = await showTimePicker(
-        context: context, initialTime: starttime ?? initialTime);
+        context: context, initialTime: _starttime ?? initialTime);
 
     if (startTime == null) return;
-    setState(() => starttime = startTime);
+    setState(() => _starttime = startTime);
     return startTime;
   }
 
-  Future pickEndTime(BuildContext context) async {
+  Future _pickEndTime(BuildContext context) async {
     final initialTime = TimeOfDay(hour: 12, minute: 0);
     final endTime = await showTimePicker(
-        context: context, initialTime: endtime ?? initialTime);
+        context: context, initialTime: _endtime ?? initialTime);
 
     if (endTime == null) return;
-    setState(() => endtime = endTime);
+    setState(() => _endtime = endTime);
     return endTime;
   }
 
@@ -666,22 +668,23 @@ class _user_item_pageState extends State<user_item_page> {
         .doc(widget.itemDataModel.item_id);
     return userBasket.set({
       'product_count': '$_count',
+      'ticket_number': Random().nextInt(20),
       'product_displayPicture': widget.itemDataModel.displayPicture,
       'product_name': widget.itemDataModel.name,
       'product_category': widget.itemDataModel.product_category,
       'product_price': widget.itemDataModel.pricePerhour,
-      'product_startdate': Timestamp.fromDate(dateTime1),
-      'product_enddate': Timestamp.fromDate(dateTime2),
+      'product_startdate': Timestamp.fromDate(_dateTime1),
+      'product_enddate': Timestamp.fromDate(_dateTime2),
       'product_starttime': '$initialValue1',
       'product_endtime': '$initialValue2',
       'startDateTime': Timestamp.fromDate(DateTime(
-          startdate!.year,
-          startdate!.month,
-          startdate!.day,
-          starttime!.hour,
-          starttime!.minute)),
-      'endDateTime': Timestamp.fromDate(DateTime(enddate!.year, enddate!.month,
-          enddate!.day, endtime!.hour, endtime!.minute)),
+          _startdate!.year,
+          _startdate!.month,
+          _startdate!.day,
+          _starttime!.hour,
+          _starttime!.minute)),
+      'endDateTime': Timestamp.fromDate(DateTime(_enddate!.year,
+          _enddate!.month, _enddate!.day, _endtime!.hour, _endtime!.minute)),
     });
   }
 }
