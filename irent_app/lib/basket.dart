@@ -192,21 +192,22 @@ class _basketState extends State<basket> {
     );
   }
 
-  Future getBasket() async {
-    var data = await FirebaseFirestore.instance
+  getBasket() {
+    FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser?.uid)
         .collection('basket')
-        .get();
+        .snapshots()
+        .listen((data) {
+      setState(() {
+        thebasket = List.from(
+            data.docs.map((doc) => BasketDataModel.fromSnapshot(doc)));
+        for (var i = 0; i < thebasket.length; i++) {
+          totalCost += int.parse(thebasket[i].product_price.toString());
+        }
 
-    setState(() {
-      thebasket =
-          List.from(data.docs.map((doc) => BasketDataModel.fromSnapshot(doc)));
-      for (var i = 0; i < thebasket.length; i++) {
-        totalCost += int.parse(thebasket[i].product_price.toString());
-      }
-
-      // storeData = newstores;
+        // storeData = newstores;
+      });
     });
   }
 
