@@ -80,15 +80,18 @@ class _basketState extends State<basket> {
                   itemBuilder: (context, index) {
                     // for (var product in thebasket) {
                     return _productDetails(
-                        context: context,
-                        name: thebasket[index].product_name.toString(),
-                        product_category:
-                            thebasket[index].product_category.toString(),
-                        pricePerhour: int.parse(
-                            thebasket[index].product_price.toString()),
-                        product_id: thebasket[index].product_id.toString(),
-                        displayPicture:
-                            thebasket[index].product_displayPicture.toString());
+                      context: context,
+                      name: thebasket[index].product_name.toString(),
+                      product_category:
+                          thebasket[index].product_category.toString(),
+                      pricePerhour:
+                          int.parse(thebasket[index].product_price.toString()),
+                      product_id: thebasket[index].product_id.toString(),
+                      displayPicture:
+                          thebasket[index].product_displayPicture.toString(),
+                      startDateTime: thebasket[index].product_startDateTime,
+                      endDateTime: thebasket[index].product_endDateTime,
+                    );
                     // }
                     // throw 'No Data Found';
                   }),
@@ -217,7 +220,9 @@ class _basketState extends State<basket> {
       required String product_category,
       required int pricePerhour,
       required String displayPicture,
-      required String product_id}) {
+      required String product_id,
+      required Timestamp startDateTime,
+      required Timestamp endDateTime}) {
     final TextStyle subtitleStyles = TextStyle(
       fontFamily: 'SF_Pro_Rounded',
       fontSize: 15,
@@ -307,12 +312,50 @@ class _basketState extends State<basket> {
                       Text('Start Date           End Date',
                           style: subtitleStyles),
                       Row(
-                        children: [date()],
+                        children: [
+                          Text(
+                              '${DateFormat('dd/MM/yyyy').format(DateTime.parse(startDateTime.toDate().toString()))}',
+                              style: TextStyle(
+                                fontFamily: 'SF_Pro_Rounded',
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF001D4A),
+                                wordSpacing: 1,
+                              )),
+                          Text(
+                              '        ${DateFormat('dd/MM/yyyy').format(DateTime.parse(endDateTime.toDate().toString()))}',
+                              style: TextStyle(
+                                fontFamily: 'SF_Pro_Rounded',
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF001D4A),
+                                wordSpacing: 1,
+                              )),
+                        ],
                       ),
                       Text('Start Time           End Time',
                           style: subtitleStyles),
                       Row(
-                        children: [time()],
+                        children: [
+                          Text(
+                              '${DateFormat('kk:mm').format(DateTime.parse(startDateTime.toDate().toString()))}',
+                              style: TextStyle(
+                                fontFamily: 'SF_Pro_Rounded',
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF001D4A),
+                                wordSpacing: 1,
+                              )),
+                          Text(
+                              '                     ${DateFormat('kk:mm').format(DateTime.parse(endDateTime.toDate().toString()))}',
+                              style: TextStyle(
+                                fontFamily: 'SF_Pro_Rounded',
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF001D4A),
+                                wordSpacing: 1,
+                              ))
+                        ],
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
@@ -419,9 +462,10 @@ class BasketDataModel {
       product_startdate = "",
       product_enddate = "",
       product_starttime = "",
-      product_endtime = "",
-      product_startDateTime = "",
-      product_endDateTime = "";
+      product_endtime = "";
+
+  Timestamp product_startDateTime = Timestamp.now(),
+      product_endDateTime = Timestamp.now();
 
   BasketDataModel();
   Map<String, dynamic> toJson() => {
@@ -435,8 +479,8 @@ class BasketDataModel {
         'product_enddate': product_enddate,
         'product_starttime': product_starttime,
         'product_endtime': product_endtime,
-        'product_startDateTime': product_startDateTime.toString(),
-        'product_endDateTime': product_endDateTime.toString(),
+        'product_startDateTime': product_startDateTime,
+        'product_endDateTime': product_endDateTime,
         // 'item_id': item_id,
       };
   BasketDataModel.fromSnapshot(snapshot)
@@ -450,6 +494,6 @@ class BasketDataModel {
         product_enddate = snapshot.data()['product_enddate'].toString(),
         product_starttime = snapshot.data()['product_starttime'],
         product_endtime = snapshot.data()['product_endtime'],
-        product_startDateTime = snapshot.data()['startDateTime'].toString(),
-        product_endDateTime = snapshot.data()['endDateTime'].toString();
+        product_startDateTime = snapshot.data()['startDateTime'],
+        product_endDateTime = snapshot.data()['endDateTime'];
 }
