@@ -187,24 +187,16 @@ class _user_homeState extends State<user_home> {
     );
   }
 
-  Future getStore() async {
-    var data = await FirebaseFirestore.instance.collection('stores').get();
-
-    setState(() {
-      thestores =
-          List.from(data.docs.map((doc) => StoreDataModel.fromSnapshot(doc)));
-      // storeData = newstores;
+  getStore() {
+    FirebaseFirestore.instance.collection('stores').snapshots().listen((data) {
+      setState(() {
+        thestores =
+            List.from(data.docs.map((doc) => StoreDataModel.fromSnapshot(doc)));
+      });
     });
   }
 }
 
-// class StoreDataModel {
-//   final String storeName, storeAddress, category, storeBanner;
-//   final List itemCategories, items;
-
-//   StoreDataModel(this.storeName, this.storeAddress, this.category,
-//       this.storeBanner, this.itemCategories, this.items);
-// }
 class StoreDataModel {
   String storeId = "",
       storeName = "",

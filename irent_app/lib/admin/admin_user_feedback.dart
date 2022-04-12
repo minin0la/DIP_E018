@@ -215,21 +215,24 @@ class _AdminUserFeedbackPageState extends State<AdminUserFeedbackPage> {
               MaterialPageRoute(
                 builder: (context) => UserFeedbackDetailsPage(
                     feedbackDataModel: userFeedbacks[index]),
-              )).then((value) => getFeedback());
+              ));
         },
       ),
     );
   }
 
-  Future getFeedback() async {
-    var data = await FirebaseFirestore.instance.collection('feedback').get();
-
-    setState(() {
-      userFeedbacks =
-          List.from(data.docs.map((doc) => FeedbackDataModel.fromSnapshot(doc)))
-              .reversed
-              .toList();
-      // storeData = newstores;
+  getFeedback() {
+    FirebaseFirestore.instance
+        .collection('feedback')
+        .snapshots()
+        .listen((data) {
+      setState(() {
+        userFeedbacks = List.from(
+                data.docs.map((doc) => FeedbackDataModel.fromSnapshot(doc)))
+            .reversed
+            .toList();
+        // storeData = newstores;
+      });
     });
   }
 }

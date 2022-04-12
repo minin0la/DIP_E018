@@ -496,28 +496,29 @@ class _UserStoreItemsPageState extends State<UserStoreItemsPage> {
     ]);
   }
 
-  Future<void> getCategory() async {
-    var selectcategory = await FirebaseFirestore.instance
+  getCategory() {
+    FirebaseFirestore.instance
         .collection('stores')
         .doc(widget.storeDataModel.storeId)
-        .get();
-    setState(() {
-      thecatagories = selectcategory.data()!['itemCategories'];
+        .snapshots()
+        .listen((data) {
+      setState(() {
+        thecatagories = data.data()!['itemCategories'];
+      });
     });
   }
 
-  Future getItems() async {
-    var data = await FirebaseFirestore.instance
+  getItems() {
+    FirebaseFirestore.instance
         .collection('stores')
         .doc(widget.storeDataModel.storeId)
         .collection('items')
-        .get();
-
-    setState(() {
-      theitems =
-          List.from(data.docs.map((doc) => ItemDataModel.fromSnapshot(doc)));
-      // storeData = newstores;
-    });
+        .snapshots()
+        .listen((data) => setState(() {
+              theitems = List.from(
+                  data.docs.map((doc) => ItemDataModel.fromSnapshot(doc)));
+              // storeData = newstores;
+            }));
   }
 }
 

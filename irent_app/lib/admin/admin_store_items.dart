@@ -92,12 +92,12 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
                     SnackBar(content: Text('All the boxes are occupied')));
               } else {
                 Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AdminAddItemPage(
-                                storeDataModel: widget.storeDataModel,
-                                catDataModel: itemCat)))
-                    .then((value) => getItems());
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AdminAddItemPage(
+                            storeDataModel: widget.storeDataModel,
+                            catDataModel: itemCat)));
+                // .then((value) => getItems());
               }
             },
             child: Icon(
@@ -228,17 +228,18 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
     });
   }
 
-  Future getItems() async {
-    var data = await FirebaseFirestore.instance
+  getItems() {
+    FirebaseFirestore.instance
         .collection('stores')
         .doc(widget.storeDataModel.storeId)
         .collection('items')
-        .get();
-
-    setState(() {
-      theitems =
-          List.from(data.docs.map((doc) => ItemDataModel.fromSnapshot(doc)));
-      // storeData = newstores;
+        .snapshots()
+        .listen((data) {
+      setState(() {
+        theitems =
+            List.from(data.docs.map((doc) => ItemDataModel.fromSnapshot(doc)));
+        // storeData = newstores;
+      });
     });
   }
 
@@ -375,7 +376,8 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
                                     itemDataModel: theitems[index],
                                     itemCat: itemCat,
                                   )),
-                        ).then((value) => getItems());
+                        );
+                        // .then((value) => getItems());
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -602,8 +604,10 @@ class _AdminStoreItemsPageState extends State<AdminStoreItemsPage> {
                         onPressed: () {
                           if (type == "item" && item_id != "") {
                             deleteItem(item_id, box_id)
-                                .then((value) =>
-                                    {getItems(), Navigator.pop(context)})
+                                .then((value) => {
+                                      // getItems(),
+                                      Navigator.pop(context)
+                                    })
                                 .catchError((onError) => {print(onError)});
                           } else if (type == 'category' &&
                               category_name != "") {
