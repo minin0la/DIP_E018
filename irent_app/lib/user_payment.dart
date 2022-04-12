@@ -163,7 +163,7 @@ class _user_paymentState extends State<user_payment> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        user_payment_successful())); //if insufficient ballance =>  showAlertDialog(context);
+                                        user_payment_successful())); //if balance not sufficient => showAlertDialog(context)
                           },
                           child: Container(
                               margin: EdgeInsets.only(left: 100, top: 22),

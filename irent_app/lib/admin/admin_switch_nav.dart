@@ -53,7 +53,7 @@ class _AdminSwitchNavBarState extends State<AdminSwitchNavBar> {
     ),
   ];
   final List<Widget> _bodyContents = <Widget>[
-    admin_home_back(),
+    admin_home(),
     admin_bookings(),
     admin_transactions(),
     AdminAccountScreen(),

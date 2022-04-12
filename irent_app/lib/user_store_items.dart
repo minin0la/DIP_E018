@@ -553,10 +553,6 @@ class ItemDataModel {
         item_id = snapshot.id,
         box_id = snapshot.data()['box_id'],
         box_number = snapshot.data()['box_number'];
-
-  // item_id = snapshot.data()['item_id'];
-  // quantity = [snapshot.data()['itemCategories']];
-  // items = [snapshot.data()['items']];
 }
 
 class CatDataModel {

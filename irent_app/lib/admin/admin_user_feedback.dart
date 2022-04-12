@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
@@ -34,17 +35,23 @@ class _AdminUserFeedbackPageState extends State<AdminUserFeedbackPage> {
     fontWeight: FontWeight.w500,
   );
 
-  final List<FeedbackDataModel> userFeedbacks = List.generate(
-      userFeedbackData.length,
-      (index) => FeedbackDataModel(
-            '${userFeedbackData[index]['user']}',
-            '${userFeedbackData[index]['itemName']}',
-            '${userFeedbackData[index]['ticketNumber']}',
-            '${userFeedbackData[index]['submissionTime']}',
-            '${userFeedbackData[index]['displayPicture']}',
-            '${userFeedbackData[index]['feedbackType']}',
-            '${userFeedbackData[index]['comments']}',
-          ));
+  // final List<FeedbackDataModel> userFeedbacks = List.generate(
+  //     userFeedbackData.length,
+  //     (index) => FeedbackDataModel(
+  //           '${userFeedbackData[index]['user']}',
+  //           '${userFeedbackData[index]['itemName']}',
+  //           '${userFeedbackData[index]['ticketNumber']}',
+  //           '${userFeedbackData[index]['submissionTime']}',
+  //           '${userFeedbackData[index]['displayPicture']}',
+  //           '${userFeedbackData[index]['feedbackType']}',
+  //           '${userFeedbackData[index]['comments']}',
+  //         ));
+  List userFeedbacks = [];
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getFeedback();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,22 +119,22 @@ class _AdminUserFeedbackPageState extends State<AdminUserFeedbackPage> {
             width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.only(left: 25, right: 25),
             child: ListView.builder(
-                itemCount: userFeedbackData.length,
+                itemCount: userFeedbacks.length,
                 itemBuilder: (context, index) {
-                  for (var item in userFeedbackData) {
-                    return _userFeedbackCard(
-                        context: context,
-                        index: index,
-                        user: userFeedbacks[index].user,
-                        itemName: userFeedbacks[index].itemName,
-                        submissionTime: userFeedbacks[index].submissionTime,
-                        ticketNumber:
-                            int.parse(userFeedbacks[index].ticketNumber),
-                        displayPicture: userFeedbacks[index].displayPicture,
-                        feedbackType: userFeedbacks[index].feedbackType,
-                        comment: userFeedbacks[index].comment);
-                  }
-                  throw 'No Data Found';
+                  // for (var item in userFeedbackData) {
+                  return _userFeedbackCard(
+                      context: context,
+                      index: index,
+                      user: userFeedbacks[index].user,
+                      itemName: userFeedbacks[index].itemName,
+                      submissionTime: userFeedbacks[index].submissionTime,
+                      ticketNumber: userFeedbacks[index].ticketNumber,
+                      displayPicture: userFeedbacks[index].displayPicture,
+                      feedbackType: userFeedbacks[index].feedbackType,
+                      comment: userFeedbacks[index].comment,
+                      resolved: userFeedbacks[index].resolved);
+                  // }
+                  // throw 'No Data Found';
                 }),
           ),
         ),
@@ -140,11 +147,12 @@ class _AdminUserFeedbackPageState extends State<AdminUserFeedbackPage> {
       required int index,
       required String user,
       required String itemName,
-      required String submissionTime,
+      required Timestamp submissionTime,
       required int ticketNumber,
       required String displayPicture,
       required String feedbackType,
-      required String comment}) {
+      required String comment,
+      required bool resolved}) {
     final TextStyle subtitleStyles = TextStyle(
       fontFamily: 'SF_Pro_Rounded',
       fontSize: 13,
@@ -170,7 +178,7 @@ class _AdminUserFeedbackPageState extends State<AdminUserFeedbackPage> {
                 Expanded(
                   flex: 6,
                   child: ListTile(
-                    leading: Image.asset(
+                    leading: Image.network(
                       displayPicture,
                       height: 48,
                       width: 48,
@@ -207,28 +215,60 @@ class _AdminUserFeedbackPageState extends State<AdminUserFeedbackPage> {
               MaterialPageRoute(
                 builder: (context) => UserFeedbackDetailsPage(
                     feedbackDataModel: userFeedbacks[index]),
-              ));
+              )).then((value) => getFeedback());
         },
       ),
     );
   }
+
+  Future getFeedback() async {
+    var data = await FirebaseFirestore.instance.collection('feedback').get();
+
+    setState(() {
+      userFeedbacks =
+          List.from(data.docs.map((doc) => FeedbackDataModel.fromSnapshot(doc)))
+              .reversed
+              .toList();
+      // storeData = newstores;
+    });
+  }
 }
 
 class FeedbackDataModel {
-  final String user,
-      itemName,
-      ticketNumber,
-      submissionTime,
-      displayPicture,
-      feedbackType,
-      comment;
+  String displayPicture = "",
+      itemName = "",
+      item_id = "",
+      comment = "",
+      shop = "",
+      feedbackType = "",
+      user = "";
+  int ticketNumber = 0;
+  Timestamp submissionTime = Timestamp.now();
+  bool resolved = false;
 
-  FeedbackDataModel(
-      this.user,
-      this.itemName,
-      this.ticketNumber,
-      this.submissionTime,
-      this.displayPicture,
-      this.feedbackType,
-      this.comment);
+  FeedbackDataModel();
+  Map<String, dynamic> toJson() => {
+        "displayPicture": displayPicture,
+        "item": itemName,
+        "item_id": item_id,
+        "message": comment,
+        "shop": shop,
+        "submissionTime": submissionTime,
+        "type": feedbackType,
+        "user": user,
+        "feedback_id": ticketNumber,
+        "resolved": resolved
+      };
+
+  FeedbackDataModel.fromSnapshot(snapshot)
+      : displayPicture = snapshot.data()["displayPicture"],
+        itemName = snapshot.data()["itemName"],
+        item_id = snapshot.data()["item_id"],
+        comment = snapshot.data()["comment"],
+        shop = snapshot.data()["shop"],
+        submissionTime = snapshot.data()["submissionTime"],
+        feedbackType = snapshot.data()["feedbackType"],
+        user = snapshot.data()["user"],
+        ticketNumber = snapshot.data()["ticketNumber"],
+        resolved = snapshot.data()["resolved"];
 }
