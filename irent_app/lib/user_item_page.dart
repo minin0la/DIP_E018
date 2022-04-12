@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,11 +30,52 @@ class _user_item_pageState extends State<user_item_page> {
   final Color marigold = const Color(0xFFECA400);
   final Color transparent = const Color(0x4DE3E3E3);
 
-  DateTime dateTime1 = DateTime(2022);
-  DateTime dateTime2 = DateTime(2022);
+  DateTime? _endDateTime;
+  DateTime? _startdate;
+  DateTime? _enddate;
+  TimeOfDay? _starttime;
+  TimeOfDay? _endtime;
+  DateTime _dateTime1 = DateTime(2022);
+  DateTime _dateTime2 = DateTime(2022);
   TimeOfDay _time = TimeOfDay.now();
   String initialValue1 = '12 AM';
   String initialValue2 = '12 AM';
+
+  String getStartDateText() {
+    if (_startdate == null) {
+      return 'Select Date';
+    } else {
+      return '${_startdate?.day}/${_startdate?.month}/${_startdate?.year}';
+    }
+  }
+
+  String getEndDateText() {
+    if (_enddate == null) {
+      return 'Select Date';
+    } else {
+      return '${_enddate?.day}/${_enddate?.month}/${_enddate?.year}';
+    }
+  }
+
+  String getStartTimeText() {
+    if (_starttime == null) {
+      return 'Select Time';
+    } else {
+      final hours = _starttime?.hour.toString().padLeft(2, '0');
+      final minutes = _starttime?.minute.toString().padLeft(2, '0');
+      return '$hours:$minutes';
+    }
+  }
+
+  String getEndTimeText() {
+    if (_endtime == null) {
+      return 'Select Time';
+    } else {
+      final hours = _endtime?.hour.toString().padLeft(2, '0');
+      final minutes = _endtime?.minute.toString().padLeft(2, '0');
+      return '$hours:$minutes';
+    }
+  }
 
   var itemList = [
     '12 AM',
@@ -180,24 +223,12 @@ class _user_item_pageState extends State<user_item_page> {
                     child: Directionality(
                         textDirection: TextDirection.rtl,
                         child: ElevatedButton.icon(
-                          onPressed: () async {
-                            DateTime? newDate = await showDatePicker(
-                                context: context,
-                                initialDate: dateTime1,
-                                firstDate: DateTime(1900),
-                                lastDate: DateTime(2300));
-                            if (newDate != null) {
-                              setState(() {
-                                dateTime1 = newDate;
-                              });
-                            }
-                          },
+                          onPressed: () => _pickStartDate(context),
                           icon: Icon(
                             Icons.keyboard_arrow_down,
                             color: Color.fromRGBO(0, 29, 74, 1),
                           ),
-                          label: Text(
-                              '${dateTime1.day}/${dateTime1.month}/${dateTime1.year}',
+                          label: Text(getStartDateText(),
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                   color: Color.fromRGBO(0, 29, 74, 1),
@@ -240,24 +271,12 @@ class _user_item_pageState extends State<user_item_page> {
                     child: Directionality(
                         textDirection: TextDirection.rtl,
                         child: ElevatedButton.icon(
-                          onPressed: () async {
-                            DateTime? newDate = await showDatePicker(
-                                context: context,
-                                initialDate: dateTime2,
-                                firstDate: DateTime(1900),
-                                lastDate: DateTime(2300));
-                            if (newDate != null) {
-                              setState(() {
-                                dateTime2 = newDate;
-                              });
-                            }
-                          },
+                          onPressed: () => _pickEndDate(context),
                           icon: Icon(
                             Icons.keyboard_arrow_down,
                             color: Color.fromRGBO(0, 29, 74, 1),
                           ),
-                          label: Text(
-                              '${dateTime2.day}/${dateTime2.month}/${dateTime2.year}',
+                          label: Text(getEndDateText(),
                               textAlign: TextAlign.start,
                               style: TextStyle(
                                   color: Color.fromRGBO(0, 29, 74, 1),
@@ -302,39 +321,54 @@ class _user_item_pageState extends State<user_item_page> {
                     height: 40,
                     width: 160,
                     child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Color.fromRGBO(219, 228, 238, 1),
-                        fixedSize: const Size(158, 41),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
+                        style: ElevatedButton.styleFrom(
+                          primary: Color.fromRGBO(219, 228, 238, 1),
+                          fixedSize: const Size(158, 41),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
                         ),
-                      ),
-                      onPressed: () {},
-                      child: Container(
-                        child: DropdownButton(
-                          style: TextStyle(
-                              color: Color.fromRGBO(0, 29, 74, 1),
-                              fontSize: 16),
-                          dropdownColor: Color.fromRGBO(219, 228, 238, 1),
-                          icon: Icon(Icons.keyboard_arrow_down,
-                              color: Color.fromRGBO(0, 29, 74, 1)),
-                          underline: Container(),
-                          value: initialValue1,
-                          onChanged: (value1) {
-                            setState(() {
-                              initialValue1 = value1.toString();
-                            });
-                          },
-                          menuMaxHeight: 150,
-                          focusNode: FocusNode(),
-                          isExpanded: true,
-                          items: itemList.map((itemone) {
-                            return DropdownMenuItem(
-                                value: itemone, child: Text(itemone));
-                          }).toList(),
+                        onPressed: () => _pickStartTime(context),
+                        child: Text(getStartTimeText(),
+                            style: TextStyle(
+                                color: Color.fromRGBO(0, 29, 74, 1),
+                                fontFamily: 'SF Pro Rounded',
+                                fontSize: 16,
+                                letterSpacing:
+                                    0 /*percentages not used in flutter. defaulting to zero*/,
+                                fontWeight: FontWeight.normal,
+                                height: 1))
+                        // child: Text('Select Time',
+                        //     style: TextStyle(
+                        //         color: Color.fromRGBO(0, 29, 74, 1),
+                        //         fontSize: 16,
+                        //         letterSpacing: 0,
+                        //         fontWeight: FontWeight.normal,
+                        //         height: 1)
+                        //     // child: DropdownButton(
+                        //     //   style: TextStyle(
+                        //     //       color: Color.fromRGBO(0, 29, 74, 1),
+                        //     //       fontSize: 16),
+                        //     //   dropdownColor: Color.fromRGBO(219, 228, 238, 1),
+                        //     //   icon: Icon(Icons.keyboard_arrow_down,
+                        //     //       color: Color.fromRGBO(0, 29, 74, 1)),
+                        //     //   underline: Container(),
+                        //     //   value: initialValue1,
+                        //     //   onChanged: (value1) {
+                        //     //     setState(() {
+                        //     //       initialValue1 = value1.toString();
+                        //     //     });
+                        //     //   },
+                        //     //   menuMaxHeight: 150,
+                        //     //   focusNode: FocusNode(),
+                        //     //   isExpanded: true,
+                        //     //   items: itemList.map((itemone) {
+                        //     //     return DropdownMenuItem(
+                        //     //         value: itemone, child: Text(itemone));
+                        //     //   }).toList(),
+                        //     // ),
+                        //     ),
                         ),
-                      ),
-                    ),
                   ),
                 ],
               ),
@@ -367,31 +401,40 @@ class _user_item_pageState extends State<user_item_page> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () => _pickEndTime(context),
                       child: Container(
-                        child: DropdownButton(
-                          style: TextStyle(
-                              color: Color.fromRGBO(0, 29, 74, 1),
-                              fontSize: 16),
-                          dropdownColor: Color.fromRGBO(219, 228, 238, 1),
-                          icon: Icon(Icons.keyboard_arrow_down,
-                              color: Color.fromRGBO(0, 29, 74, 1)),
-                          underline: Container(),
-                          value: initialValue2,
-                          onChanged: (value2) {
-                            setState(() {
-                              initialValue2 = value2.toString();
-                            });
-                          },
-                          menuMaxHeight: 150,
-                          focusNode: FocusNode(),
-                          isExpanded: true,
-                          items: itemList.map((item_end) {
-                            return DropdownMenuItem(
-                                value: item_end, child: Text(item_end));
-                          }).toList(),
-                        ),
-                      ),
+                          child: Text(getEndTimeText(),
+                              style: TextStyle(
+                                  color: Color.fromRGBO(0, 29, 74, 1),
+                                  fontFamily: 'SF Pro Rounded',
+                                  fontSize: 16,
+                                  letterSpacing:
+                                      0 /*percentages not used in flutter. defaulting to zero*/,
+                                  fontWeight: FontWeight.normal,
+                                  height: 1))
+                          // child: DropdownButton(
+                          //   style: TextStyle(
+                          //       color: Color.fromRGBO(0, 29, 74, 1),
+                          //       fontSize: 16),
+                          //   dropdownColor: Color.fromRGBO(219, 228, 238, 1),
+                          //   icon: Icon(Icons.keyboard_arrow_down,
+                          //       color: Color.fromRGBO(0, 29, 74, 1)),
+                          //   underline: Container(),
+                          //   value: initialValue2,
+                          //   onChanged: (value2) {
+                          //     setState(() {
+                          //       initialValue2 = value2.toString();
+                          //     });
+                          //   },
+                          //   menuMaxHeight: 150,
+                          //   focusNode: FocusNode(),
+                          //   isExpanded: true,
+                          //   items: itemList.map((item_end) {
+                          //     return DropdownMenuItem(
+                          //         value: item_end, child: Text(item_end));
+                          //   }).toList(),
+                          // ),
+                          ),
                     ),
                   ),
                 ],
@@ -536,6 +579,87 @@ class _user_item_pageState extends State<user_item_page> {
             ])));
   }
 
+  // Future pickEndDateTime(BuildContext context) async {
+  //   final endingDate = await pickEndDateTime(context);
+  //   if (endingDate == null) return;
+
+  //   final endingTime = await pickEndTime(context);
+  //   if (endingTime == null) return;
+
+  //   setState(() {
+  //     endDateTime = DateTime(
+  //       endingDate.year,
+  //       endingDate.month,
+  //       endingDate.day,
+  //       endingTime.hour,
+  //       endingTime.minute,
+  //     );
+  //   });
+  //   return endDateTime;
+  // }
+
+  // pickStartDateTime(BuildContext context) async {
+  //   // final startingDate = await pickStartDate(context);
+  //   // if (startingDate == null) return;
+
+  //   // final startingTime = await pickStartTime(context);
+  //   // if (startingTime == null) return;
+
+  //   setState(() {
+  //     startDateTime = DateTime(startDate.year, startingDate.month,
+  //         startingDate.day, startingTime.hour, startingTime.minute);
+  //   });
+  //   return startDateTime;
+  // }
+
+  _pickStartDate(BuildContext context) async {
+    final initialDate = DateTime.now();
+    final startDate = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: DateTime(DateTime.now().year - 5),
+        lastDate: DateTime(DateTime.now().year + 5));
+
+    if (startDate == null) return;
+
+    setState(() => _startdate = startDate);
+    return startDate;
+  }
+
+  Future _pickEndDate(BuildContext context) async {
+    final initialDate = DateTime.now();
+    final endDate = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: DateTime(DateTime.now().year - 5),
+        lastDate: DateTime(DateTime.now().year + 5));
+
+    if (endDate == null) return;
+
+    setState(() => _enddate = endDate);
+    return endDate;
+  }
+
+  Future _pickStartTime(BuildContext context) async {
+    final initialTime = TimeOfDay(hour: 12, minute: 0);
+    final startTime = await showTimePicker(
+        context: context, initialTime: _starttime ?? initialTime);
+
+    if (startTime == null) return;
+    setState(() => _starttime = startTime);
+    return startTime;
+  }
+
+  Future _pickEndTime(BuildContext context) async {
+    final initialTime = TimeOfDay(hour: 12, minute: 0);
+    final endTime = await showTimePicker(
+        context: context, initialTime: _endtime ?? initialTime);
+
+    if (endTime == null) return;
+    setState(() => _endtime = endTime);
+    return endTime;
+  }
+
   Future<void> addToBasket() async {
     var userBasket = FirebaseFirestore.instance
         .collection('users')
@@ -544,16 +668,23 @@ class _user_item_pageState extends State<user_item_page> {
         .doc(widget.itemDataModel.item_id);
     return userBasket.set({
       'product_count': '$_count',
+      'ticket_number': Random().nextInt(20),
       'product_displayPicture': widget.itemDataModel.displayPicture,
       'product_name': widget.itemDataModel.name,
       'product_category': widget.itemDataModel.product_category,
       'product_price': widget.itemDataModel.pricePerhour,
-      'product_startdate':
-          '${dateTime1.day}/${dateTime1.month}/${dateTime1.year}',
-      'product_enddate':
-          '${dateTime2.day}/${dateTime2.month}/${dateTime2.year}',
+      'product_startdate': Timestamp.fromDate(_dateTime1),
+      'product_enddate': Timestamp.fromDate(_dateTime2),
       'product_starttime': '$initialValue1',
-      'product_endtime': '$initialValue2'
+      'product_endtime': '$initialValue2',
+      'startDateTime': Timestamp.fromDate(DateTime(
+          _startdate!.year,
+          _startdate!.month,
+          _startdate!.day,
+          _starttime!.hour,
+          _starttime!.minute)),
+      'endDateTime': Timestamp.fromDate(DateTime(_enddate!.year,
+          _enddate!.month, _enddate!.day, _endtime!.hour, _endtime!.minute)),
     });
   }
 }
