@@ -202,13 +202,13 @@ class _admin_homeState extends State<admin_home> {
     );
   }
 
-  Future getStore() async {
-    var data = await FirebaseFirestore.instance.collection('stores').get();
-
-    setState(() {
-      thestores =
-          List.from(data.docs.map((doc) => StoreDataModel.fromSnapshot(doc)));
-      // storeData = newstores;
+  getStore() {
+    FirebaseFirestore.instance.collection('stores').snapshots().listen((data) {
+      setState(() {
+        thestores =
+            List.from(data.docs.map((doc) => StoreDataModel.fromSnapshot(doc)));
+        // storeData = newstores;
+      });
     });
   }
 }

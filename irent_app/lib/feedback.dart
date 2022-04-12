@@ -389,18 +389,18 @@ class _FeedbackPageState extends State<FeedbackPage> {
     );
   }
 
-  Future getStore() async {
-    var data = await FirebaseFirestore.instance.collection('stores').get();
-
-    setState(() {
-      thestores =
-          List.from(data.docs.map((doc) => StoreDataModel.fromSnapshot(doc)));
-      // storeData = newstores;
+  getStore() {
+    FirebaseFirestore.instance.collection('stores').snapshots().listen((data) {
+      setState(() {
+        thestores =
+            List.from(data.docs.map((doc) => StoreDataModel.fromSnapshot(doc)));
+        // storeData = newstores;
+      });
     });
   }
 
-  Future getItems() async {
-    var data = await FirebaseFirestore.instance
+  getItems() {
+    FirebaseFirestore.instance
         .collection('stores')
         .doc(thestores
             .where((element) => element.storeName == dropdownValueStore)
@@ -408,12 +408,13 @@ class _FeedbackPageState extends State<FeedbackPage> {
             .storeId
             .toString())
         .collection('items')
-        .get();
-
-    setState(() {
-      theitems =
-          List.from(data.docs.map((doc) => ItemDataModel.fromSnapshot(doc)));
-      // storeData = newstores;
+        .snapshots()
+        .listen((data) {
+      setState(() {
+        theitems =
+            List.from(data.docs.map((doc) => ItemDataModel.fromSnapshot(doc)));
+        // storeData = newstores;
+      });
     });
   }
 
