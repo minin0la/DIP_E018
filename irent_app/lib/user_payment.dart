@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:irent_app/time.dart';
 import 'package:irent_app/user_payment_successful.dart';
 //import '../size_config.dart';
 import 'constants.dart';
@@ -99,8 +100,7 @@ class _user_paymentState extends State<user_payment> {
                       returnDate: thebooking[index].product_endDateTime,
                       collectTime: thebooking[index].product_startDateTime,
                       returnTime: thebooking[index].product_endDateTime,
-                      ticketNumber:
-                          int.parse(thebooking[index].ticket_number.toString()),
+                      // ticketNumber: thebooking[index].ticket_number,
                       displayPicture:
                           thebooking[index].product_displayPicture.toString());
                 }),
@@ -225,11 +225,11 @@ Widget _historyCard(
     required String itemName,
     required int qty,
     required int pricePerhour,
-    required String collectDate,
-    required String returnDate,
-    required String collectTime,
-    required String returnTime,
-    required int ticketNumber,
+    required Timestamp collectDate,
+    required Timestamp returnDate,
+    required Timestamp collectTime,
+    required Timestamp returnTime,
+    // required int ticketNumber,
     required String displayPicture}) {
   final TextStyle subtitleStyles = TextStyle(
     fontFamily: 'SF_Pro_Rounded',
@@ -306,7 +306,7 @@ Widget _historyCard(
                                 width: 135,
                                 child: Center(
                                   child: Text(
-                                    '$collectDate - $returnDate',
+                                    '${DateFormat('dd/MM/yyyy').format(collectDate.toDate())} - ${DateFormat('dd/MM/yyyy').format(returnDate.toDate())}',
                                     style: TextStyle(
                                       fontFamily: 'SF_Pro_Rounded',
                                       fontSize: 12,
@@ -358,7 +358,7 @@ Widget _historyCard(
                                 width: 135,
                                 child: Center(
                                   child: Text(
-                                    '$collectTime',
+                                    '${DateFormat('kk:mm:ss').format(collectTime.toDate())}',
                                     style: TextStyle(
                                       fontFamily: 'SF_Pro_Rounded',
                                       fontSize: 12,
@@ -410,7 +410,7 @@ Widget _historyCard(
                                 width: 135,
                                 child: Center(
                                   child: Text(
-                                    '$returnTime',
+                                    '${DateFormat('kk:mm:ss').format(returnTime.toDate())}',
                                     style: TextStyle(
                                       fontFamily: 'SF_Pro_Rounded',
                                       fontSize: 12,
@@ -548,10 +548,11 @@ class BasketDataModel {
       product_startdate = "",
       product_enddate = "",
       product_starttime = "",
-      product_endtime = "",
-      product_startDateTime = "",
-      product_endDateTime = "",
-      ticket_number = "";
+      product_endtime = "";
+
+  Timestamp product_startDateTime = Timestamp.now(),
+      product_endDateTime = Timestamp.now();
+  // ticket_number = "";
 
   BasketDataModel();
   Map<String, dynamic> toJson() => {
@@ -567,7 +568,7 @@ class BasketDataModel {
         'product_endtime': product_endtime,
         'product_startDateTime': product_startDateTime.toString(),
         'product_endDateTime': product_endDateTime.toString(),
-        'ticket_number': ticket_number,
+        // 'ticket_number': ticket_number,
         // 'item_id': item_id,
       };
   BasketDataModel.fromSnapshot(snapshot)
@@ -581,7 +582,7 @@ class BasketDataModel {
         product_enddate = snapshot.data()['product_enddate'].toString(),
         product_starttime = snapshot.data()['product_starttime'],
         product_endtime = snapshot.data()['product_endtime'],
-        product_startDateTime = snapshot.data()['startDateTime'].toString(),
-        product_endDateTime = snapshot.data()['endDateTime'].toString(),
-        ticket_number = snapshot.data()['ticket_number'].toString();
+        product_startDateTime = snapshot.data()['startDateTime'],
+        product_endDateTime = snapshot.data()['endDateTime'];
+  // ticket_number = snapshot.data()['ticket_number'].toString();
 }

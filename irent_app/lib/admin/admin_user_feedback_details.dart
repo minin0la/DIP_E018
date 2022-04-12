@@ -261,7 +261,7 @@ class UserFeedbackDetailsPage extends StatelessWidget {
         ),
         _fields(
             title: 'Submission Time',
-            subtitle: DateFormat('dd/mm/yyyy, kk:mm:ss a')
+            subtitle: DateFormat('dd/MM/yyyy, kk:mm:ss a')
                 .format(submissionTime.toDate()),
             width: double.infinity),
         _fields(
