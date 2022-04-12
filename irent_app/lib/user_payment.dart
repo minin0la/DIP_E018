@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:irent_app/user_payment_successful.dart';
 //import '../size_config.dart';
 import 'constants.dart';
+import 'package:intl/intl.dart';
 import 'user_bookings.dart';
 
 class user_payment extends StatefulWidget {
@@ -39,6 +40,11 @@ class _user_paymentState extends State<user_payment> {
   final Color marigold = const Color(0xFFECA400);
   final Color transparent = const Color(0x4DE3E3E3);
   TextEditingController total = TextEditingController();
+
+  getCustomFormattedDateTime(String givenDateTime, String dateFormat) {
+    final DateTime docDateTime = DateTime.parse(givenDateTime);
+    return DateFormat(dateFormat).format(docDateTime);
+  }
 
   @override
   void didChangeDependencies() {
@@ -89,14 +95,10 @@ class _user_paymentState extends State<user_payment> {
                           int.parse(thebooking[index].product_count.toString()),
                       pricePerhour:
                           int.parse(thebooking[index].product_price.toString()),
-                      collectDate:
-                          thebooking[index].product_startDateTime.toString(),
-                      returnDate:
-                          thebooking[index].product_endDateTime.toString(),
-                      collectTime:
-                          thebooking[index].product_startDateTime.toString(),
-                      returnTime:
-                          thebooking[index].product_endDateTime.toString(),
+                      collectDate: thebooking[index].product_startDateTime,
+                      returnDate: thebooking[index].product_endDateTime,
+                      collectTime: thebooking[index].product_startDateTime,
+                      returnTime: thebooking[index].product_endDateTime,
                       ticketNumber:
                           int.parse(thebooking[index].ticket_number.toString()),
                       displayPicture:
