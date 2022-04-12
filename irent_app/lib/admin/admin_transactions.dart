@@ -1,5 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:irent_app/admin/admin_constants.dart';
+// import 'package:irent_app/admin/admin_constants.dart';
 import 'package:irent_app/user_store_uroc.dart';
 import 'dart:ui';
 import '../app_icons.dart';
@@ -41,6 +42,13 @@ class _admin_transactionsState extends State<admin_transactions> {
       fontWeight: FontWeight.w600,
       fontSize: 30,
       color: Color(0xFFFBFBFF));
+  List transactionData = [];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getTransaction();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,17 +150,17 @@ class _admin_transactionsState extends State<admin_transactions> {
                 child: ListView.builder(
                     itemCount: transactionData.length,
                     itemBuilder: (context, index) {
-                      for (var trans in transactionData) {
-                        return _transaction(
-                            context: context,
-                            ticketNumber: transactionData[index]['ticketNumber']
-                                .toString(),
-                            paymentDate: transactionData[index]['paymentDate']
-                                .toString(),
-                            totalAmount: transactionData[index]['totalAmount']
-                                .toString());
-                      }
-                      throw 'No Data Found';
+                      // for (var trans in transactionData) {
+                      return _transaction(
+                          context: context,
+                          ticketNumber:
+                              transactionData[index]['ticketNumber'].toString(),
+                          paymentDate:
+                              transactionData[index]['paymentDate'].toString(),
+                          totalAmount:
+                              transactionData[index]['totalAmount'].toString());
+                      // }
+                      // throw 'No Data Found';
                     }),
               ),
             )
@@ -277,4 +285,50 @@ class _admin_transactionsState extends State<admin_transactions> {
       ],
     );
   }
+
+  getTransaction() {
+    FirebaseFirestore.instance
+        .collection('transactions')
+        .snapshots()
+        .listen((data) {
+      setState(() {
+        transactionData = List.from(
+            data.docs.map((doc) => BookingsDataModel.fromSnapshot(doc)));
+        // storeData = newstores;
+      });
+    });
+  }
+}
+
+class BookingsDataModel {
+  String name = "", displayPicture = "", status = "";
+  int qty = 0, price = 0, ticketNumber = 0;
+  Timestamp collectDate = Timestamp.now(),
+      returnDate = Timestamp.now(),
+      collectTime = Timestamp.now(),
+      returnTime = Timestamp.now();
+  BookingsDataModel();
+  Map<String, dynamic> toJson() => {
+        "name": name,
+        "qty": qty,
+        "price": price,
+        "collectDate": collectDate,
+        "returnDate": returnDate,
+        "collectTime": collectTime,
+        "returnTime": returnTime,
+        "ticketNumber": ticketNumber,
+        "displayPicture": displayPicture,
+        "status": status,
+      };
+  BookingsDataModel.fromSnapshot(snapshot)
+      : name = snapshot.data()['name'],
+        qty = snapshot.data()['qty'],
+        price = snapshot.data()['price'],
+        collectDate = snapshot.data()['collectDate'],
+        returnDate = snapshot.data()['returnDate'],
+        collectTime = snapshot.data()['collectTime'],
+        returnTime = snapshot.data()['returnTime'],
+        ticketNumber = snapshot.data()['ticketNumber'],
+        status = snapshot.data()['status'],
+        displayPicture = snapshot.data()['displayPicture'];
 }

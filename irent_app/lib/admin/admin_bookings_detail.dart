@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -85,13 +86,13 @@ class BookingDetailsPage extends StatelessWidget {
                   child: _bookingsDetails(
                     user: bookingsDataModel.user,
                     itemName: bookingsDataModel.name,
-                    qty: int.parse(bookingsDataModel.qty),
-                    price: num.parse(bookingsDataModel.price),
+                    qty: bookingsDataModel.qty,
+                    price: bookingsDataModel.price,
                     collectDate: bookingsDataModel.collectDate,
                     returnDate: bookingsDataModel.returnDate,
                     collectTime: bookingsDataModel.collectTime,
                     returnTime: bookingsDataModel.returnTime,
-                    ticketNumber: int.parse(bookingsDataModel.ticketNumber),
+                    ticketNumber: bookingsDataModel.ticketNumber,
                     displayPicture: bookingsDataModel.displayPicture,
                     itemLoc: bookingsDataModel.itemLoc,
                     returned: bookingsDataModel.returned,
@@ -147,10 +148,10 @@ Widget _bookingsDetails(
     required String itemName,
     required int qty,
     required num price,
-    required String collectDate,
-    required String returnDate,
-    required String collectTime,
-    required String returnTime,
+    required Timestamp collectDate,
+    required Timestamp returnDate,
+    required Timestamp collectTime,
+    required Timestamp returnTime,
     required int ticketNumber,
     required String displayPicture,
     required String itemLoc,

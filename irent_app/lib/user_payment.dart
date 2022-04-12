@@ -247,6 +247,9 @@ class _user_paymentState extends State<user_payment> {
         await FirebaseFirestore.instance.collection('transactions').get();
     var count = userTransaction.docs.length + 1;
     var transactions = FirebaseFirestore.instance.collection('transactions');
+    var wallet = FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid);
     for (var eachDoc in thebooking) {
       transactions.doc(count.toString()).set({
         'collectDate': eachDoc.product_startDateTime,
@@ -266,7 +269,13 @@ class _user_paymentState extends State<user_payment> {
         'ticketNumber': count,
         'status': "confirmed",
         'box_id': eachDoc.product_box_id,
-        'box_number': eachDoc.product_box_number,
+        'collectedDate': "",
+        'collectedTime': "",
+        'returnedDate': "",
+        'returnedTime': "",
+      });
+      wallet.update({
+        'wallet': FieldValue.increment(int.parse(eachDoc.product_price)),
       });
       count++;
     }

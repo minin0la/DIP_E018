@@ -32,27 +32,34 @@ class _admin_bookingsState extends State<admin_bookings> {
   DocumentReference users =
       FirebaseFirestore.instance.collection('users').doc(uid);
 
-  final List<BookingsDataModel> bookings = List.generate(
-      bookingsData.length,
-      (index) => BookingsDataModel(
-            '${bookingsData[index]['user']}',
-            '${bookingsData[index]['name']}',
-            '${bookingsData[index]['qty']}',
-            '${bookingsData[index]['price']}',
-            '${bookingsData[index]['collectDate']}',
-            '${bookingsData[index]['returnDate']}',
-            '${bookingsData[index]['collectTime']}',
-            '${bookingsData[index]['returnTime']}',
-            '${bookingsData[index]['ticketNumber']}',
-            '${bookingsData[index]['displayPicture']}',
-            '${bookingsData[index]['itemLoc']}',
-            '${bookingsData[index]['returned']}',
-            '${bookingsData[index]['imgCapture']}',
-          ));
+  // final List<BookingsDataModel> bookings = List.generate(
+  //     bookingsData.length,
+  //     (index) => BookingsDataModel(
+  //           '${bookingsData[index]['user']}',
+  //           '${bookingsData[index]['name']}',
+  //           '${bookingsData[index]['qty']}',
+  //           '${bookingsData[index]['price']}',
+  //           '${bookingsData[index]['collectDate']}',
+  //           '${bookingsData[index]['returnDate']}',
+  //           '${bookingsData[index]['collectTime']}',
+  //           '${bookingsData[index]['returnTime']}',
+  //           '${bookingsData[index]['ticketNumber']}',
+  //           '${bookingsData[index]['displayPicture']}',
+  //           '${bookingsData[index]['itemLoc']}',
+  //           '${bookingsData[index]['returned']}',
+  //           '${bookingsData[index]['imgCapture']}',
+  //         ));
 
   DateTime dateTime = DateTime.now();
   ValueNotifier<DateTime> _dateTimeNotifier =
       ValueNotifier<DateTime>(DateTime.now());
+
+  List transactionData = [];
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getTransaction();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,23 +87,23 @@ class _admin_bookingsState extends State<admin_bookings> {
               width: MediaQuery.of(context).size.width,
               padding: const EdgeInsets.only(left: 15, right: 15),
               child: ListView.builder(
-                  itemCount: bookingsData.length,
+                  itemCount: transactionData.length,
                   itemBuilder: (context, index) {
-                    for (var product in bookingsData) {
-                      return _bookingsCard(
-                          context: context,
-                          index: index,
-                          itemName: bookings[index].name,
-                          qty: int.parse(bookings[index].qty),
-                          price: num.parse(bookings[index].price),
-                          collectDate: bookings[index].collectDate,
-                          returnDate: bookings[index].returnDate,
-                          collectTime: bookings[index].collectTime,
-                          returnTime: bookings[index].returnTime,
-                          ticketNumber: int.parse(bookings[index].ticketNumber),
-                          displayPicture: bookings[index].displayPicture);
-                    }
-                    throw 'No Data Found';
+                    // for (var product in bookingsData) {
+                    return _bookingsCard(
+                        context: context,
+                        index: index,
+                        itemName: transactionData[index].name,
+                        qty: transactionData[index].qty,
+                        price: transactionData[index].price,
+                        collectDate: transactionData[index].collectDate,
+                        returnDate: transactionData[index].returnDate,
+                        collectTime: transactionData[index].collectTime,
+                        returnTime: transactionData[index].returnTime,
+                        ticketNumber: transactionData[index].ticketNumber,
+                        displayPicture: transactionData[index].displayPicture);
+                    // }
+                    // throw 'No Data Found';
                   }),
             ),
           ),
@@ -205,10 +212,10 @@ class _admin_bookingsState extends State<admin_bookings> {
       required String itemName,
       required int qty,
       required num price,
-      required String collectDate,
-      required String returnDate,
-      required String collectTime,
-      required String returnTime,
+      required Timestamp collectDate,
+      required Timestamp returnDate,
+      required Timestamp collectTime,
+      required Timestamp returnTime,
       required int ticketNumber,
       required String displayPicture}) {
     final TextStyle subtitleStyles = TextStyle(
@@ -286,8 +293,8 @@ class _admin_bookingsState extends State<admin_bookings> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      BookingDetailsPage(bookingsDataModel: bookings[index]),
+                  builder: (context) => BookingDetailsPage(
+                      bookingsDataModel: transactionData[index]),
                 ));
           },
         ),
@@ -295,35 +302,60 @@ class _admin_bookingsState extends State<admin_bookings> {
       ],
     );
   }
+
+  getTransaction() {
+    FirebaseFirestore.instance
+        .collection('transactions')
+        .snapshots()
+        .listen((data) {
+      setState(() {
+        transactionData = List.from(
+            data.docs.map((doc) => BookingsDataModel.fromSnapshot(doc)));
+        // storeData = newstores;
+      });
+    });
+  }
 }
 
 class BookingsDataModel {
-  final String user,
-      name,
-      qty,
-      price,
-      collectDate,
-      returnDate,
-      collectTime,
-      returnTime,
-      ticketNumber,
-      displayPicture,
-      itemLoc,
-      returned,
-      imgCapture;
+  String user = "",
+      name = "",
+      displayPicture = "",
+      status = "",
+      itemLoc = "",
+      returned = "",
+      imgCapture = "";
+  int qty = 0, price = 0, ticketNumber = 0;
+  Timestamp collectDate = Timestamp.now(),
+      returnDate = Timestamp.now(),
+      collectTime = Timestamp.now(),
+      returnTime = Timestamp.now();
 
-  BookingsDataModel(
-      this.user,
-      this.name,
-      this.qty,
-      this.price,
-      this.collectDate,
-      this.returnDate,
-      this.collectTime,
-      this.returnTime,
-      this.ticketNumber,
-      this.displayPicture,
-      this.itemLoc,
-      this.returned,
-      this.imgCapture);
+  BookingsDataModel();
+  Map<String, dynamic> toJson() => {
+        "user": user,
+        "name": name,
+        "qty": qty,
+        "price": price,
+        "collectDate": collectDate,
+        "returnDate": returnDate,
+        "collectTime": collectTime,
+        "returnTime": returnTime,
+        "ticketNumber": ticketNumber,
+        "displayPicture": displayPicture,
+        "status": status,
+        "imgCapture": imgCapture,
+      };
+  BookingsDataModel.fromSnapshot(snapshot)
+      : name = snapshot.data()['name'],
+        qty = snapshot.data()['qty'],
+        price = snapshot.data()['price'],
+        collectDate = snapshot.data()['collectDate'],
+        returnDate = snapshot.data()['returnDate'],
+        collectTime = snapshot.data()['collectTime'],
+        returnTime = snapshot.data()['returnTime'],
+        ticketNumber = snapshot.data()['ticketNumber'],
+        status = snapshot.data()['status'],
+        imgCapture = "images/overcooked_cd.jpeg",
+        displayPicture = snapshot.data()['displayPicture'];
 }
