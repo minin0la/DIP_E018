@@ -427,8 +427,11 @@ class _UserStoreItemsPageState extends State<UserStoreItemsPage> {
             height: 28.25,
             width: 126,
             //color: Colors.black,
-            child: FutureBuilder(
-              future: getUserInfo(),
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("users")
+                  .doc(uid)
+                  .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (snapshot.hasData && snapshot.data!.exists) {
