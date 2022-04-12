@@ -427,8 +427,11 @@ class _UserStoreItemsPageState extends State<UserStoreItemsPage> {
             height: 28.25,
             width: 126,
             //color: Colors.black,
-            child: FutureBuilder(
-              future: getUserInfo(),
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("users")
+                  .doc(uid)
+                  .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (snapshot.hasData && snapshot.data!.exists) {
@@ -529,7 +532,9 @@ class ItemDataModel {
       product_category = "",
       quantity = "",
       item_id = "",
-      box_id = "";
+      box_id = "",
+      storeName = "",
+      storeId = "";
   int box_number = 0;
   // item_id = "";
 
@@ -543,6 +548,8 @@ class ItemDataModel {
         'item_id': item_id,
         'box_id': box_id,
         'box_number': box_number,
+        'storeName': storeName,
+        'storeId': storeId,
         // 'item_id': item_id,
       };
   ItemDataModel.fromSnapshot(snapshot)
@@ -553,7 +560,9 @@ class ItemDataModel {
         quantity = snapshot.data()['quantity'],
         item_id = snapshot.id,
         box_id = snapshot.data()['box_id'],
-        box_number = snapshot.data()['box_number'];
+        box_number = snapshot.data()['box_number'],
+        storeName = snapshot.data()['storeName'],
+        storeId = snapshot.data()['storeId'];
 }
 
 class CatDataModel {

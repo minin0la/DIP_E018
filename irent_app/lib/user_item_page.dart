@@ -685,6 +685,8 @@ class _user_item_pageState extends State<user_item_page> {
           _starttime!.minute)),
       'endDateTime': Timestamp.fromDate(DateTime(_enddate!.year,
           _enddate!.month, _enddate!.day, _endtime!.hour, _endtime!.minute)),
+      'storeName': widget.itemDataModel.storeName,
+      'storeId': widget.itemDataModel.storeId,
     });
   }
 }

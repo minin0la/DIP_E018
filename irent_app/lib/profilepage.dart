@@ -43,8 +43,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Column(
                     // ignore: prefer_const_literals_to_create_immutables
                     children: [
-                      FutureBuilder(
-                        future: getUserInfo(),
+                      StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(uid)
+                            .snapshots(),
                         builder: (BuildContext context,
                             AsyncSnapshot<DocumentSnapshot> snapshot) {
                           if (snapshot.hasData && snapshot.data!.exists) {

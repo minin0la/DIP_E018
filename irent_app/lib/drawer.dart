@@ -21,8 +21,11 @@ class NavigationDrawer extends StatelessWidget {
           margin: EdgeInsets.only(left: 30, top: 30),
           child: Container(
             height: 200,
-            child: FutureBuilder(
-              future: getUserInfo(),
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("users")
+                  .doc(uid)
+                  .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (snapshot.hasData && snapshot.data!.exists) {

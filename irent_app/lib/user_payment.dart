@@ -159,6 +159,8 @@ class _user_paymentState extends State<user_payment> {
                       children: [
                         InkWell(
                           onTap: () {
+                            addToTransaction();
+                            deleteCollection();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -201,6 +203,27 @@ class _user_paymentState extends State<user_payment> {
     );
   }
 
+  void deleteCollection() {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .collection('basket')
+        .get()
+        .then((snaps) {
+      for (DocumentSnapshot ds in snaps.docs) {
+        ds.reference.delete();
+      }
+    });
+  }
+
+  // Future<void> deleteItem(product_id) {
+  //   CollectionReference selectitem = FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(FirebaseAuth.instance.currentUser?.uid)
+  //       .collection('basket');
+  //   return selectitem.();
+  // }
+
   Future getBasket() async {
     var data = await FirebaseFirestore.instance
         .collection('users')
@@ -217,6 +240,32 @@ class _user_paymentState extends State<user_payment> {
 
       // storeData = newstores;
     });
+  }
+
+  Future<void> addToTransaction() async {
+    var userTransaction =
+        await FirebaseFirestore.instance.collection('transactions').get();
+    var count = userTransaction.docs.length + 1;
+    var transactions = FirebaseFirestore.instance.collection('transactions');
+    for (var eachDoc in thebooking) {
+      transactions.doc(count.toString()).set({
+        'collectDate': eachDoc.product_startDateTime,
+        'collectTime': 'yes',
+        'displayPicture': 'yes',
+        'imgCapture': 'yes',
+        'itemLoc': 'yes',
+        'itemId': 'yes',
+        'name': 'yes',
+        'price': 0,
+        'qty': 0,
+        'returnDate': 'yes',
+        'returnTime': 'yes',
+        'returned': 'yes',
+        'user': 'yes',
+        'ticketNumber': count,
+      });
+      count++;
+    }
   }
 }
 
@@ -585,4 +634,5 @@ class BasketDataModel {
         product_startDateTime = snapshot.data()['startDateTime'],
         product_endDateTime = snapshot.data()['endDateTime'];
   // ticket_number = snapshot.data()['ticket_number'].toString();
+
 }
