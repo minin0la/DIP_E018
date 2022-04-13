@@ -12,11 +12,13 @@ enum qns2 { yes, no }
 class collect_barcode extends StatefulWidget {
   final String box_id;
   final String store_id;
-  const collect_barcode({
-    Key? key,
-    required this.store_id,
-    required this.box_id,
-  }) : super(key: key);
+  final String ticketNumber;
+  const collect_barcode(
+      {Key? key,
+      required this.store_id,
+      required this.box_id,
+      required this.ticketNumber})
+      : super(key: key);
 
   @override
   State<collect_barcode> createState() => _collect_barcodeState();
@@ -33,14 +35,25 @@ class _collect_barcodeState extends State<collect_barcode> {
   Condition? _condition;
   qns2? _qns2;
   String thekey = "";
-
+  String thestatus = "";
   void initState() {
     CollectionReference keyCollection =
         FirebaseFirestore.instance.collection('Key');
-    keyCollection.doc('user').get().then((DocumentSnapshot datas) {
+    keyCollection.doc('user').snapshots().listen((event) {
       try {
         setState(() {
-          thekey = datas.get(FieldPath(['value']));
+          thekey = event.get(FieldPath(['value']));
+        });
+      } on StateError catch (e) {
+        print('No nested field exists!');
+      }
+    });
+    CollectionReference statusCollection =
+        FirebaseFirestore.instance.collection('transactions');
+    statusCollection.doc(widget.ticketNumber).snapshots().listen((event) {
+      try {
+        setState(() {
+          thestatus = event.get(FieldPath(['status']));
         });
       } on StateError catch (e) {
         print('No nested field exists!');
@@ -48,8 +61,7 @@ class _collect_barcodeState extends State<collect_barcode> {
     });
     super.initState();
 
-    Timer(Duration(seconds: 1), () {
-      //triggered action after countdown
+    if (thestatus == "ongoing") {
       showModalBottomSheet<void>(
         isDismissible: false,
         enableDrag: false,
@@ -214,7 +226,7 @@ class _collect_barcodeState extends State<collect_barcode> {
           });
         },
       );
-    });
+    }
   }
 
   @override
@@ -222,8 +234,8 @@ class _collect_barcodeState extends State<collect_barcode> {
     Map userQR = {
       'username': FirebaseAuth.instance.currentUser!.email,
       'key': thekey,
-      'status': '1',
-      'store': widget.store_id.toString(),
+      'status': 'ongoing',
+      'ticketNumber': widget.ticketNumber.toString(),
       'box': widget.box_id.toString(),
     };
     return Scaffold(

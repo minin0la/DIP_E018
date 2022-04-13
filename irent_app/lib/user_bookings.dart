@@ -222,6 +222,7 @@ class _user_bookingsState extends State<user_bookings> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => collect_barcode(
+                        ticketNumber: ticketNumber.toString(),
                         store_id: store_id,
                         box_id:
                             box_id))); //time for collection => collect_barcode()
