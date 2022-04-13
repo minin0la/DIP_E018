@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:irent_app/admin/admin_constants.dart';
 import 'package:irent_app/user_store_uroc.dart';
 import 'dart:ui';
@@ -152,15 +153,11 @@ class _admin_transactionsState extends State<admin_transactions> {
                 child: ListView.builder(
                     itemCount: thetransactions.length,
                     itemBuilder: (context, index) {
-                      for (var trans in transactionData) {
-                        return _transaction(
-                            context: context,
-                            ticketNumber: thetransactions[index].ticketNumber,
-                            paymentDate: thetransactions[index].collectDate,
-                            totalAmount: thetransactions[index].qty *
-                                thetransactions[index].price);
-                      }
-                      throw 'No Data Found';
+                      return _transaction(
+                          context: context,
+                          ticketNumber: thetransactions[index].ticketNumber,
+                          paymentDate: thetransactions[index].collectDate,
+                          totalAmount: thetransactions[index].price);
                     }),
               ),
             )
@@ -217,23 +214,23 @@ class _admin_transactionsState extends State<admin_transactions> {
     );
   }
 
-  getTransactions() {
-    FirebaseFirestore.instance
-        .collection('transactions')
-        .snapshots()
-        .listen((data) {
+  Future getTransactions() async {
+    var thisdata =
+        await FirebaseFirestore.instance.collection('transactions').get();
+    {
       setState(() {
         thetransactions = List.from(
-            data.docs.map((doc) => TransactionDataModel.fromSnapshot(doc)));
+            thisdata.docs.map((doc) => TransactionDataModel.fromSnapshot(doc)));
         // storeData = newstores;
       });
-    });
+    }
+    ;
   }
 
   Widget _transaction(
       {required BuildContext context,
       required String ticketNumber,
-      required String paymentDate,
+      required Timestamp paymentDate,
       required String totalAmount}) {
     TextStyle _textStyle({required double size, required FontWeight weight}) {
       return TextStyle(
@@ -271,7 +268,7 @@ class _admin_transactionsState extends State<admin_transactions> {
                     ],
                   ),
                   Text(
-                    paymentDate,
+                    '${DateFormat('dd/MM/yyyy').format(paymentDate.toDate())}',
                     style: _textStyle(size: 12, weight: FontWeight.w500),
                   )
                 ],
@@ -301,52 +298,18 @@ class _admin_transactionsState extends State<admin_transactions> {
 }
 
 class TransactionDataModel {
-  String collectDate = "",
-      collectTime = "",
-      displayPicture = "",
-      imgCapture = "",
-      itemLoc = "",
-      itemId = "",
-      name = "",
-      price = "",
-      qty = "",
-      returnDate = "",
-      returnTime = "",
-      returned = "",
-      user = "",
-      ticketNumber = "";
+  Timestamp collectDate = Timestamp.now();
+  String price = "", ticketNumber = "";
 
   TransactionDataModel();
   Map<String, dynamic> toJson() => {
         'collectDate': collectDate,
-        'collectTime': collectTime,
-        'displayPicture': displayPicture,
-        'imgCapture': imgCapture,
-        'itemLoc': itemLoc,
-        'itemId': itemId,
-        'name': name,
-        'price': price,
-        'qty': qty,
-        'returnDate': returnDate,
-        'returnTime': returnTime,
-        'returned': returned,
-        'user': user,
-        'ticketNumber': ticketNumber
+        'price': price.toString(),
+        'ticketNumber': ticketNumber.toString(),
         // 'item_id': item_id,
       };
   TransactionDataModel.fromSnapshot(snapshot)
       : collectDate = snapshot.data()['collectDate'],
-        collectTime = snapshot.data()['collectTime'],
-        displayPicture = snapshot.data()['displayPicture'],
-        imgCapture = snapshot.data()['imgCapture'],
-        itemLoc = snapshot.data()['itemLoc'],
-        itemId = snapshot.data()['itemId'],
-        name = snapshot.data()['name'],
-        price = snapshot.data()['price'],
-        qty = snapshot.data()['qty'],
-        returnDate = snapshot.data()['returnDate'],
-        returnTime = snapshot.data()['returnTime'],
-        returned = snapshot.data()['returned'],
-        user = snapshot.data()['user'],
-        ticketNumber = snapshot.data()['ticketNumber'];
+        price = snapshot.data()['price'].toString(),
+        ticketNumber = snapshot.data()['ticketNumber'].toString();
 }
