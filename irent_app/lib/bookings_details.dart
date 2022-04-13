@@ -100,6 +100,8 @@ class bookings_details extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) => return_barcode(
+                                  ticketNumber:
+                                      bookingsDataModel.ticketNumber.toString(),
                                   store_id: bookingsDataModel.storeId,
                                   box_id: bookingsDataModel
                                       .box_id))); //if return succeess --> return_success()

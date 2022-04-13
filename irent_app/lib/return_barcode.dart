@@ -14,12 +14,14 @@ class return_barcode extends StatefulWidget {
 
   final String box_id;
   final String store_id;
+  final String ticketNumber;
 
-  const return_barcode({
-    Key? key,
-    required this.store_id,
-    required this.box_id,
-  }) : super(key: key);
+  const return_barcode(
+      {Key? key,
+      required this.store_id,
+      required this.box_id,
+      required this.ticketNumber})
+      : super(key: key);
 
   @override
   State<return_barcode> createState() => _return_barcodeState();
@@ -29,13 +31,26 @@ class _return_barcodeState extends State<return_barcode> {
   final controller = TextEditingController();
 
   String thekey = "";
+  String thestatus = "";
+
   void initState() {
     CollectionReference keyCollection =
         FirebaseFirestore.instance.collection('Key');
-    keyCollection.doc('user').get().then((DocumentSnapshot datas) {
+    keyCollection.doc('user').snapshots().listen((event) {
       try {
         setState(() {
-          thekey = datas.get(FieldPath(['value']));
+          thekey = event.get(FieldPath(['value']));
+        });
+      } on StateError catch (e) {
+        print('No nested field exists!');
+      }
+    });
+    CollectionReference statusCollection =
+        FirebaseFirestore.instance.collection('transactions');
+    statusCollection.doc(widget.ticketNumber).snapshots().listen((event) {
+      try {
+        setState(() {
+          thestatus = event.get(FieldPath(['status']));
         });
       } on StateError catch (e) {
         print('No nested field exists!');
@@ -49,8 +64,8 @@ class _return_barcodeState extends State<return_barcode> {
     Map userQR = {
       'username': FirebaseAuth.instance.currentUser!.email,
       'key': thekey,
-      'status': '1',
-      'store': widget.store_id.toString(),
+      'status': 'completed',
+      'ticketNumber': widget.ticketNumber.toString(),
       'box': widget.box_id.toString(),
     };
     return Scaffold(
