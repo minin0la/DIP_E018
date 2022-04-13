@@ -237,11 +237,28 @@ class _user_paymentState extends State<user_payment> {
           List.from(data.docs.map((doc) => BasketDataModel.fromSnapshot(doc)));
       for (var i = 0; i < thebooking.length; i++) {
         totalCost += int.parse(thebooking[i].product_price.toString()) *
-            int.parse(thebooking[i].product_count.toString());
+            int.parse(thebooking[i].product_count.toString()) *
+            int.parse(calcTime(thebooking[i].product_startDateTime,
+                    thebooking[i].product_endDateTime)
+                .toString());
       }
 
       // storeData = newstores;
     });
+  }
+
+  calcTime(Timestamp startDateTime, Timestamp endDateTime) {
+    try {
+      var borrowPeriod = DateTime.fromMillisecondsSinceEpoch(
+              endDateTime.millisecondsSinceEpoch)
+          .difference(DateTime.fromMillisecondsSinceEpoch(
+              startDateTime.millisecondsSinceEpoch))
+          .inHours;
+
+      return borrowPeriod;
+    } catch (e) {
+      return 0;
+    }
   }
 
   Future<void> addToTransaction() async {

@@ -111,21 +111,8 @@ class _basketState extends State<basket> {
                   child: Row(
                     children: [
                       Expanded(
-                        flex: 1,
-                        child: Row(
-                          children: [
-                            Container(width: 20, child: checkbox()),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10, top: 8),
-                              child: Text('All'),
-                            )
-                          ],
-                        ),
-                      ),
-                      Expanded(
                         flex: 3,
                         child: Container(
-                          margin: EdgeInsets.only(left: 70),
                           height: 58,
                           width: 67,
                           child: Column(
@@ -225,12 +212,29 @@ class _basketState extends State<basket> {
             data.docs.map((doc) => BasketDataModel.fromSnapshot(doc)));
         for (var i = 0; i < thebasket.length; i++) {
           totalCost += int.parse(thebasket[i].product_price.toString()) *
-              int.parse(thebasket[i].product_count.toString());
+              int.parse(thebasket[i].product_count.toString()) *
+              int.parse(calcTime(thebasket[i].product_startDateTime,
+                      thebasket[i].product_endDateTime)
+                  .toString());
         }
 
         // storeData = newstores;
       });
     });
+  }
+
+  calcTime(Timestamp startDateTime, Timestamp endDateTime) {
+    try {
+      var borrowPeriod = DateTime.fromMillisecondsSinceEpoch(
+              endDateTime.millisecondsSinceEpoch)
+          .difference(DateTime.fromMillisecondsSinceEpoch(
+              startDateTime.millisecondsSinceEpoch))
+          .inHours;
+
+      return borrowPeriod;
+    } catch (e) {
+      return 0;
+    }
   }
 
   Widget _productDetails(
@@ -265,7 +269,7 @@ class _basketState extends State<basket> {
             children: [
               Expanded(
                 child: (Column(
-                  children: [checkbox()],
+                  children: [SizedBox()],
                 )),
               ),
               Expanded(
@@ -526,8 +530,8 @@ class BasketDataModel {
         'product_enddate': product_enddate,
         'product_starttime': product_starttime,
         'product_endtime': product_endtime,
-        'product_startDateTime': product_startDateTime.toString(),
-        'product_endDateTime': product_endDateTime.toString(),
+        'product_startDateTime': product_startDateTime,
+        'product_endDateTime': product_endDateTime,
         'storeId': storeId,
         'storeName': storeName,
         'product_box_number': product_box_number,

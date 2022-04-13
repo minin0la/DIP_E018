@@ -115,7 +115,7 @@ class _user_item_pageState extends State<user_item_page> {
 
   void _decreamentCount() {
     setState(() {
-      _count--;
+      if (_count > 0) _count--;
     });
   }
 

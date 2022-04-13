@@ -192,11 +192,12 @@ class _HistoryPageState extends State<HistoryPage> {
                       children: [
                         Text('Qty: $qty   |   Price: \$$price',
                             style: subtitleStyles),
-                        Text('Date: $collectDate - $returnDate',
+                        Text(
+                            'Date: ${DateTime.fromMillisecondsSinceEpoch(collectDate.millisecondsSinceEpoch)} - ${DateTime.fromMillisecondsSinceEpoch(returnDate.millisecondsSinceEpoch)}',
                             style: subtitleStyles),
-                        Text('Collection Time: $collectTime',
-                            style: subtitleStyles),
-                        Text('Return Time: $returnTime', style: subtitleStyles),
+                        //Text('Collection Time: ${DateTime.fromMillisecondsSinceEpoch(collectDate.millisecondsSinceEpoch)}',
+                        //    style: subtitleStyles),
+                        //Text('Return Time: $returnTime', style: subtitleStyles),
                       ],
                     ),
                   ),

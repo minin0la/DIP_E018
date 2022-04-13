@@ -79,7 +79,7 @@ class _AdminQRPageState extends State<AdminQRPage> {
               ),
               QrImage(
                 data: json.encode(adminQR),
-                size: 200,
+                size: 350,
                 backgroundColor: white,
               ),
               SizedBox(

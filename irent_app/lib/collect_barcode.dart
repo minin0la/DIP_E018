@@ -48,7 +48,7 @@ class _collect_barcodeState extends State<collect_barcode> {
     });
     super.initState();
 
-    Timer(Duration(seconds: 1), () {
+    Timer(Duration(seconds: 30), () {
       //triggered action after countdown
       showModalBottomSheet<void>(
         isDismissible: false,
@@ -256,7 +256,7 @@ class _collect_barcodeState extends State<collect_barcode> {
               padding: EdgeInsets.only(top: 40),
               child: QrImage(
                 data: json.encode(userQR),
-                size: 200,
+                size: 350,
               )),
           Container(
               padding: EdgeInsets.only(top: 40),
