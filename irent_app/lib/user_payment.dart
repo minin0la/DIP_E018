@@ -268,6 +268,11 @@ class _user_paymentState extends State<user_payment> {
     var transactions = FirebaseFirestore.instance.collection('transactions');
     for (var eachDoc in thebooking) {
       transactions.doc(count.toString()).set({
+        'Before_Image': "",
+        'After_Image': "",
+        'collectDate': eachDoc.product_startDateTime,
+        'CollectedTime': Timestamp.now(),
+        'ReturnedTime': Timestamp.now(),
         'collectDate': eachDoc.product_startDateTime,
         'collectTime': eachDoc.product_startDateTime,
         'displayPicture': eachDoc.product_displayPicture,
