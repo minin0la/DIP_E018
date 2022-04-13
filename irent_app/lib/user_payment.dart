@@ -141,7 +141,7 @@ class _user_paymentState extends State<user_payment> {
                               height: 30,
                               width: 150,
                               child: Text(
-                                '\$10',
+                                '\$$totalCost',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                     color: Color.fromRGBO(251, 251, 255, 1),
@@ -164,8 +164,9 @@ class _user_paymentState extends State<user_payment> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        user_payment_successful())); //if balance not sufficient => showAlertDialog(context)
+                                    builder: (context) => user_payment_successful(
+                                        totalPayment:
+                                            totalCost))); //if balance not sufficient => showAlertDialog(context)
                           },
                           child: Container(
                               margin: EdgeInsets.only(left: 100, top: 22),
@@ -235,7 +236,8 @@ class _user_paymentState extends State<user_payment> {
       thebooking =
           List.from(data.docs.map((doc) => BasketDataModel.fromSnapshot(doc)));
       for (var i = 0; i < thebooking.length; i++) {
-        totalCost += int.parse(thebooking[i].product_price.toString());
+        totalCost += int.parse(thebooking[i].product_price.toString()) *
+            int.parse(thebooking[i].product_count.toString());
       }
 
       // storeData = newstores;

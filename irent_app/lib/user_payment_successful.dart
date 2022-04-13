@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:irent_app/user_bookings.dart';
+import 'package:irent_app/switch_nav.dart';
 
 class user_payment_successful extends StatefulWidget {
-  const user_payment_successful({Key? key}) : super(key: key);
+  final int totalPayment;
+  const user_payment_successful({Key? key, required this.totalPayment})
+      : super(key: key);
 
   @override
   State<user_payment_successful> createState() =>
@@ -29,15 +31,10 @@ class _user_payment_successfulState extends State<user_payment_successful> {
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              children: [
-                Container(
-                  height: 100,
-                  width: 100,
-                  color: Colors.blue,
-                ),
-              ],
+            Container(
+              child: Image.asset('images/checked.png', height: 177, width: 177),
             ),
             Column(
               children: [
@@ -75,7 +72,7 @@ class _user_payment_successfulState extends State<user_payment_successful> {
               children: [
                 Container(
                     child: Text(
-                  ' \$2',
+                  ' \$${widget.totalPayment}',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Color(0xFF001D4A),
@@ -91,17 +88,18 @@ class _user_payment_successfulState extends State<user_payment_successful> {
                 Container(
                     padding: EdgeInsets.only(top: 60, bottom: 10),
                     child: SizedBox(
-                      width: 160,
+                      width: 200,
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: ((context) => user_bookings())));
+                                  builder: ((context) => SwitchNavBar())));
                         },
                         child: Text(
-                          'Go to Bookings',
+                          'Return to Homepage',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                               color: Color(0xFFFBFBFF),
                               fontFamily: 'SF_Pro_Rounded',

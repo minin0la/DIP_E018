@@ -49,6 +49,10 @@ class _basketState extends State<basket> {
     getBasket();
   }
 
+  String? uid = FirebaseAuth.instance.currentUser?.uid;
+  CollectionReference updateWallet =
+      FirebaseFirestore.instance.collection('users');
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -88,7 +92,9 @@ class _basketState extends State<basket> {
                             thebasket[index].product_price.toString()),
                         product_id: thebasket[index].product_id.toString(),
                         displayPicture:
-                            thebasket[index].product_displayPicture.toString());
+                            thebasket[index].product_displayPicture.toString(),
+                        item_count: int.parse(
+                            thebasket[index].product_count.toString()));
                     // }
                     // throw 'No Data Found';
                   }),
@@ -104,84 +110,99 @@ class _basketState extends State<basket> {
                   color: Color(0xFFFBFBFF),
                   child: Row(
                     children: [
-                      checkbox(),
-                      Container(
-                        child: Text('All'),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(left: 100),
-                        height: 58,
-                        width: 67,
-                        child: Column(
+                      Expanded(
+                        flex: 1,
+                        child: Row(
                           children: [
-                            Container(
-                                height: 21,
-                                width: 126,
-                                child: Text(
-                                  'Total',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      color: Color(0xFF001D4A),
-                                      fontFamily: 'SF Pro Rounded',
-                                      fontSize: 16,
-                                      letterSpacing: 0,
-                                      fontWeight: FontWeight.w500,
-                                      height: 1),
-                                )),
-                            Container(
-                                height: 25,
-                                width: 126,
-                                child: Text(
-                                  '\$$totalCost',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      color: Color(0xFF001D4A),
-                                      fontFamily: 'SF Pro Rounded',
-                                      fontSize: 30,
-                                      letterSpacing: 0,
-                                      fontWeight: FontWeight.w500,
-                                      height: 1),
-                                )),
+                            Container(width: 20, child: checkbox()),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10, top: 8),
+                              child: Text('All'),
+                            )
                           ],
                         ),
                       ),
-                      Column(
-                        children: [
-                          InkWell(
-                            child: Container(
-                                margin: EdgeInsets.only(top: 22),
-                                height: 53,
-                                width: 140,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(32),
-                                    topRight: Radius.circular(32),
-                                    bottomLeft: Radius.circular(32),
-                                    bottomRight: Radius.circular(32),
-                                  ),
-                                  color: Color.fromRGBO(236, 164, 0, 1),
-                                ),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'Book',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Color.fromRGBO(255, 255, 255, 1),
-                                      fontFamily: 'SF Pro Rounded',
-                                      fontSize: 18,
-                                      letterSpacing: 0,
-                                      fontWeight: FontWeight.normal,
-                                      height: 1),
-                                )),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => user_payment()),
-                              );
-                            },
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          margin: EdgeInsets.only(left: 70),
+                          height: 58,
+                          width: 67,
+                          child: Column(
+                            children: [
+                              Container(
+                                  height: 21,
+                                  width: 126,
+                                  child: Text(
+                                    'Total',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        color: Color(0xFF001D4A),
+                                        fontFamily: 'SF Pro Rounded',
+                                        fontSize: 16,
+                                        letterSpacing: 0,
+                                        fontWeight: FontWeight.w500,
+                                        height: 1),
+                                  )),
+                              Container(
+                                  height: 25,
+                                  width: 126,
+                                  child: Text(
+                                    '\$$totalCost',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        color: Color(0xFF001D4A),
+                                        fontFamily: 'SF Pro Rounded',
+                                        fontSize: 30,
+                                        letterSpacing: 0,
+                                        fontWeight: FontWeight.w500,
+                                        height: 1),
+                                  )),
+                            ],
                           ),
-                        ],
+                        ),
+                      ),
+                      Expanded(
+                        flex: 4,
+                        child: Column(
+                          children: [
+                            InkWell(
+                              child: Container(
+                                  margin: EdgeInsets.only(top: 22),
+                                  height: 53,
+                                  width: 140,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(32),
+                                      topRight: Radius.circular(32),
+                                      bottomLeft: Radius.circular(32),
+                                      bottomRight: Radius.circular(32),
+                                    ),
+                                    color: Color.fromRGBO(236, 164, 0, 1),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'Book',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Color.fromRGBO(255, 255, 255, 1),
+                                        fontFamily: 'SF Pro Rounded',
+                                        fontSize: 18,
+                                        letterSpacing: 0,
+                                        fontWeight: FontWeight.normal,
+                                        height: 1),
+                                  )),
+                              onTap: () {
+                                decreaseWallet();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => user_payment()),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   )),
@@ -203,7 +224,8 @@ class _basketState extends State<basket> {
         thebasket = List.from(
             data.docs.map((doc) => BasketDataModel.fromSnapshot(doc)));
         for (var i = 0; i < thebasket.length; i++) {
-          totalCost += int.parse(thebasket[i].product_price.toString());
+          totalCost += int.parse(thebasket[i].product_price.toString()) *
+              int.parse(thebasket[i].product_count.toString());
         }
 
         // storeData = newstores;
@@ -217,7 +239,8 @@ class _basketState extends State<basket> {
       required String product_category,
       required int pricePerhour,
       required String displayPicture,
-      required String product_id}) {
+      required String product_id,
+      required int item_count}) {
     final TextStyle subtitleStyles = TextStyle(
       fontFamily: 'SF_Pro_Rounded',
       fontSize: 15,
@@ -317,7 +340,9 @@ class _basketState extends State<basket> {
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Row(
-                          children: [increment_decrement()],
+                          children: [
+                            increment_decrement(itemCount: item_count)
+                          ],
                         ),
                       ),
                     ],
@@ -397,6 +422,12 @@ class _basketState extends State<basket> {
         return alert;
       },
     );
+  }
+
+  Future<void> decreaseWallet() {
+    return updateWallet
+        .doc(uid)
+        .update({'wallet': FieldValue.increment(totalCost * -1)});
   }
 }
 

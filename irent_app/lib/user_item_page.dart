@@ -490,7 +490,8 @@ class _user_item_pageState extends State<user_item_page> {
             child: Column(children: [
               Container(
                 child: Row(children: [
-                  Container(
+                  Expanded(
+                    flex: 1,
                     child: Column(
                       children: [
                         Container(
@@ -508,7 +509,7 @@ class _user_item_pageState extends State<user_item_page> {
                         Container(
                             padding: EdgeInsets.only(left: 30),
                             child: Text(
-                              '\$2',
+                              '\$${_count * int.parse(widget.itemDataModel.pricePerhour)}',
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                 color: Color.fromRGBO(251, 251, 255, 1),
@@ -520,59 +521,63 @@ class _user_item_pageState extends State<user_item_page> {
                       ],
                     ),
                   ),
-                  Column(
-                    children: [
-                      InkWell(
-                        child: Container(
-                            margin: EdgeInsets.only(left: 140, top: 20),
-                            height: 53,
-                            width: 168,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(32),
-                              color: Color.fromRGBO(236, 164, 0, 1),
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              'Add to Basket',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Color.fromRGBO(255, 255, 255, 1),
-                                fontFamily: 'SF Pro Rounded',
-                                fontSize: 18,
-                                fontWeight: FontWeight.normal,
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        InkWell(
+                          child: Container(
+                              margin: EdgeInsets.only(top: 20, right: 20),
+                              height: 53,
+                              width: 168,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(32),
+                                color: Color.fromRGBO(236, 164, 0, 1),
                               ),
-                            )),
-                        onTap: () {
-                          addToBasket().then((value) => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => basket())));
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => basket()));
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => basket(
-                          //           product_count: '$_count',
-                          //           product_displayPicture:
-                          //               widget.itemDataModel.displayPicture,
-                          //           product_name: widget.itemDataModel.name,
-                          //           product_category:
-                          //               widget.itemDataModel.product_category,
-                          //           product_price:
-                          //               widget.itemDataModel.pricePerhour,
-                          //           product_startdate:
-                          //               '${dateTime1.day}/${dateTime1.month}/${dateTime1.year}',
-                          //           product_enddate:
-                          //               '${dateTime2.day}/${dateTime2.month}/${dateTime2.year}',
-                          //           product_starttime: '$initialValue1',
-                          //           product_endtime: '$initialValue2')),
-                          // );
-                        },
-                      ),
-                    ],
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Add to Basket',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Color.fromRGBO(255, 255, 255, 1),
+                                  fontFamily: 'SF Pro Rounded',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              )),
+                          onTap: () {
+                            addToBasket().then((value) => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => basket())));
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => basket()));
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => basket(
+                            //           product_count: '$_count',
+                            //           product_displayPicture:
+                            //               widget.itemDataModel.displayPicture,
+                            //           product_name: widget.itemDataModel.name,
+                            //           product_category:
+                            //               widget.itemDataModel.product_category,
+                            //           product_price:
+                            //               widget.itemDataModel.pricePerhour,
+                            //           product_startdate:
+                            //               '${dateTime1.day}/${dateTime1.month}/${dateTime1.year}',
+                            //           product_enddate:
+                            //               '${dateTime2.day}/${dateTime2.month}/${dateTime2.year}',
+                            //           product_starttime: '$initialValue1',
+                            //           product_endtime: '$initialValue2')),
+                            // );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ]),
               )
