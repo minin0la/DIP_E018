@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
                       alignment: Alignment.topLeft,
                       margin: EdgeInsets.only(left: 30),
                       child: Text(
-                        'Hello,\nStephanie',
+                        'Welcome\nBack!',
                         style: TextStyle(
                           fontSize: 35,
                           fontWeight: FontWeight.w500,

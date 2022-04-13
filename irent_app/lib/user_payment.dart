@@ -55,6 +55,7 @@ class _user_paymentState extends State<user_payment> {
 
   List thebooking = [];
   int totalCost = 0;
+  int walletBalance = 0;
 
   bool? _success;
   String? _userEmail;
@@ -159,14 +160,18 @@ class _user_paymentState extends State<user_payment> {
                       children: [
                         InkWell(
                           onTap: () {
-                            addToTransaction();
-                            deleteCollection();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => user_payment_successful(
-                                        totalPayment:
-                                            totalCost))); //if balance not sufficient => showAlertDialog(context)
+                            if (getWallet() > totalCost) {
+                              addToTransaction();
+                              deleteCollection();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          user_payment_successful(
+                                              totalPayment: totalCost)));
+                            } else
+                              showAlertDialog(context);
+                            ; //if balance not sufficient => showAlertDialog(context)
                           },
                           child: Container(
                               margin: EdgeInsets.only(left: 100, top: 22),
@@ -202,6 +207,23 @@ class _user_paymentState extends State<user_payment> {
         ),
       ]),
     );
+  }
+
+  getWallet() {
+    CollectionReference keyCollection =
+        FirebaseFirestore.instance.collection('users');
+
+    var wallets = keyCollection
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .get()
+        .then((DocumentSnapshot datas) {
+      try {
+        setState(() {
+          walletBalance = (datas.get(FieldPath(["wallet"])));
+        });
+      } catch (e) {}
+    });
+    return walletBalance;
   }
 
   void deleteCollection() {
@@ -588,8 +610,9 @@ showAlertDialog(BuildContext context) {
   AlertDialog alert = AlertDialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
     backgroundColor: Color(0xFFDBE4EE),
-    title: Text("Insufficient Balance"),
-    content: Text("Please top-up your iRent walet to make this booking."),
+    title: Text("Insufficient Balance", textAlign: TextAlign.center),
+    content: Text("Please top-up your wallet to make this booking.",
+        textAlign: TextAlign.center),
     actions: [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
