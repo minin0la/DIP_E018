@@ -222,7 +222,7 @@ class _collect_barcodeState extends State<collect_barcode> {
     Map userQR = {
       'username': FirebaseAuth.instance.currentUser!.email,
       'key': thekey,
-      'status': '2',
+      'status': '1',
       'store': widget.store_id.toString(),
       'box': widget.box_id.toString(),
     };

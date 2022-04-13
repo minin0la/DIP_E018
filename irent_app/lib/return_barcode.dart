@@ -49,7 +49,7 @@ class _return_barcodeState extends State<return_barcode> {
     Map userQR = {
       'username': FirebaseAuth.instance.currentUser!.email,
       'key': thekey,
-      'status': '1',
+      'status': '2',
       'store': widget.store_id.toString(),
       'box': widget.box_id.toString(),
     };
