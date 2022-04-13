@@ -3,6 +3,8 @@ import 'package:irent_app/admin/admin_constants.dart';
 import 'package:irent_app/user_store_uroc.dart';
 import 'dart:ui';
 import '../app_icons.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class admin_transactions extends StatefulWidget {
   const admin_transactions({Key? key}) : super(key: key);
@@ -41,6 +43,14 @@ class _admin_transactionsState extends State<admin_transactions> {
       fontWeight: FontWeight.w600,
       fontSize: 30,
       color: Color(0xFFFBFBFF));
+
+  List thetransactions = [];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getTransactions();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -140,17 +150,15 @@ class _admin_transactionsState extends State<admin_transactions> {
               //height: screenheight * 0.42,
               child: Container(
                 child: ListView.builder(
-                    itemCount: transactionData.length,
+                    itemCount: thetransactions.length,
                     itemBuilder: (context, index) {
                       for (var trans in transactionData) {
                         return _transaction(
                             context: context,
-                            ticketNumber: transactionData[index]['ticketNumber']
-                                .toString(),
-                            paymentDate: transactionData[index]['paymentDate']
-                                .toString(),
-                            totalAmount: transactionData[index]['totalAmount']
-                                .toString());
+                            ticketNumber: thetransactions[index].ticketNumber,
+                            paymentDate: thetransactions[index].collectDate,
+                            totalAmount: thetransactions[index].qty *
+                                thetransactions[index].price);
                       }
                       throw 'No Data Found';
                     }),
@@ -207,6 +215,19 @@ class _admin_transactionsState extends State<admin_transactions> {
         ),
       ),
     );
+  }
+
+  getTransactions() {
+    FirebaseFirestore.instance
+        .collection('transactions')
+        .snapshots()
+        .listen((data) {
+      setState(() {
+        thetransactions = List.from(
+            data.docs.map((doc) => TransactionDataModel.fromSnapshot(doc)));
+        // storeData = newstores;
+      });
+    });
   }
 
   Widget _transaction(
@@ -277,4 +298,55 @@ class _admin_transactionsState extends State<admin_transactions> {
       ],
     );
   }
+}
+
+class TransactionDataModel {
+  String collectDate = "",
+      collectTime = "",
+      displayPicture = "",
+      imgCapture = "",
+      itemLoc = "",
+      itemId = "",
+      name = "",
+      price = "",
+      qty = "",
+      returnDate = "",
+      returnTime = "",
+      returned = "",
+      user = "",
+      ticketNumber = "";
+
+  TransactionDataModel();
+  Map<String, dynamic> toJson() => {
+        'collectDate': collectDate,
+        'collectTime': collectTime,
+        'displayPicture': displayPicture,
+        'imgCapture': imgCapture,
+        'itemLoc': itemLoc,
+        'itemId': itemId,
+        'name': name,
+        'price': price,
+        'qty': qty,
+        'returnDate': returnDate,
+        'returnTime': returnTime,
+        'returned': returned,
+        'user': user,
+        'ticketNumber': ticketNumber
+        // 'item_id': item_id,
+      };
+  TransactionDataModel.fromSnapshot(snapshot)
+      : collectDate = snapshot.data()['collectDate'],
+        collectTime = snapshot.data()['collectTime'],
+        displayPicture = snapshot.data()['displayPicture'],
+        imgCapture = snapshot.data()['imgCapture'],
+        itemLoc = snapshot.data()['itemLoc'],
+        itemId = snapshot.data()['itemId'],
+        name = snapshot.data()['name'],
+        price = snapshot.data()['price'],
+        qty = snapshot.data()['qty'],
+        returnDate = snapshot.data()['returnDate'],
+        returnTime = snapshot.data()['returnTime'],
+        returned = snapshot.data()['returned'],
+        user = snapshot.data()['user'],
+        ticketNumber = snapshot.data()['ticketNumber'];
 }
