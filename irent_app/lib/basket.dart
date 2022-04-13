@@ -86,6 +86,8 @@ class _basketState extends State<basket> {
                     return _productDetails(
                         context: context,
                         name: thebasket[index].product_name.toString(),
+                        startDateTime: thebasket[index].product_startDateTime,
+                        endDateTime: thebasket[index].product_endDateTime,
                         product_category:
                             thebasket[index].product_category.toString(),
                         pricePerhour: int.parse(
@@ -244,7 +246,9 @@ class _basketState extends State<basket> {
       required int pricePerhour,
       required String displayPicture,
       required String product_id,
-      required int item_count}) {
+      required int item_count,
+      required Timestamp startDateTime,
+      required Timestamp endDateTime}) {
     final TextStyle subtitleStyles = TextStyle(
       fontFamily: 'SF_Pro_Rounded',
       fontSize: 15,
@@ -334,12 +338,18 @@ class _basketState extends State<basket> {
                       Text('Start Date           End Date',
                           style: subtitleStyles),
                       Row(
-                        children: [date()],
+                        children: [
+                          Text(
+                              '${DateFormat('dd/MM/yyyy').format(startDateTime.toDate())}         ${DateFormat('dd/MM/yyyy').format(endDateTime.toDate())}         ')
+                        ],
                       ),
                       Text('Start Time           End Time',
                           style: subtitleStyles),
                       Row(
-                        children: [time()],
+                        children: [
+                          Text(
+                              '${DateFormat('kk:mm').format(startDateTime.toDate())}                    ${DateFormat('kk:mm').format(endDateTime.toDate())}')
+                        ],
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
