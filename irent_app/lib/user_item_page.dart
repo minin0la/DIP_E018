@@ -692,6 +692,9 @@ class _user_item_pageState extends State<user_item_page> {
           _enddate!.month, _enddate!.day, _endtime!.hour, _endtime!.minute)),
       'storeName': widget.itemDataModel.storeName,
       'storeId': widget.itemDataModel.storeId,
+      'box_number': widget.itemDataModel.box_number,
+      'box_id': widget.itemDataModel.box_id,
+      'product_id': widget.itemDataModel.item_id,
     });
   }
 }

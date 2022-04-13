@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'constants.dart';
 import 'dart:convert';
 
 class return_barcode extends StatefulWidget {
@@ -10,7 +11,15 @@ class return_barcode extends StatefulWidget {
   final Color iceberg = const Color(0xFFDBE4EE);
   final Color marigold = const Color(0xFFECA400);
   final Color transparent = const Color(0x4DE3E3E3);
-  const return_barcode({Key? key}) : super(key: key);
+
+  final String box_id;
+  final String store_id;
+
+  const return_barcode({
+    Key? key,
+    required this.store_id,
+    required this.box_id,
+  }) : super(key: key);
 
   @override
   State<return_barcode> createState() => _return_barcodeState();
@@ -18,8 +27,32 @@ class return_barcode extends StatefulWidget {
 
 class _return_barcodeState extends State<return_barcode> {
   final controller = TextEditingController();
+
+  String thekey = "";
+  void initState() {
+    CollectionReference keyCollection =
+        FirebaseFirestore.instance.collection('Key');
+    keyCollection.doc('user').get().then((DocumentSnapshot datas) {
+      try {
+        setState(() {
+          thekey = datas.get(FieldPath(['value']));
+        });
+      } on StateError catch (e) {
+        print('No nested field exists!');
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    Map userQR = {
+      'username': FirebaseAuth.instance.currentUser!.email,
+      'key': thekey,
+      'status': '1',
+      'store': widget.store_id.toString(),
+      'box': widget.box_id.toString(),
+    };
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -62,7 +95,7 @@ class _return_barcodeState extends State<return_barcode> {
                       fontWeight: FontWeight.w700))),
           Container(
               child: Text(
-            'Box #1',
+            'Box #${widget.box_id}',
             style: TextStyle(
                 color: Color(0xFF001D4A),
                 fontFamily: 'SF_Pro_Rounded',
