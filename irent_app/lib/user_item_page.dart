@@ -9,6 +9,7 @@ import 'package:irent_app/app_icons.dart';
 import 'package:irent_app/constants.dart';
 import 'package:irent_app/basket.dart';
 import 'package:irent_app/constants.dart';
+import 'package:irent_app/datetimetest.dart';
 import 'user_store_uroc.dart';
 import 'package:irent_app/date.dart';
 import 'user_store_items.dart';
@@ -509,7 +510,7 @@ class _user_item_pageState extends State<user_item_page> {
                         Container(
                             padding: EdgeInsets.only(left: 30),
                             child: Text(
-                              '\$${_count * int.parse(widget.itemDataModel.pricePerhour)}',
+                              '\$${_count * int.parse(widget.itemDataModel.pricePerhour) * calcTime()}',
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                 color: Color.fromRGBO(251, 251, 255, 1),
@@ -664,6 +665,30 @@ class _user_item_pageState extends State<user_item_page> {
     setState(() => _endtime = endTime);
     return endTime;
   }
+
+  calcTime() {
+    try {
+      var startDateTIme = Timestamp.fromDate(DateTime(
+          _startdate!.year,
+          _startdate!.month,
+          _startdate!.day,
+          _starttime!.hour,
+          _starttime!.minute));
+      var endDateTime = Timestamp.fromDate(DateTime(_enddate!.year,
+          _enddate!.month, _enddate!.day, _endtime!.hour, _endtime!.minute));
+      var borrowPeriod = DateTime.fromMillisecondsSinceEpoch(
+              endDateTime.millisecondsSinceEpoch)
+          .difference(DateTime.fromMillisecondsSinceEpoch(
+              startDateTIme.millisecondsSinceEpoch))
+          .inHours;
+
+      return borrowPeriod;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  // int thehours = calcTime();
 
   Future<void> addToBasket() async {
     var userBasket = FirebaseFirestore.instance
