@@ -133,7 +133,7 @@ class _TopUpPageState extends State<TopUpPage> {
                 ),
                 style: amountStyle,
                 textAlign: TextAlign.right,
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.numberWithOptions(signed: true),
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly
                 ], // Only numbers can be entered

@@ -133,25 +133,30 @@ class _UserStoreItemsPageState extends State<UserStoreItemsPage> {
             ),
             Container(
               height: 55,
-              child: Expanded(
-                flex: 4,
-                child: Container(
-                  width: 126,
-                  height: 35,
-                  margin: EdgeInsets.only(left: 30.0, top: 10.0, bottom: 20),
-                  child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Text(
-                      'Categories',
-                      style: TextStyle(
-                          color: oxford,
-                          fontFamily: 'SF Pro Rounded',
-                          fontSize: 25,
-                          fontWeight: FontWeight.normal,
-                          height: 1),
+              child: Column(
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: Container(
+                      width: 126,
+                      height: 35,
+                      margin:
+                          EdgeInsets.only(left: 30.0, top: 10.0, bottom: 20),
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Text(
+                          'Categories',
+                          style: TextStyle(
+                              color: oxford,
+                              fontFamily: 'SF Pro Rounded',
+                              fontSize: 25,
+                              fontWeight: FontWeight.normal,
+                              height: 1),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
             Expanded(
