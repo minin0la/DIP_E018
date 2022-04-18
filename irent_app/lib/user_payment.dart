@@ -48,9 +48,15 @@ class _user_paymentState extends State<user_payment> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    getBasket();
+    getWallet();
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    getBasket();
   }
 
   List thebooking = [];
@@ -160,7 +166,9 @@ class _user_paymentState extends State<user_payment> {
                       children: [
                         InkWell(
                           onTap: () {
-                            if (getWallet() > totalCost) {
+                            // getWallet();
+                            if (walletBalance >= totalCost) {
+                              decreaseWallet();
                               addToTransaction();
                               deleteCollection();
                               Navigator.push(
@@ -169,9 +177,10 @@ class _user_paymentState extends State<user_payment> {
                                       builder: (context) =>
                                           user_payment_successful(
                                               totalPayment: totalCost)));
-                            } else
+                            } else {
                               showAlertDialog(context);
-                            ; //if balance not sufficient => showAlertDialog(context)
+                            }
+                            //if balance not sufficient => showAlertDialog(context)
                           },
                           child: Container(
                               margin: EdgeInsets.only(left: 100, top: 22),
@@ -209,6 +218,16 @@ class _user_paymentState extends State<user_payment> {
     );
   }
 
+  Future<void> decreaseWallet() {
+    CollectionReference updateWallet =
+        FirebaseFirestore.instance.collection('users');
+    String? uid = FirebaseAuth.instance.currentUser?.uid;
+
+    return updateWallet
+        .doc(uid)
+        .update({'wallet': FieldValue.increment(totalCost * -1)});
+  }
+
   getWallet() {
     CollectionReference keyCollection =
         FirebaseFirestore.instance.collection('users');
@@ -219,11 +238,12 @@ class _user_paymentState extends State<user_payment> {
         .then((DocumentSnapshot datas) {
       try {
         setState(() {
-          walletBalance = (datas.get(FieldPath(["wallet"])));
+          walletBalance = datas.get(FieldPath(["wallet"]));
+          print(datas.get(FieldPath(["wallet"])));
         });
       } catch (e) {}
     });
-    return walletBalance;
+    // return walletBalance;
   }
 
   void deleteCollection() {
