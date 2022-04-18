@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
 class increment_decrement extends StatefulWidget {
-  const increment_decrement({Key? key}) : super(key: key);
+  final int itemCount;
+  const increment_decrement({Key? key, required this.itemCount})
+      : super(key: key);
 
   @override
   State<increment_decrement> createState() => _increment_decrementState();
 }
 
 class _increment_decrementState extends State<increment_decrement> {
-  int _itemCount = 0;
-
   @override
   Widget build(BuildContext context) {
+    int _itemCount = widget.itemCount;
     return Container(
       child: Row(
         children: <Widget>[

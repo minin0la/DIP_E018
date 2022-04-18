@@ -7,9 +7,9 @@ import 'package:image_picker/image_picker.dart';
 
 String? uid = FirebaseAuth.instance.currentUser?.uid;
 
-Future<DocumentSnapshot> getUserInfo() async {
-  return await FirebaseFirestore.instance.collection("users").doc(uid).get();
-}
+// Stream<QuerySnapshot> getUserInfo() {
+//   return FirebaseFirestore.instance.collection("users").doc(uid).snapshots();
+// }
 
 Future selectImage() async {
   final image = await ImagePicker().pickImage(

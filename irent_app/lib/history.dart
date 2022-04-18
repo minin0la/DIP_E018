@@ -1,13 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
-import 'package:irent_app/app_icons.dart';
-import 'package:irent_app/switch_nav.dart';
-import 'homepage.dart';
-import 'constants.dart';
 import 'history_details.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -33,6 +29,13 @@ class _HistoryPageState extends State<HistoryPage> {
 
   bool? _success;
   String? _userEmail;
+  List historyData = [];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getBooking();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,112 +105,160 @@ class _HistoryPageState extends State<HistoryPage> {
             child: ListView.builder(
                 itemCount: historyData.length,
                 itemBuilder: (context, index) {
-                  for (var product in historyData) {
-                    return _historyCard(
-                        context: context,
-                        itemName: historyData[index]['name'].toString(),
-                        qty: int.parse(historyData[index]['qty'].toString()),
-                        price:
-                            int.parse(historyData[index]['price'].toString()),
-                        collectDate:
-                            historyData[index]['collectDate'].toString(),
-                        returnDate: historyData[index]['returnDate'].toString(),
-                        collectTime:
-                            historyData[index]['collectTime'].toString(),
-                        returnTime: historyData[index]['returnTime'].toString(),
-                        ticketNumber: int.parse(
-                            historyData[index]['ticketNumber'].toString()),
-                        displayPicture:
-                            historyData[index]['displayPicture'].toString());
-                  }
-                  throw 'No Data Found';
+                  // for (var product in historyData) {
+                  return _historyCard(
+                      context: context,
+                      index: index,
+                      itemName: historyData[index].name,
+                      qty: historyData[index].qty,
+                      price: historyData[index].price,
+                      collectDate: historyData[index].collectDate,
+                      returnDate: historyData[index].returnDate,
+                      collectTime: historyData[index].collectTime,
+                      returnTime: historyData[index].returnTime,
+                      ticketNumber: historyData[index].ticketNumber,
+                      displayPicture: historyData[index].displayPicture);
+                  // }
+                  // throw 'No Data Found';
                 }),
           ),
         ),
       ]),
     );
   }
-}
 
-Widget _historyCard(
-    {required BuildContext context,
-    required String itemName,
-    required int qty,
-    required int price,
-    required String collectDate,
-    required String returnDate,
-    required String collectTime,
-    required String returnTime,
-    required int ticketNumber,
-    required String displayPicture}) {
-  final TextStyle subtitleStyles = TextStyle(
-    fontFamily: 'SF_Pro_Rounded',
-    fontSize: 15,
-    fontWeight: FontWeight.w300,
-    color: Color(0xFF001D4A),
-    wordSpacing: 1,
-  );
+  Widget _historyCard(
+      {required BuildContext context,
+      required int index,
+      required String itemName,
+      required int qty,
+      required int price,
+      required Timestamp collectDate,
+      required Timestamp returnDate,
+      required Timestamp collectTime,
+      required Timestamp returnTime,
+      required int ticketNumber,
+      required String displayPicture}) {
+    final TextStyle subtitleStyles = TextStyle(
+      fontFamily: 'SF_Pro_Rounded',
+      fontSize: 15,
+      fontWeight: FontWeight.w300,
+      color: Color(0xFF001D4A),
+      wordSpacing: 1,
+    );
 
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 8.0),
-    child: GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const HistoryDetailsPage()),
-        );
-      },
-      child: Card(
-        color: Color(0xFFDBE4EE),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        elevation: 1,
-        child: Padding(
-          padding:
-              const EdgeInsets.only(left: 10.0, right: 10, top: 15, bottom: 15),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 6,
-                child: ListTile(
-                  leading: Image.asset(
-                    displayPicture,
-                    height: 48,
-                    width: 48,
-                  ),
-                  title: Text(
-                    itemName,
-                    style: TextStyle(
-                      fontFamily: 'SF_Pro_Rounded',
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF001D4A),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    HistoryDetailsPage(historyData: historyData[index])),
+          );
+        },
+        child: Card(
+          color: Color(0xFFDBE4EE),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          elevation: 1,
+          child: Padding(
+            padding: const EdgeInsets.only(
+                left: 10.0, right: 10, top: 15, bottom: 15),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 6,
+                  child: ListTile(
+                    leading: Image.network(
+                      displayPicture,
+                      height: 48,
+                      width: 48,
+                    ),
+                    title: Text(
+                      itemName,
+                      style: TextStyle(
+                        fontFamily: 'SF_Pro_Rounded',
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF001D4A),
+                      ),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Qty: $qty   |   Price: \$$price',
+                            style: subtitleStyles),
+                        Text(
+                            'Date: ${DateTime.fromMillisecondsSinceEpoch(collectDate.millisecondsSinceEpoch)} - ${DateTime.fromMillisecondsSinceEpoch(returnDate.millisecondsSinceEpoch)}',
+                            style: subtitleStyles),
+                        //Text('Collection Time: ${DateTime.fromMillisecondsSinceEpoch(collectDate.millisecondsSinceEpoch)}',
+                        //    style: subtitleStyles),
+                        //Text('Return Time: $returnTime', style: subtitleStyles),
+                      ],
                     ),
                   ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Qty: $qty   |   Price: \$$price',
-                          style: subtitleStyles),
-                      Text('Date: $collectDate - $returnDate',
-                          style: subtitleStyles),
-                      Text('Collection Time: $collectTime',
-                          style: subtitleStyles),
-                      Text('Return Time: $returnTime', style: subtitleStyles),
-                    ],
-                  ),
                 ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Text('#$ticketNumber', style: subtitleStyles),
-              ),
-            ],
+                Expanded(
+                  flex: 1,
+                  child: Text('#$ticketNumber', style: subtitleStyles),
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
+
+  getBooking() {
+    FirebaseFirestore.instance
+        .collection('transactions')
+        .where("user", isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .where("status", isEqualTo: "completed")
+        .snapshots()
+        .listen((data) {
+      setState(() {
+        historyData = List.from(
+            data.docs.map((doc) => BookingsDataModel.fromSnapshot(doc)));
+        // storeData = newstores;
+      });
+    });
+  }
+}
+
+class BookingsDataModel {
+  String name = "", displayPicture = "", status = "";
+  int qty = 0, price = 0, ticketNumber = 0;
+  Timestamp collectDate = Timestamp.now(),
+      returnDate = Timestamp.now(),
+      collectTime = Timestamp.now(),
+      returnTime = Timestamp.now();
+  BookingsDataModel();
+  Map<String, dynamic> toJson() => {
+        "name": name,
+        "qty": qty,
+        "price": price,
+        "collectDate": collectDate,
+        "returnDate": returnDate,
+        "collectTime": collectTime,
+        "returnTime": returnTime,
+        "ticketNumber": ticketNumber,
+        "displayPicture": displayPicture,
+        "status": status,
+      };
+  BookingsDataModel.fromSnapshot(snapshot)
+      : name = snapshot.data()['name'],
+        qty = snapshot.data()['qty'],
+        price = snapshot.data()['price'],
+        collectDate = snapshot.data()['collectDate'],
+        returnDate = snapshot.data()['returnDate'],
+        collectTime = snapshot.data()['collectTime'],
+        returnTime = snapshot.data()['returnTime'],
+        ticketNumber = snapshot.data()['ticketNumber'],
+        status = snapshot.data()['status'],
+        displayPicture = snapshot.data()['displayPicture'];
 }

@@ -1,12 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'app_icons.dart';
-import 'constants.dart';
-import 'user_bookings.dart';
-import 'return_barcode.dart';
-import 'extend.dart';
-
-import 'dart:ffi';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
+
+import 'constants.dart';
+import 'extend.dart';
+import 'return_barcode.dart';
+import 'user_bookings.dart';
 
 class bookings_details extends StatelessWidget {
   final Color white = const Color(0xFFFBFBFF);
@@ -15,19 +15,6 @@ class bookings_details extends StatelessWidget {
   final Color iceberg = const Color(0xFFDBE4EE);
   final Color marigold = const Color(0xFFECA400);
   final Color transparent = const Color(0x4DE3E3E3);
-  final List<BookingsDataModel> bookings = List.generate(
-      bookingsData.length,
-      (index) => BookingsDataModel(
-            '${bookingsData[index]['name']}',
-            '${bookingsData[index]['qty']}',
-            '${bookingsData[index]['price']}',
-            '${bookingsData[index]['collectDate']}',
-            '${bookingsData[index]['returnDate']}',
-            '${bookingsData[index]['collectTime']}',
-            '${bookingsData[index]['returnTime']}',
-            '${bookingsData[index]['ticketNumber']}',
-            '${bookingsData[index]['displayPicture']}',
-          ));
 
   final BookingsDataModel bookingsDataModel;
   bookings_details({Key? key, required this.bookingsDataModel})
@@ -65,13 +52,13 @@ class bookings_details extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 30),
                   child: _bookingsDetails(
                     itemName: bookingsDataModel.name,
-                    qty: int.parse(bookingsDataModel.qty),
-                    price: num.parse(bookingsDataModel.price),
+                    qty: bookingsDataModel.qty,
+                    price: bookingsDataModel.price,
                     collectDate: bookingsDataModel.collectDate,
                     returnDate: bookingsDataModel.returnDate,
                     collectTime: bookingsDataModel.collectTime,
                     returnTime: bookingsDataModel.returnTime,
-                    ticketNumber: int.parse(bookingsDataModel.ticketNumber),
+                    ticketNumber: bookingsDataModel.ticketNumber,
                     displayPicture: bookingsDataModel.displayPicture,
                   )),
             )),
@@ -112,8 +99,12 @@ class bookings_details extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  return_barcode())); //if return succeess --> return_success()
+                              builder: (context) => return_barcode(
+                                  ticketNumber:
+                                      bookingsDataModel.ticketNumber.toString(),
+                                  store_id: bookingsDataModel.storeId,
+                                  box_id: bookingsDataModel
+                                      .box_id))); //if return succeess --> return_success()
                     },
                     child: Text(
                       'Return',
@@ -178,11 +169,11 @@ Widget _fields({
 Widget _bookingsDetails({
   required String itemName,
   required int qty,
-  required num price,
-  required String collectDate,
-  required String returnDate,
-  required String collectTime,
-  required String returnTime,
+  required int price,
+  required Timestamp collectDate,
+  required Timestamp returnDate,
+  required Timestamp collectTime,
+  required Timestamp returnTime,
   required int ticketNumber,
   required String displayPicture,
 }) {
@@ -201,7 +192,7 @@ Widget _bookingsDetails({
       ),
       Row(
         children: [
-          Expanded(flex: 1, child: Image.asset(displayPicture)),
+          Expanded(flex: 1, child: Image.network(displayPicture)),
           SizedBox(width: 20),
           Expanded(
             flex: 2,
@@ -236,14 +227,16 @@ Widget _bookingsDetails({
             flex: 1,
             child: _fields(
                 title: 'Pickup',
-                subtitle: '$collectDate, $collectTime',
+                subtitle:
+                    '${DateFormat('dd/MM/yyyy').format(collectDate.toDate())} - ${DateFormat('kk:mm:ss').format(collectTime.toDate())}',
                 width: double.infinity),
           ),
           Expanded(
             flex: 1,
             child: _fields(
                 title: 'Return',
-                subtitle: '$returnDate, $returnTime',
+                subtitle:
+                    '${DateFormat('dd/MM/yyyy').format(returnDate.toDate())} - ${DateFormat('kk:mm:ss').format(returnTime.toDate())}',
                 width: double.infinity),
           ),
         ],

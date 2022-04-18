@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:irent_app/time.dart';
 import 'package:irent_app/user_payment_successful.dart';
 //import '../size_config.dart';
 import 'constants.dart';
+import 'package:intl/intl.dart';
 import 'user_bookings.dart';
 
 class user_payment extends StatefulWidget {
@@ -38,6 +42,27 @@ class _user_paymentState extends State<user_payment> {
   final Color transparent = const Color(0x4DE3E3E3);
   TextEditingController total = TextEditingController();
 
+  getCustomFormattedDateTime(String givenDateTime, String dateFormat) {
+    final DateTime docDateTime = DateTime.parse(givenDateTime);
+    return DateFormat(dateFormat).format(docDateTime);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getBasket();
+    getWallet();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  List thebooking = [];
+  int totalCost = 0;
+  int walletBalance = 0;
+
   bool? _success;
   String? _userEmail;
 
@@ -69,29 +94,22 @@ class _user_paymentState extends State<user_payment> {
             width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.only(left: 25, right: 25),
             child: ListView.builder(
-                itemCount: historyData.length,
+                itemCount: thebooking.length,
                 itemBuilder: (context, index) {
-                  for (var product in historyData) {
-                    return _historyCard(
-                        context: context,
-                        itemName: historyData[index]['name'].toString(),
-                        qty: int.parse(historyData[index]['qty'].toString()),
-                        price:
-                            int.parse(historyData[index]['price'].toString()),
-                        pricePerhour:
-                            int.parse(historyData[index]['price'].toString()),
-                        collectDate:
-                            historyData[index]['collectDate'].toString(),
-                        returnDate: historyData[index]['returnDate'].toString(),
-                        collectTime:
-                            historyData[index]['collectTime'].toString(),
-                        returnTime: historyData[index]['returnTime'].toString(),
-                        ticketNumber: int.parse(
-                            historyData[index]['ticketNumber'].toString()),
-                        displayPicture:
-                            historyData[index]['displayPicture'].toString());
-                  }
-                  throw 'No Data Found';
+                  return _historyCard(
+                      context: context,
+                      itemName: thebooking[index].product_name.toString(),
+                      qty:
+                          int.parse(thebooking[index].product_count.toString()),
+                      pricePerhour:
+                          int.parse(thebooking[index].product_price.toString()),
+                      collectDate: thebooking[index].product_startDateTime,
+                      returnDate: thebooking[index].product_endDateTime,
+                      collectTime: thebooking[index].product_startDateTime,
+                      returnTime: thebooking[index].product_endDateTime,
+                      // ticketNumber: thebooking[index].ticket_number,
+                      displayPicture:
+                          thebooking[index].product_displayPicture.toString());
                 }),
           ),
         ),
@@ -130,7 +148,7 @@ class _user_paymentState extends State<user_payment> {
                               height: 30,
                               width: 150,
                               child: Text(
-                                '\$10',
+                                '\$$totalCost',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                     color: Color.fromRGBO(251, 251, 255, 1),
@@ -148,11 +166,21 @@ class _user_paymentState extends State<user_payment> {
                       children: [
                         InkWell(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        user_payment_successful())); //if insufficient ballance =>  showAlertDialog(context);
+                            // getWallet();
+                            if (walletBalance >= totalCost) {
+                              decreaseWallet();
+                              addToTransaction();
+                              deleteCollection();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          user_payment_successful(
+                                              totalPayment: totalCost)));
+                            } else {
+                              showAlertDialog(context);
+                            }
+                            //if balance not sufficient => showAlertDialog(context)
                           },
                           child: Container(
                               margin: EdgeInsets.only(left: 100, top: 22),
@@ -189,19 +217,138 @@ class _user_paymentState extends State<user_payment> {
       ]),
     );
   }
+
+  Future<void> decreaseWallet() {
+    CollectionReference updateWallet =
+        FirebaseFirestore.instance.collection('users');
+    String? uid = FirebaseAuth.instance.currentUser?.uid;
+
+    return updateWallet
+        .doc(uid)
+        .update({'wallet': FieldValue.increment(totalCost * -1)});
+  }
+
+  getWallet() {
+    CollectionReference keyCollection =
+        FirebaseFirestore.instance.collection('users');
+
+    var wallets = keyCollection
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .get()
+        .then((DocumentSnapshot datas) {
+      try {
+        setState(() {
+          walletBalance = datas.get(FieldPath(["wallet"]));
+          print(datas.get(FieldPath(["wallet"])));
+        });
+      } catch (e) {}
+    });
+    // return walletBalance;
+  }
+
+  void deleteCollection() {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .collection('basket')
+        .get()
+        .then((snaps) {
+      for (DocumentSnapshot ds in snaps.docs) {
+        ds.reference.delete();
+      }
+    });
+  }
+
+  // Future<void> deleteItem(product_id) {
+  //   CollectionReference selectitem = FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(FirebaseAuth.instance.currentUser?.uid)
+  //       .collection('basket');
+  //   return selectitem.();
+  // }
+
+  Future getBasket() async {
+    var data = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .collection('basket')
+        .get();
+
+    setState(() {
+      thebooking =
+          List.from(data.docs.map((doc) => BasketDataModel.fromSnapshot(doc)));
+      for (var i = 0; i < thebooking.length; i++) {
+        totalCost += int.parse(thebooking[i].product_price.toString()) *
+            int.parse(thebooking[i].product_count.toString()) *
+            int.parse(calcTime(thebooking[i].product_startDateTime,
+                    thebooking[i].product_endDateTime)
+                .toString());
+      }
+
+      // storeData = newstores;
+    });
+  }
+
+  calcTime(Timestamp startDateTime, Timestamp endDateTime) {
+    try {
+      var borrowPeriod = DateTime.fromMillisecondsSinceEpoch(
+              endDateTime.millisecondsSinceEpoch)
+          .difference(DateTime.fromMillisecondsSinceEpoch(
+              startDateTime.millisecondsSinceEpoch))
+          .inHours;
+
+      return borrowPeriod;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  Future<void> addToTransaction() async {
+    var userTransaction =
+        await FirebaseFirestore.instance.collection('transactions').get();
+    var count = userTransaction.docs.length + 1;
+    var transactions = FirebaseFirestore.instance.collection('transactions');
+    for (var eachDoc in thebooking) {
+      transactions.doc(count.toString()).set({
+        'Before_Image': "",
+        'After_Image': "",
+        'collectDate': eachDoc.product_startDateTime,
+        'CollectedTime': Timestamp.now(),
+        'ReturnedTime': Timestamp.now(),
+        'collectDate': eachDoc.product_startDateTime,
+        'collectTime': eachDoc.product_startDateTime,
+        'displayPicture': eachDoc.product_displayPicture,
+        'imgCapture': 'yes',
+        'itemLoc': eachDoc.storeName,
+        'itemId': eachDoc.product_id,
+        'storeId': eachDoc.storeId,
+        'name': eachDoc.product_name,
+        'price': int.parse(eachDoc.product_price),
+        'qty': int.parse(eachDoc.product_count),
+        'returnDate': eachDoc.product_endDateTime,
+        'returnTime': eachDoc.product_endDateTime,
+        'returned': 'yes',
+        'user': FirebaseAuth.instance.currentUser!.email.toString(),
+        'ticketNumber': count,
+        'status': "confirmed",
+        'box_id': eachDoc.product_box_id,
+        'box_number': eachDoc.product_box_number,
+      });
+      count++;
+    }
+  }
 }
 
 Widget _historyCard(
     {required BuildContext context,
     required String itemName,
     required int qty,
-    required int price,
     required int pricePerhour,
-    required String collectDate,
-    required String returnDate,
-    required String collectTime,
-    required String returnTime,
-    required int ticketNumber,
+    required Timestamp collectDate,
+    required Timestamp returnDate,
+    required Timestamp collectTime,
+    required Timestamp returnTime,
+    // required int ticketNumber,
     required String displayPicture}) {
   final TextStyle subtitleStyles = TextStyle(
     fontFamily: 'SF_Pro_Rounded',
@@ -230,7 +377,7 @@ Widget _historyCard(
               Expanded(
                 flex: 6,
                 child: ListTile(
-                  leading: Image.asset(
+                  leading: Image.network(
                     displayPicture,
                     height: 48,
                     width: 48,
@@ -278,7 +425,7 @@ Widget _historyCard(
                                 width: 135,
                                 child: Center(
                                   child: Text(
-                                    '$collectDate - $returnDate',
+                                    '${DateFormat('dd/MM/yyyy').format(collectDate.toDate())} - ${DateFormat('dd/MM/yyyy').format(returnDate.toDate())}',
                                     style: TextStyle(
                                       fontFamily: 'SF_Pro_Rounded',
                                       fontSize: 12,
@@ -330,7 +477,7 @@ Widget _historyCard(
                                 width: 135,
                                 child: Center(
                                   child: Text(
-                                    '$collectTime',
+                                    '${DateFormat('kk:mm:ss').format(collectTime.toDate())}',
                                     style: TextStyle(
                                       fontFamily: 'SF_Pro_Rounded',
                                       fontSize: 12,
@@ -382,7 +529,7 @@ Widget _historyCard(
                                 width: 135,
                                 child: Center(
                                   child: Text(
-                                    '$returnTime',
+                                    '${DateFormat('kk:mm:ss').format(returnTime.toDate())}',
                                     style: TextStyle(
                                       fontFamily: 'SF_Pro_Rounded',
                                       fontSize: 12,
@@ -488,8 +635,9 @@ showAlertDialog(BuildContext context) {
   AlertDialog alert = AlertDialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
     backgroundColor: Color(0xFFDBE4EE),
-    title: Text("Insufficient Balance"),
-    content: Text("Please top-up your iRent walet to make this booking."),
+    title: Text("Insufficient Balance", textAlign: TextAlign.center),
+    content: Text("Please top-up your wallet to make this booking.",
+        textAlign: TextAlign.center),
     actions: [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -508,4 +656,124 @@ showAlertDialog(BuildContext context) {
       return alert;
     },
   );
+}
+
+// class BasketDataModel {
+//   String product_id = "",
+//       product_count = "",
+//       product_displayPicture = "",
+//       product_name = "",
+//       product_category = "",
+//       product_price = "",
+//       product_startdate = "",
+//       product_enddate = "",
+//       product_starttime = "",
+//       product_endtime = "",
+//       storeId = "",
+//       storeName = "";
+
+//   Timestamp product_startDateTime = Timestamp.now(),
+//       product_endDateTime = Timestamp.now();
+//   // ticket_number = "";
+
+//   BasketDataModel();
+//   Map<String, dynamic> toJson() => {
+//         'product_id': product_id,
+//         'product_count': product_count,
+//         'product_displayPicture': product_displayPicture,
+//         'product_name': product_name,
+//         'product_category': product_category,
+//         'product_price': product_price,
+//         'product_startdate': product_startdate,
+//         'product_enddate': product_enddate,
+//         'product_starttime': product_starttime,
+//         'product_endtime': product_endtime,
+//         'product_startDateTime': product_startDateTime.toString(),
+//         'product_endDateTime': product_endDateTime.toString(),
+//         'storeId': storeId,
+//         'storeName': storeName
+//         // 'ticket_number': ticket_number,
+//         // 'item_id': item_id,
+//       };
+//   BasketDataModel.fromSnapshot(snapshot)
+//       : product_id = snapshot.id,
+//         product_count = snapshot.data()['product_count'],
+//         product_displayPicture = snapshot.data()['product_displayPicture'],
+//         product_name = snapshot.data()['product_name'],
+//         product_category = snapshot.data()['product_category'],
+//         product_price = snapshot.data()['product_price'],
+//         product_startdate = snapshot.data()['product_startdate'].toString(),
+//         product_enddate = snapshot.data()['product_enddate'].toString(),
+//         product_starttime = snapshot.data()['product_starttime'],
+//         product_endtime = snapshot.data()['product_endtime'],
+//         product_startDateTime = snapshot.data()['startDateTime'],
+//         product_endDateTime = snapshot.data()['endDateTime'],
+//         storeName = snapshot.data()['storeName'],
+//         storeId = snapshot.data()['storeId'];
+
+//   // ticket_number = snapshot.data()['ticket_number'].toString();
+
+// }
+class BasketDataModel {
+  String product_id = "",
+      product_count = "",
+      product_displayPicture = "",
+      product_name = "",
+      product_category = "",
+      product_price = "",
+      product_startdate = "",
+      product_enddate = "",
+      product_starttime = "",
+      product_endtime = "",
+      storeId = "",
+      storeName = "",
+      product_box_id = "";
+
+  int product_box_number = 0;
+
+  Timestamp product_startDateTime = Timestamp.now(),
+      product_endDateTime = Timestamp.now();
+  // ticket_number = "";
+
+  BasketDataModel();
+  Map<String, dynamic> toJson() => {
+        'product_id': product_id,
+        'product_count': product_count,
+        'product_displayPicture': product_displayPicture,
+        'product_name': product_name,
+        'product_category': product_category,
+        'product_price': product_price,
+        'product_startdate': product_startdate,
+        'product_enddate': product_enddate,
+        'product_starttime': product_starttime,
+        'product_endtime': product_endtime,
+        'product_startDateTime': product_startDateTime.toString(),
+        'product_endDateTime': product_endDateTime.toString(),
+        'storeId': storeId,
+        'storeName': storeName,
+        'product_box_number': product_box_number,
+        'product_box_id': product_box_id,
+        // 'ticket_number': ticket_number,
+        // 'item_id': item_id,
+      };
+  BasketDataModel.fromSnapshot(snapshot)
+      : product_id = snapshot.id,
+        product_count = snapshot.data()['product_count'],
+        product_displayPicture = snapshot.data()['product_displayPicture'],
+        product_name = snapshot.data()['product_name'],
+        product_category = snapshot.data()['product_category'],
+        product_price = snapshot.data()['product_price'],
+        product_startdate = snapshot.data()['product_startdate'].toString(),
+        product_enddate = snapshot.data()['product_enddate'].toString(),
+        product_starttime = snapshot.data()['product_starttime'],
+        product_endtime = snapshot.data()['product_endtime'],
+        product_startDateTime = snapshot.data()['startDateTime'],
+        product_endDateTime = snapshot.data()['endDateTime'],
+        storeName = snapshot.data()['storeName'],
+        storeId = snapshot.data()['storeId'],
+        product_box_number = snapshot.data()['box_number'],
+        product_box_id = snapshot.data()['box_id'];
+
+  // ticket_number = snapshot.data()['ticket_number'].toString();
+
 }

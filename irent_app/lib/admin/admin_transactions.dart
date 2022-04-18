@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:irent_app/admin/admin_constants.dart';
 import 'package:irent_app/user_store_uroc.dart';
 import 'dart:ui';
 import '../app_icons.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class admin_transactions extends StatefulWidget {
   const admin_transactions({Key? key}) : super(key: key);
@@ -41,6 +44,14 @@ class _admin_transactionsState extends State<admin_transactions> {
       fontWeight: FontWeight.w600,
       fontSize: 30,
       color: Color(0xFFFBFBFF));
+
+  List thetransactions = [];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getTransactions();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -140,19 +151,13 @@ class _admin_transactionsState extends State<admin_transactions> {
               //height: screenheight * 0.42,
               child: Container(
                 child: ListView.builder(
-                    itemCount: transactionData.length,
+                    itemCount: thetransactions.length,
                     itemBuilder: (context, index) {
-                      for (var trans in transactionData) {
-                        return _transaction(
-                            context: context,
-                            ticketNumber: transactionData[index]['ticketNumber']
-                                .toString(),
-                            paymentDate: transactionData[index]['paymentDate']
-                                .toString(),
-                            totalAmount: transactionData[index]['totalAmount']
-                                .toString());
-                      }
-                      throw 'No Data Found';
+                      return _transaction(
+                          context: context,
+                          ticketNumber: thetransactions[index].ticketNumber,
+                          paymentDate: thetransactions[index].collectDate,
+                          totalAmount: thetransactions[index].price);
                     }),
               ),
             )
@@ -209,10 +214,23 @@ class _admin_transactionsState extends State<admin_transactions> {
     );
   }
 
+  Future getTransactions() async {
+    var thisdata =
+        await FirebaseFirestore.instance.collection('transactions').get();
+    {
+      setState(() {
+        thetransactions = List.from(
+            thisdata.docs.map((doc) => TransactionDataModel.fromSnapshot(doc)));
+        // storeData = newstores;
+      });
+    }
+    ;
+  }
+
   Widget _transaction(
       {required BuildContext context,
       required String ticketNumber,
-      required String paymentDate,
+      required Timestamp paymentDate,
       required String totalAmount}) {
     TextStyle _textStyle({required double size, required FontWeight weight}) {
       return TextStyle(
@@ -250,7 +268,7 @@ class _admin_transactionsState extends State<admin_transactions> {
                     ],
                   ),
                   Text(
-                    paymentDate,
+                    '${DateFormat('dd/MM/yyyy').format(paymentDate.toDate())}',
                     style: _textStyle(size: 12, weight: FontWeight.w500),
                   )
                 ],
@@ -277,4 +295,21 @@ class _admin_transactionsState extends State<admin_transactions> {
       ],
     );
   }
+}
+
+class TransactionDataModel {
+  Timestamp collectDate = Timestamp.now();
+  String price = "", ticketNumber = "";
+
+  TransactionDataModel();
+  Map<String, dynamic> toJson() => {
+        'collectDate': collectDate,
+        'price': price.toString(),
+        'ticketNumber': ticketNumber.toString(),
+        // 'item_id': item_id,
+      };
+  TransactionDataModel.fromSnapshot(snapshot)
+      : collectDate = snapshot.data()['collectDate'],
+        price = snapshot.data()['price'].toString(),
+        ticketNumber = snapshot.data()['ticketNumber'].toString();
 }
